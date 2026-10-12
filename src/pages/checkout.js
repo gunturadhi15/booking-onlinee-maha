@@ -6,7 +6,7 @@ import { t, getDateLocale } from '../i18n.js';
 
 export function renderCheckout() {
   const data = JSON.parse(sessionStorage.getItem('bookingData') || 'null');
-  
+
   if (!data) {
     return `
       <section class="section" style="text-align: center; padding-top: calc(var(--navbar-height) + var(--space-16));">
@@ -198,7 +198,7 @@ export function initCheckout() {
         data.booking_status = 'CONFIRMED';
         data.paid_at = new Date().toISOString();
         data.transaction_id = 'TRX' + Date.now();
-        
+
         sessionStorage.setItem('bookingData', JSON.stringify(data));
         window.location.hash = `/invoice/${data.invoice_id}`;
       }, 2000);

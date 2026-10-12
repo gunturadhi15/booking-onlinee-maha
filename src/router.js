@@ -34,11 +34,11 @@ export class Router {
       for (const [route, h] of Object.entries(this.routes)) {
         const routeParts = route.split('/');
         const pathParts = path.split('/');
-        
+
         if (routeParts.length === pathParts.length) {
           let match = true;
           const tempParams = {};
-          
+
           for (let i = 0; i < routeParts.length; i++) {
             if (routeParts[i].startsWith(':')) {
               tempParams[routeParts[i].slice(1)] = pathParts[i];
@@ -47,7 +47,7 @@ export class Router {
               break;
             }
           }
-          
+
           if (match) {
             handler = h;
             params = tempParams;
@@ -86,7 +86,7 @@ export class Router {
     };
 
     let activePage = pageMap[path] || '';
-    
+
     // For dynamic routes
     if (!activePage && path.startsWith('/layanan/')) activePage = 'services';
     if (!activePage && path.startsWith('/booking')) activePage = 'booking';
@@ -117,7 +117,7 @@ export class Router {
 
   start() {
     window.addEventListener('hashchange', () => this.resolve());
-    
+
     // Handle initial load
     if (!window.location.hash) {
       window.location.hash = '/';

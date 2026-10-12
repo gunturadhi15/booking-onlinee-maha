@@ -304,10 +304,10 @@ function setupGlobalUI() {
       setTimeout(() => {
         const botBubble = document.createElement('div');
         botBubble.style.cssText = 'background: white; padding: 10px 14px; border-radius: 12px; border-top-left-radius: 2px; box-shadow: var(--shadow-sm); max-width: 85%; line-height: 1.5;';
-        
+
         const lower = text.toLowerCase();
         let reply = t('chat_reply_default');
-        
+
         if (lower.includes('harga') || lower.includes('biaya') || lower.includes('paket') || lower.includes('price') || lower.includes('cost') || lower.includes('价格') || lower.includes('料金') || lower.includes('цена')) {
           reply = t('chat_reply_price');
         } else if (lower.includes('jadwal') || lower.includes('booking') || lower.includes('slot') || lower.includes('schedule') || lower.includes('预订') || lower.includes('予約') || lower.includes('расписание')) {

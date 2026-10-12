@@ -53,7 +53,7 @@ export function renderContact() {
               </div>
             </div>
 
-            <a href="https://wa.me/${COMPANY.whatsapp.replace(/\D/g, '')}?text=Halo%20${encodeURIComponent(COMPANY.name)},%20saya%20ingin%20bertanya%20seputar%20booking" 
+            <a href="https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=Halo%20${encodeURIComponent(COMPANY.name)},%20saya%20ingin%20bertanya%20seputar%20booking" 
                target="_blank" class="btn btn--primary btn--lg" style="margin-top: var(--space-6); width: 100%; text-align: center;">
               ${t('con_chat_wa')}
             </a>

@@ -335,6 +335,10 @@ export const COMPANY = {
     { icon: '🌿', title: 'Harmoni', desc: 'Keselarasan jiwa, raga, dan pikiran' },
     { icon: '✨', title: 'Transformasi', desc: 'Perubahan positif dalam kehidupan' },
   ],
+  phone: '+62 812 3456 7890',
+  whatsapp: '6281234567890',
+  email: 'info@sacredjourneybali.com',
+  address: 'Jl. Raya Ubud No. 88, Ubud, Gianyar, Bali 80571',
   contact: {
     phone: '+62 812 3456 7890',
     email: 'info@sacredjourneybali.com',

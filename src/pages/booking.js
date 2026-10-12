@@ -89,7 +89,7 @@ export function renderBooking() {
 }
 
 function renderStep(step) {
-  switch(step) {
+  switch (step) {
     case 1: return renderStep1();
     case 2: return renderStep2();
     case 3: return renderStep3();
@@ -104,10 +104,10 @@ function renderStep1() {
     <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_service')}</h3>
     <div style="display: grid; gap: var(--space-4);">
       ${SERVICES.filter(s => s.status === 'active').map(service => {
-        const srvKey = service.service_id.toLowerCase();
-        const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
-        const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
-        return `
+    const srvKey = service.service_id.toLowerCase();
+    const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
+    const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
+    return `
         <button class="payment-method booking-service-select" data-service="${service.service_id}"
                 style="cursor: pointer; text-align: left; width: 100%;">
           <div class="payment-method__radio"></div>
@@ -127,7 +127,7 @@ function renderStep1() {
 function renderStep2() {
   const packages = getPackagesByService(bookingState.service_id);
   const service = getServiceById(bookingState.service_id);
-  
+
   if (!service) return renderStep1();
 
   const srvKey = service.service_id.toLowerCase();
@@ -259,7 +259,7 @@ function renderStep4() {
 function renderStep5() {
   const service = getServiceById(bookingState.service_id);
   const pkg = getPackageById(bookingState.package_id);
-  
+
   if (!service || !pkg) return renderStep1();
 
   const subtotal = pkg.price;
@@ -343,12 +343,12 @@ function formatDate(dateStr) {
 function renderCalendar(container, year, month) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const startDay = firstDay.getDay(); // 0 = Sunday
   const daysInMonth = lastDay.getDate();
-  
+
   const monthNames = t('cal_months');
   const dayNames = t('cal_days');
 
@@ -382,12 +382,12 @@ function renderCalendar(container, year, month) {
     const isPast = date < today;
     const isToday = date.getTime() === today.getTime();
     const isSelected = bookingState.booking_date === dateStr;
-    
+
     let classes = 'calendar__day';
     if (isPast) classes += ' disabled';
     if (isToday) classes += ' today';
     if (isSelected) classes += ' selected';
-    
+
     html += `<button class="${classes}" ${isPast ? 'disabled' : ''} data-date="${dateStr}">${day}</button>`;
   }
 
@@ -407,7 +407,7 @@ function renderTimeSlots(container, dateStr) {
     let classes = 'time-slot';
     if (isBooked) classes += ' booked';
     if (isSelected) classes += ' selected';
-    
+
     html += `<button class="${classes}" ${isBooked ? 'disabled' : ''} data-time="${time}">${time}</button>`;
   });
   html += '</div>';
@@ -419,7 +419,7 @@ function generateTimeSlots() {
   const slots = [];
   const [openH, openM] = SETTINGS.opening_time.split(':').map(Number);
   const [closeH, closeM] = SETTINGS.closing_time.split(':').map(Number);
-  
+
   let h = openH, m = openM;
   while (h < closeH || (h === closeH && m < closeM)) {
     slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
@@ -574,7 +574,7 @@ export function initBooking() {
 function initCalendarAndSlots() {
   const calContainer = document.getElementById('booking-calendar');
   const timeContainer = document.getElementById('time-slots-container');
-  
+
   if (calContainer) {
     const now = new Date();
     renderCalendar(calContainer, now.getFullYear(), now.getMonth());
@@ -595,7 +595,7 @@ function updateContinueBtn() {
 function updateBookingUI() {
   const content = document.getElementById('booking-step-content');
   const stepsEl = document.getElementById('booking-steps');
-  
+
   if (content) {
     content.innerHTML = renderStep(bookingState.step);
     if (bookingState.step === 3) {
@@ -607,7 +607,7 @@ function updateBookingUI() {
     // Re-render steps indicator
     const steps = stepsEl.querySelectorAll('.booking-step');
     const connectors = stepsEl.querySelectorAll('.booking-step__connector');
-    
+
     steps.forEach((step, i) => {
       const stepNum = i + 1;
       step.classList.toggle('active', stepNum <= bookingState.step);
