@@ -1446,10 +1446,107 @@ const DEFAULT_LANG = 'id';
 
 let currentLang = localStorage.getItem('lang') || DEFAULT_LANG;
 
+const KEY_ALIASES = {
+  // Checkout aliases
+  chk_overline: 'checkout_overline',
+  chk_heading: 'checkout_heading',
+  chk_no_order_title: 'checkout_no_order',
+  chk_no_order_desc: 'checkout_no_order_desc',
+  chk_no_order_btn: 'checkout_start_booking',
+  chk_invalid_data_title: 'checkout_invalid',
+  chk_invalid_data_desc: 'checkout_invalid_desc',
+  chk_countdown_text: 'checkout_pay_before',
+  chk_payment_method: 'checkout_choose_method',
+  chk_method_qris: 'checkout_qris_desc',
+  chk_method_va: 'checkout_va_desc',
+  chk_method_card: 'checkout_card_desc',
+  chk_pay_now: 'checkout_pay_now',
+  chk_secure_payment: 'checkout_secure',
+  chk_summary_title: 'checkout_summary',
+  chk_processing: 'checkout_processing',
+
+  // Invoice aliases
+  inv_success_title: 'inv_success',
+  inv_success_desc: 'inv_confirmed_msg',
+  inv_schedule_info: 'inv_schedule',
+  inv_item_desc: 'inv_description',
+  inv_status_paid: 'inv_status',
+  inv_btn_wa: 'inv_confirm_wa',
+  inv_btn_print: 'inv_print',
+  inv_btn_home: 'inv_back_home',
+};
+
+const EXTRA_FALLBACKS = {
+  id: {
+    inv_guide_desc: 'Harap hadir 15 menit sebelum sesi dimulai. Mengenakan pakaian sopan bernuansa putih/kuning terang untuk kenyamanan dan keselarasan energi. Tunjukkan bukti e-tiket/invoice ini kepada pemandu kami saat kedatangan.',
+    inv_wa_greeting: 'Halo Tim',
+    inv_wa_intro: 'Saya ingin konfirmasi pesanan booking spiritual saya:',
+    inv_wa_thanks: 'Mohon informasikan detail titik temu penjemputan. Terima kasih!',
+  },
+  en: {
+    inv_guide_desc: 'Please arrive 15 minutes prior to session at agreed meeting point. Wear modest light or white clothing for comfort and energy alignment. Present this e-ticket to our guide upon arrival.',
+    inv_wa_greeting: 'Hello Team',
+    inv_wa_intro: 'I would like to confirm my spiritual booking order:',
+    inv_wa_thanks: 'Please let me know the meeting/pickup point details. Thank you!',
+  },
+  zh: {
+    inv_guide_desc: '请在约定集合点提前15分钟到达。请穿着舒适得体的浅色或白色衣物。抵达时请向向导出示此电子门票/发票。',
+    inv_wa_greeting: '您好，团队',
+    inv_wa_intro: '我想确认我的灵修预订订单：',
+    inv_wa_thanks: '请提供集合接送地点详情，谢谢！',
+  },
+  ja: {
+    inv_guide_desc: 'セッション開始の15分前に集合場所へお越しください。快適で清らかなエネルギーのために白や明るい服装をお勧めします。到着時にこのEチケットをご提示ください。',
+    inv_wa_greeting: 'こんにちは、チームの皆様',
+    inv_wa_intro: 'スピリチュアルツアーの予約を確認させていただきます：',
+    inv_wa_thanks: '集合場所や送迎の詳細をご案内ください。よろしくお願いいたします。',
+  },
+  ru: {
+    inv_guide_desc: 'Пожалуйста, приходите за 15 минут до начала в оговоренное место встречи. Одевайтесь в светлую удобную одежду. Предъявите этот электронный билет нашему гиду.',
+    inv_wa_greeting: 'Здравствуйте, команда',
+    inv_wa_intro: 'Я хочу подтвердить свое бронирование духовного тура:',
+    inv_wa_thanks: 'Пожалуйста, сообщите детали места встречи и трансфера. Спасибо!',
+  },
+  de: {
+    inv_guide_desc: 'Bitte erscheinen Sie 15 Minuten vor Beginn am vereinbarten Treffpunkt. Tragen Sie angemessene helle Kleidung für Komfort und Energieausgleich. Zeigen Sie dieses E-Ticket unserem Guide bei Ankunft vor.',
+    inv_wa_greeting: 'Hallo Team',
+    inv_wa_intro: 'Ich möchte meine spirituelle Buchung bestätigen:',
+    inv_wa_thanks: 'Bitte teilen Sie mir die Details zum Treffpunkt/Abholung mit. Vielen Dank!',
+  }
+};
+
 /** Get translation by key */
 export function t(key) {
-  const translations = TRANSLATIONS[currentLang] || TRANSLATIONS[DEFAULT_LANG];
-  return translations[key] ?? TRANSLATIONS[DEFAULT_LANG][key] ?? key;
+  const lang = currentLang;
+  const translations = TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANG];
+  
+  if (translations[key] !== undefined) {
+    return translations[key];
+  }
+
+  // Check alias in current language
+  const alias = KEY_ALIASES[key];
+  if (alias && translations[alias] !== undefined) {
+    return translations[alias];
+  }
+
+  // Check extra fallbacks
+  if (EXTRA_FALLBACKS[lang]?.[key] !== undefined) {
+    return EXTRA_FALLBACKS[lang][key];
+  }
+  if (EXTRA_FALLBACKS[DEFAULT_LANG]?.[key] !== undefined) {
+    return EXTRA_FALLBACKS[DEFAULT_LANG][key];
+  }
+
+  // Fallback to default language
+  if (TRANSLATIONS[DEFAULT_LANG][key] !== undefined) {
+    return TRANSLATIONS[DEFAULT_LANG][key];
+  }
+  if (alias && TRANSLATIONS[DEFAULT_LANG][alias] !== undefined) {
+    return TRANSLATIONS[DEFAULT_LANG][alias];
+  }
+
+  return key;
 }
 
 /** Get current language code */

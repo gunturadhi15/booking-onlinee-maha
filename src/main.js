@@ -32,9 +32,9 @@ router.addRoute('/layanan/:slug', async (params) => {
   return renderServiceDetail(params);
 });
 
-router.addRoute('/booking', async () => {
-  const html = renderBooking();
-  setTimeout(() => initBooking(), 50);
+router.addRoute('/booking', async (params) => {
+  const html = renderBooking(params);
+  setTimeout(() => initBooking(params), 50);
   return html;
 });
 
@@ -197,6 +197,7 @@ function switchLanguage(langCode) {
   const mobileMenu = document.getElementById('mobile-menu');
   if (navToggle) navToggle.classList.remove('active');
   if (mobileMenu) mobileMenu.classList.remove('open');
+  document.body.classList.remove('no-scroll');
 }
 
 /** Initialize language switcher event listeners */
@@ -246,8 +247,9 @@ function setupGlobalUI() {
 
   if (navToggle && mobileMenu) {
     navToggle.addEventListener('click', () => {
-      navToggle.classList.toggle('active');
-      mobileMenu.classList.toggle('open');
+      const isOpen = mobileMenu.classList.toggle('open');
+      navToggle.classList.toggle('active', isOpen);
+      document.body.classList.toggle('no-scroll', isOpen);
     });
 
     // Close mobile menu on link click
@@ -255,6 +257,7 @@ function setupGlobalUI() {
       link.addEventListener('click', () => {
         navToggle.classList.remove('active');
         mobileMenu.classList.remove('open');
+        document.body.classList.remove('no-scroll');
       });
     });
   }

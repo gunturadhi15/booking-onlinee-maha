@@ -22,24 +22,36 @@ const BOOKED_SLOTS = {
   // 'YYYY-MM-DD': ['HH:MM', ...]
 };
 
-export function renderBooking() {
-  // Parse query params from hash
+export function renderBooking(params = {}) {
+  // Parse query params from params and hash
   const hashParts = window.location.hash.split('?');
-  if (hashParts.length > 1) {
-    const params = new URLSearchParams(hashParts[1]);
-    if (params.get('service')) bookingState.service_id = params.get('service');
-    if (params.get('package')) {
-      bookingState.package_id = params.get('package');
-      const pkg = getPackageById(params.get('package'));
-      if (pkg) bookingState.service_id = pkg.service_id;
+  const hashParams = hashParts.length > 1 ? Object.fromEntries(new URLSearchParams(hashParts[1]).entries()) : {};
+  const serviceId = params?.service || hashParams.service;
+  const packageId = params?.package || hashParams.package;
+
+  if (serviceId) {
+    bookingState.service_id = serviceId;
+  }
+  if (packageId) {
+    bookingState.package_id = packageId;
+    const pkg = getPackageById(packageId);
+    if (pkg) {
+      bookingState.service_id = pkg.service_id;
     }
   }
 
   // Determine which step to show
   if (bookingState.service_id && bookingState.package_id) {
-    bookingState.step = 3; // Skip to date selection
+    bookingState.step = 3; // Skip directly to date/time selection
   } else if (bookingState.service_id) {
     bookingState.step = 2; // Show package selection
+  } else {
+    // Fresh navigation to booking without params
+    if (!serviceId && !packageId) {
+      bookingState.service_id = null;
+      bookingState.package_id = null;
+      bookingState.step = 1;
+    }
   }
 
   return `

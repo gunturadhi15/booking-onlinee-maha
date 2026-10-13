@@ -14,7 +14,17 @@ export class Router {
   }
 
   getPath() {
-    return window.location.hash.slice(1) || '/';
+    const rawHash = window.location.hash.slice(1) || '/';
+    const [path] = rawHash.split('?');
+    return path || '/';
+  }
+
+  getQueryParams() {
+    const rawHash = window.location.hash.slice(1) || '';
+    const qIndex = rawHash.indexOf('?');
+    if (qIndex === -1) return {};
+    const searchParams = new URLSearchParams(rawHash.slice(qIndex + 1));
+    return Object.fromEntries(searchParams.entries());
   }
 
   navigate(path) {
@@ -26,8 +36,9 @@ export class Router {
 
   async resolve() {
     const path = this.getPath();
+    const queryParams = this.getQueryParams();
     let handler = this.routes[path];
-    let params = {};
+    let params = { ...queryParams };
 
     // Check for dynamic routes
     if (!handler) {
@@ -50,7 +61,7 @@ export class Router {
 
           if (match) {
             handler = h;
-            params = tempParams;
+            params = { ...tempParams, ...queryParams };
             break;
           }
         }

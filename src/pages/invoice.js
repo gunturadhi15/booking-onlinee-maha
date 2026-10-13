@@ -90,7 +90,7 @@ export function renderInvoice(params) {
           </div>
 
           <!-- Customer & Booking Info -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6); background: var(--cream-50); padding: var(--space-4); border-radius: var(--radius-lg);">
+          <div class="invoice-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6); background: var(--cream-50); padding: var(--space-4); border-radius: var(--radius-lg);">
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: var(--space-2);">${t('inv_customer_info')}</h4>
               <p style="font-weight: 600; font-size: var(--text-sm); color: var(--earth-800);">${data.customer_name}</p>
@@ -106,25 +106,27 @@ export function renderInvoice(params) {
           </div>
 
           <!-- Items Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: var(--space-6);">
-            <thead>
-              <tr style="border-bottom: 2px solid var(--cream-200); text-align: left; font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase;">
-                <th style="padding: var(--space-3) 0;">${t('inv_item_desc')}</th>
-                <th style="padding: var(--space-3) var(--space-2); text-align: center;">Qty</th>
-                <th style="padding: var(--space-3) 0; text-align: right;">Total</th>
-              </tr>
-            </thead>
-            <tbody style="font-size: var(--text-sm);">
-              <tr style="border-bottom: 1px solid var(--cream-100);">
-                <td style="padding: var(--space-4) 0;">
-                  <strong style="color: var(--earth-800); display: block;">${serviceName}</strong>
-                  <span style="font-size: var(--text-xs); color: var(--text-muted);">${t('book_package_label')}: ${packageName}</span>
-                </td>
-                <td style="padding: var(--space-4) var(--space-2); text-align: center;">1 ${t('inv_session')}</td>
-                <td style="padding: var(--space-4) 0; text-align: right; font-weight: 600; color: var(--earth-800);">${formatCurrency(data.subtotal)}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: var(--space-6);">
+            <table style="width: 100%; min-width: 280px; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--cream-200); text-align: left; font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase;">
+                  <th style="padding: var(--space-3) 0;">${t('inv_item_desc')}</th>
+                  <th style="padding: var(--space-3) var(--space-2); text-align: center;">Qty</th>
+                  <th style="padding: var(--space-3) 0; text-align: right;">Total</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: var(--text-sm);">
+                <tr style="border-bottom: 1px solid var(--cream-100);">
+                  <td style="padding: var(--space-4) 0;">
+                    <strong style="color: var(--earth-800); display: block;">${serviceName}</strong>
+                    <span style="font-size: var(--text-xs); color: var(--text-muted);">${t('book_package_label')}: ${packageName}</span>
+                  </td>
+                  <td style="padding: var(--space-4) var(--space-2); text-align: center;">1 ${t('inv_session')}</td>
+                  <td style="padding: var(--space-4) 0; text-align: right; font-weight: 600; color: var(--earth-800);">${formatCurrency(data.subtotal)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <!-- Totals -->
           <div style="max-width: 300px; margin-left: auto; border-top: 1px solid var(--cream-200); padding-top: var(--space-3); font-size: var(--text-sm);">
