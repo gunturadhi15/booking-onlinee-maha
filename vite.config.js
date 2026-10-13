@@ -97,7 +97,7 @@ function apiPlugin() {
             if (pathname === '/api/admin/availability' && req.method === 'GET') {
               const targetDate = query.date || '2026-10-15';
               const timeSlots = ['09:00:00', '10:00:00', '11:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00'];
-              
+
               const bookings = db.prepare(`
                 SELECT b.booking_id, b.booking_time, b.pax, b.status, c.name as customer_name, s.service_name
                 FROM bookings b
@@ -233,7 +233,7 @@ function apiPlugin() {
               const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
               const rand = String(Math.floor(Math.random() * 9999)).padStart(4, '0');
               const bookingId = `BKG-${dateStr}-${rand}`;
-              
+
               // Register/Find Customer
               let cust = db.prepare('SELECT customer_id FROM customers WHERE email = ? OR phone = ?').get(body.email, body.phone);
               let custId = cust?.customer_id;
@@ -265,7 +265,7 @@ function apiPlugin() {
 
               // Generate Idempotency Key TRX-{USER_ID}-{TIMESTAMP}-{RANDOM}
               const pad = (n) => String(n).padStart(2, '0');
-              const timeStr = `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+              const timeStr = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
               const randKey = Math.random().toString(36).substring(2, 6).toUpperCase();
               const userIdClean = custId.replace(/\D/g, '').slice(0, 6) || '102';
               const orderId = `TRX-${userIdClean}-${timeStr}-${randKey}`;
