@@ -3,6 +3,7 @@
  */
 import { getServiceById, getPackageById, formatCurrency, SETTINGS } from '../data.js';
 import { t, getDateLocale } from '../i18n.js';
+import { updateBookingStatusInSupabase } from '../api/supabase.js';
 
 export function renderCheckout() {
   const data = JSON.parse(sessionStorage.getItem('bookingData') || 'null');
@@ -176,32 +177,51 @@ export function initCheckout() {
   // Pay button
   const payBtn = document.getElementById('pay-now');
   if (payBtn) {
-    payBtn.addEventListener('click', () => {
+    payBtn.addEventListener('click', async () => {
       const data = JSON.parse(sessionStorage.getItem('bookingData') || 'null');
       if (!data) return;
 
-      // Simulate payment process
+      // Indikator Loading
       payBtn.disabled = true;
+      const originalBtnText = payBtn.innerHTML;
       payBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;">
           <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
         </svg>
         ${t('chk_processing')}
       `;
 
-      // In MVP, this would create payment via n8n webhook
-      // Simulating payment success after 2 seconds
-      setTimeout(() => {
+      try {
         const selectedMethod = document.querySelector('.payment-method.selected');
-        data.payment_method = selectedMethod?.dataset.method || 'qris';
+        const paymentMethod = selectedMethod?.dataset.method || 'qris';
+        const invoiceNumber = data.invoice_number || data.invoice_id;
+
+        // Simulasi proses gateway 1.5 detik
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Update status pembayaran di Supabase menjadi 'paid'
+        if (invoiceNumber) {
+          const updateRes = await updateBookingStatusInSupabase(invoiceNumber, 'paid');
+          if (!updateRes.success && !updateRes.simulated) {
+            console.warn('Perhatian: Gagal memperbarui status di Supabase:', updateRes.error);
+          }
+        }
+
+        data.payment_method = paymentMethod;
         data.payment_status = 'PAID';
+        data.status = 'paid';
         data.booking_status = 'CONFIRMED';
         data.paid_at = new Date().toISOString();
         data.transaction_id = 'TRX' + Date.now();
 
         sessionStorage.setItem('bookingData', JSON.stringify(data));
-        window.location.hash = `/invoice/${data.invoice_id}`;
-      }, 2000);
+        window.location.hash = `/invoice/${invoiceNumber}`;
+      } catch (err) {
+        console.error('Error saat pemrosesan pembayaran:', err);
+        alert('Terjadi kendala saat memproses pembayaran. Silakan coba kembali.');
+        payBtn.disabled = false;
+        payBtn.innerHTML = originalBtnText;
+      }
     });
   }
 }

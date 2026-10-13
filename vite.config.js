@@ -381,6 +381,7 @@ function apiPlugin() {
 }
 
 export default defineConfig({
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   plugins: [apiPlugin()],
   server: {
     port: 5173,

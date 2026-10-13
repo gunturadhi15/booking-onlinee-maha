@@ -3,6 +3,7 @@
  */
 import { formatCurrency, COMPANY, getServiceById, getPackageById } from '../data.js';
 import { t, getDateLocale } from '../i18n.js';
+import { getBookingByInvoiceFromSupabase, isSupabaseConfigured } from '../api/supabase.js';
 
 export function renderInvoice(params) {
   const invoiceId = params?.id;
@@ -34,7 +35,7 @@ export function renderInvoice(params) {
   const pkg = getPackageById(data.package_id);
   const srvKey = service ? service.service_id.toLowerCase() : 'srv_001';
   const serviceName = service ? (t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name) : 'Spiritual Journey Bali';
-  const packageName = pkg ? pkg.package_name : 'Paket Pilihan';
+  const packageName = data.package_name || (pkg ? pkg.package_name : 'Paket Pilihan');
 
   const formattedDate = new Date(data.booking_date).toLocaleDateString(getDateLocale(), {
     weekday: 'long',
@@ -172,11 +173,23 @@ export function renderInvoice(params) {
   `;
 }
 
-export function initInvoice() {
+export async function initInvoice(params) {
   const printBtn = document.getElementById('btn-print-invoice');
   if (printBtn) {
     printBtn.addEventListener('click', () => {
       window.print();
     });
+  }
+
+  const invoiceId = params?.id || JSON.parse(sessionStorage.getItem('bookingData') || '{}')?.invoice_number || JSON.parse(sessionStorage.getItem('bookingData') || '{}')?.invoice_id;
+  if (invoiceId && isSupabaseConfigured()) {
+    try {
+      const res = await getBookingByInvoiceFromSupabase(invoiceId);
+      if (res.success && res.data) {
+        console.log('✅ [Supabase] Data invoice tersinkronisasi dari database:', res.data);
+      }
+    } catch (e) {
+      console.warn('Gagal sinkronisasi invoice dari Supabase:', e);
+    }
   }
 }

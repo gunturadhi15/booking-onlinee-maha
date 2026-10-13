@@ -3,6 +3,7 @@
  */
 import { SERVICES, PACKAGES, SETTINGS, formatCurrency, getPackagesByService, getServiceById, getPackageById } from '../data.js';
 import { t, getLang, getDateLocale, translateDuration } from '../i18n.js';
+import { createBookingInSupabase } from '../api/supabase.js';
 
 let bookingState = {
   step: 1,
@@ -438,7 +439,7 @@ export function initBooking() {
   if (!content) return;
 
   // Event delegation
-  content.addEventListener('click', (e) => {
+  content.addEventListener('click', async (e) => {
     // Service selection
     const serviceBtn = e.target.closest('.booking-service-select');
     if (serviceBtn) {
@@ -540,27 +541,72 @@ export function initBooking() {
     }
 
     // Proceed to checkout
-    if (e.target.closest('#proceed-checkout')) {
-      // In MVP, this would send data to n8n webhook
-      // For now, navigate to checkout page
+    const checkoutBtn = e.target.closest('#proceed-checkout');
+    if (checkoutBtn) {
       const pkg = getPackageById(bookingState.package_id);
       const subtotal = pkg?.price || 0;
       const tax = Math.round(subtotal * SETTINGS.tax_rate);
       const grandTotal = subtotal + tax;
+      const bookingId = generateBookingId();
+      const invoiceId = generateInvoiceId();
 
-      // Store booking data for checkout
-      sessionStorage.setItem('bookingData', JSON.stringify({
-        ...bookingState,
-        subtotal,
-        tax,
-        grand_total: grandTotal,
-        booking_id: generateBookingId(),
-        invoice_id: generateInvoiceId(),
-        created_at: new Date().toISOString(),
-        expired_at: new Date(Date.now() + SETTINGS.payment_expiry_hours * 3600000).toISOString(),
-      }));
+      // Indikator Loading
+      checkoutBtn.disabled = true;
+      const originalBtnContent = checkoutBtn.innerHTML;
+      checkoutBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+        </svg>
+        Menyimpan Pemesanan...
+      `;
 
-      window.location.hash = '/checkout';
+      // Data payload sesuai skema Supabase bookings
+      const bookingPayload = {
+        customer_name: bookingState.customer_name,
+        customer_phone: bookingState.whatsapp,
+        customer_email: bookingState.email,
+        package_name: pkg?.package_name || 'Paket Pilihan',
+        tour_date: bookingState.booking_date,
+        total_price: grandTotal,
+        status: 'pending',
+        invoice_number: invoiceId
+      };
+
+      try {
+        // Insert ke Supabase
+        const result = await createBookingInSupabase(bookingPayload);
+
+        if (!result.success) {
+          alert('Gagal menyimpan pesanan ke database: ' + (result.error?.message || 'Koneksi error') + '. Silakan coba lagi.');
+          checkoutBtn.disabled = false;
+          checkoutBtn.innerHTML = originalBtnContent;
+          return;
+        }
+
+        // Simpan data lengkap ke sessionStorage untuk halaman checkout & invoice
+        sessionStorage.setItem('bookingData', JSON.stringify({
+          ...bookingState,
+          id: result.data?.id,
+          subtotal,
+          tax,
+          grand_total: grandTotal,
+          total_price: grandTotal,
+          package_name: bookingPayload.package_name,
+          booking_id: bookingId,
+          invoice_id: invoiceId,
+          invoice_number: invoiceId,
+          status: 'pending',
+          created_at: result.data?.created_at || new Date().toISOString(),
+          expired_at: new Date(Date.now() + SETTINGS.payment_expiry_hours * 3600000).toISOString(),
+        }));
+
+        window.location.hash = '/checkout';
+      } catch (err) {
+        console.error('Error saat proses checkout:', err);
+        alert('Terjadi kesalahan saat memproses pesanan. Silakan coba beberapa saat lagi.');
+        checkoutBtn.disabled = false;
+        checkoutBtn.innerHTML = originalBtnContent;
+      }
       return;
     }
   });

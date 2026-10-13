@@ -52,7 +52,7 @@ router.addRoute('/invoice', async () => {
 
 router.addRoute('/invoice/:id', async (params) => {
   const html = renderInvoice(params);
-  setTimeout(() => initInvoice(), 50);
+  setTimeout(() => initInvoice(params), 50);
   return html;
 });
 
