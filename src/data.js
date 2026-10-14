@@ -366,11 +366,22 @@ export const SETTINGS = {
 
 // Helper functions
 export function getServiceById(id) {
-  return SERVICES.find(s => s.service_id === id);
+  if (!id) return undefined;
+  const clean = String(id).trim().toLowerCase().replace(/[-_]/g, '');
+  return SERVICES.find(s => 
+    s.service_id.toLowerCase() === id.toLowerCase() ||
+    s.service_id.toLowerCase().replace(/[-_]/g, '') === clean ||
+    (s.slug && s.slug.toLowerCase() === id.toLowerCase())
+  );
 }
 
 export function getPackageById(id) {
-  return PACKAGES.find(p => p.package_id === id);
+  if (!id) return undefined;
+  const clean = String(id).trim().toLowerCase().replace(/[-_]/g, '');
+  return PACKAGES.find(p => 
+    p.package_id.toLowerCase() === id.toLowerCase() ||
+    p.package_id.toLowerCase().replace(/[-_]/g, '') === clean
+  );
 }
 
 export function getPackagesByService(serviceId) {

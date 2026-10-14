@@ -4,6 +4,7 @@
 import { getServiceById, getPackageById, formatCurrency, SETTINGS } from '../data.js';
 import { t, getDateLocale } from '../i18n.js';
 import { updateBookingStatusInSupabase } from '../api/supabase.js';
+import { resetBooking } from './booking.js';
 
 export function renderCheckout() {
   const data = JSON.parse(sessionStorage.getItem('bookingData') || 'null');
@@ -215,6 +216,7 @@ export function initCheckout() {
         data.transaction_id = 'TRX' + Date.now();
 
         sessionStorage.setItem('bookingData', JSON.stringify(data));
+        resetBooking();
         window.location.hash = `/invoice/${invoiceNumber}`;
       } catch (err) {
         console.error('Error saat pemrosesan pembayaran:', err);

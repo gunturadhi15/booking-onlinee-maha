@@ -40,17 +40,19 @@ export function renderServices() {
             const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
             const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
             return `
-              <a href="#/layanan/${service.slug}" class="service-card" 
+              <div class="service-card" 
                  data-service="${service.service_id}" data-category="${service.category}"
                  data-name="${service.service_name.toLowerCase()}">
-                <div class="service-card__img">
+                <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block;">
                   <img src="/src/assets/${service.slug}.jpg" alt="${srvName}"
                        onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #D4A000, #8C6900)';" />
                   <span class="service-card__badge badge badge--teal">${service.category}</span>
-                </div>
+                </a>
                 <div class="service-card__body">
                   <p class="service-card__category">${service.category}</p>
-                  <h3 class="service-card__title">${srvName}</h3>
+                  <h3 class="service-card__title">
+                    <a href="#/layanan/${service.slug}" style="color: inherit; text-decoration: none;">${srvName}</a>
+                  </h3>
                   <p class="service-card__desc">${srvDesc}</p>
                   <div class="service-card__meta">
                     <span class="service-card__price">
@@ -63,8 +65,16 @@ export function renderServices() {
                       ${packages.length} ${t('svc_packages_count')}
                     </span>
                   </div>
+                  <div class="service-card__actions" style="display: flex; gap: var(--space-3); margin-top: var(--space-5);">
+                    <a href="#/layanan/${service.slug}" class="btn btn--secondary btn--sm" style="flex: 1; text-align: center;">
+                      Detail
+                    </a>
+                    <a href="#/booking?service=${service.service_id}" class="btn btn--primary btn--sm" style="flex: 1; text-align: center;" data-page="booking">
+                      ${t('nav_booking_cta')}
+                    </a>
+                  </div>
                 </div>
-              </a>
+              </div>
             `;
           }).join('')}
         </div>
