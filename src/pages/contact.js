@@ -28,27 +28,33 @@ export function renderContact() {
             </p>
 
             <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--cream-200); border-radius: var(--radius-lg);">
-                <div style="font-size: 24px; color: var(--gold-600);">📍</div>
+              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--border-hairline); border-radius: var(--radius-lg);">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--surface-silk); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); flex-shrink: 0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--earth-800);">${t('con_office')}</h4>
-                  <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px;">${COMPANY.address}</p>
+                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_office')}</h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.address}</p>
                 </div>
               </div>
 
-              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--cream-200); border-radius: var(--radius-lg);">
-                <div style="font-size: 24px; color: var(--gold-600);">💬</div>
+              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--border-hairline); border-radius: var(--radius-lg);">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--surface-silk); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); flex-shrink: 0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--earth-800);">${t('con_wa_care')}</h4>
-                  <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px;">${COMPANY.phone} ${t('con_wa_hours')}</p>
+                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_wa_care')}</h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.phone} ${t('con_wa_hours')}</p>
                 </div>
               </div>
 
-              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--cream-200); border-radius: var(--radius-lg);">
-                <div style="font-size: 24px; color: var(--gold-600);">✉️</div>
+              <div style="display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: white; border: 1px solid var(--border-hairline); border-radius: var(--radius-lg);">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--surface-silk); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); flex-shrink: 0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--earth-800);">${t('con_email_official')}</h4>
-                  <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-top: 2px;">${COMPANY.email}</p>
+                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_email_official')}</h4>
+                  <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.email}</p>
                 </div>
               </div>
             </div>

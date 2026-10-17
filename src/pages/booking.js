@@ -28,6 +28,15 @@ export function renderBooking(params = {}) {
   const hashParams = hashParts.length > 1 ? Object.fromEntries(new URLSearchParams(hashParts[1]).entries()) : {};
   const serviceId = params?.service || hashParams.service;
   const packageId = params?.package || hashParams.package;
+  const initialDate = params?.date || hashParams.date;
+  const initialTime = params?.time || hashParams.time;
+
+  if (initialDate && !bookingState.booking_date) {
+    bookingState.booking_date = initialDate;
+  }
+  if (initialTime && !bookingState.booking_time) {
+    bookingState.booking_time = initialTime;
+  }
 
   const resolvedService = serviceId ? getServiceById(serviceId) : null;
   const resolvedPackage = packageId ? getPackageById(packageId) : null;
@@ -36,7 +45,7 @@ export function renderBooking(params = {}) {
     const isNewPackage = bookingState.package_id !== resolvedPackage.package_id;
     bookingState.package_id = resolvedPackage.package_id;
     bookingState.service_id = resolvedPackage.service_id;
-    if (isNewPackage) {
+    if (isNewPackage && !initialDate) {
       bookingState.booking_date = null;
       bookingState.booking_time = null;
     }
@@ -45,7 +54,7 @@ export function renderBooking(params = {}) {
     const isNewService = bookingState.service_id !== resolvedService.service_id;
     bookingState.service_id = resolvedService.service_id;
     bookingState.package_id = null; // Always reset package so user can pick from this service
-    if (isNewService) {
+    if (isNewService && !initialDate) {
       bookingState.booking_date = null;
       bookingState.booking_time = null;
     }
@@ -55,8 +64,8 @@ export function renderBooking(params = {}) {
     if (!serviceId && !packageId) {
       bookingState.service_id = null;
       bookingState.package_id = null;
-      bookingState.booking_date = null;
-      bookingState.booking_time = null;
+      if (!initialDate) bookingState.booking_date = null;
+      if (!initialTime) bookingState.booking_time = null;
       bookingState.step = 1;
     }
   }

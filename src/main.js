@@ -2,6 +2,7 @@
  * Sacred Journey Bali — Application Entry Point
  */
 import './styles/index.css';
+import './styles/editorial.css';
 import { Router } from './router.js';
 import { renderHome, initHomeEffects } from './pages/home.js';
 import { renderServices, initServicesFilter, renderServiceDetail } from './pages/services.js';

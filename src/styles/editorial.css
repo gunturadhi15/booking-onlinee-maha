@@ -1,0 +1,885 @@
+/* ==========================================================================
+   MAHAWELLNERJOURNEY — Official Design System & Sanctuary Theme Layer
+   Brand: Mahawellnerjourney (Bali)
+   Philosophy: Ornate Emblem on a Quiet Sanctuary Canvas
+   ========================================================================== */
+
+:root {
+  /* Canvas & Surfaces */
+  --canvas: #FAF7F2;          /* Sacred Lotus Alabaster Canvas */
+  --surface-silk: #F3EFE6;    /* Warm Sanctuary Silk */
+  --surface-card: #FFFFFF;    /* Pure Sanctuary White */
+  --surface-card-hover: #FCFAF6;
+  --border-hairline: #E6DEC8; /* Champagne Hairline Border */
+  --border-gold-subtle: #DFCBA8;
+
+  /* Maha Gold (Exclusively for Micro Accents, Badges, & Hairlines) */
+  --gold-maha: #C59B27;
+  --gold-maha-hover: #B38728;
+  --gold-50: #FDF9EE;
+  --gold-100: #F7EECD;
+  --gold-200: #EED798;
+  --gold-300: #E5C365;
+  --gold-500: #C59B27;
+  --gold-600: #B38728;
+  --gold-700: #8E6818;
+
+  /* Royal Contrast & Primary Action (Deep Sacred Ubud Forest) */
+  --cta-forest: #14281D;
+  --cta-forest-hover: #0D1B13;
+  --cta-forest-active: #08110C;
+
+  /* Typography Colors */
+  --text-onyx: #1C1915;       /* Deep Onyx - 100% Crisp Legibility */
+  --text-stone: #6E675F;      /* Warm Stone - Balanced Secondary */
+  --text-muted: #8E877E;      /* Calm Neutral */
+
+  /* Aliases for Global CSS Compatibility */
+  --paper: var(--canvas);
+  --ink: var(--text-onyx);
+  --rule: var(--border-hairline);
+  --rule-strong: var(--text-onyx);
+  --accent: var(--gold-maha);
+  --primary: var(--cta-forest);
+  --primary-hover: var(--cta-forest-hover);
+  --success: #1E6B3E;
+
+  --bg-primary: var(--canvas);
+  --bg-secondary: var(--surface-card);
+  --bg-tertiary: var(--surface-silk);
+  --bg-card: var(--surface-card);
+
+  --text-primary: var(--text-onyx);
+  --text-secondary: var(--text-stone);
+
+  /* Typography Families */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Fine Geometric Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;  /* Buttons & Inputs */
+  --radius-lg: 8px;  /* Cards, Forms, Booking Bar */
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* Quiet Sanctuary Elevation (100% Anti-AI Slop: No blurry neon or thick glow) */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px rgba(28, 25, 21, 0.04);
+  --shadow-sm: 0 2px 4px rgba(28, 25, 21, 0.04);
+  --shadow-md: 0 4px 12px rgba(28, 25, 21, 0.05);
+  --shadow-lg: 0 6px 18px rgba(28, 25, 21, 0.06);
+}
+
+/* ==========================================================================
+   Base & Resets
+   ========================================================================== */
+body {
+  background-color: var(--canvas);
+  color: var(--text-onyx);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Typography Hierarchy
+   ========================================================================== */
+h1, h2, h3, h4,
+.heading-1, .heading-2, .heading-3,
+.font-serif {
+  font-family: var(--font-serif);
+  color: var(--text-onyx);
+  letter-spacing: -0.02em;
+}
+
+.heading-1 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.heading-2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.heading-3 {
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+}
+
+.overline {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-maha);
+  display: inline-block;
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--text-stone);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Echoing Geometry Section Divider */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin: var(--space-12) auto;
+  max-width: 480px;
+}
+
+.section-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-gold-subtle);
+}
+
+.section-divider__motif {
+  color: var(--gold-maha);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Buttons & CTAs (Calm Authority)
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn::before {
+  display: none !important;
+}
+
+.btn--primary {
+  background: var(--cta-forest);
+  color: #FFFFFF !important;
+  border: 1px solid var(--cta-forest);
+}
+
+.btn--primary:hover {
+  background: var(--cta-forest-hover);
+  border-color: var(--cta-forest-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 40, 29, 0.15);
+}
+
+.btn--secondary {
+  background: var(--surface-card);
+  color: var(--text-onyx) !important;
+  border: 1px solid var(--border-hairline);
+}
+
+.btn--secondary:hover {
+  background: var(--surface-silk);
+  border-color: var(--text-onyx);
+  color: var(--text-onyx) !important;
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-onyx) !important;
+  border: 1px solid var(--border-hairline);
+}
+
+.btn--ghost:hover {
+  border-color: var(--text-onyx);
+  background: var(--surface-silk);
+}
+
+.btn--lg {
+  padding: 13px 28px;
+  font-size: 0.98rem;
+}
+
+.btn--sm {
+  padding: 6px 14px;
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   Navbar & Header (Official Brand Header)
+   ========================================================================== */
+.navbar {
+  background: var(--canvas);
+  border-bottom: 1px solid var(--border-hairline);
+  box-shadow: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(250, 247, 242, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: var(--border-hairline);
+}
+
+.navbar__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.navbar__logo-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hairline);
+  box-shadow: var(--shadow-xs);
+  flex-shrink: 0;
+}
+
+.navbar__logo-text {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-onyx);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.navbar__link {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-stone);
+  transition: color 0.15s ease;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.navbar__link:hover,
+.navbar__link.active {
+  color: var(--text-onyx);
+  background: transparent;
+  box-shadow: inset 0 -2px 0 var(--gold-maha);
+}
+
+.navbar__cta {
+  background: var(--cta-forest);
+  color: #FFFFFF !important;
+  border-radius: var(--radius-md);
+  padding: 8px 18px;
+  font-size: 0.86rem;
+}
+
+/* ==========================================================================
+   Direct Journey Booking Bar (Section 3B)
+   ========================================================================== */
+.booking-bar-wrapper {
+  max-width: 1040px;
+  margin: calc(var(--space-8) * -1) auto var(--space-8);
+  position: relative;
+  z-index: 20;
+  padding: 0 var(--space-4);
+}
+
+.booking-bar {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-6);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  grid-template-columns: 1.4fr 1.1fr 1fr 1fr auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.booking-bar__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.booking-bar__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.booking-bar__select,
+.booking-bar__input {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 6px 0;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-onyx);
+  outline: none;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.booking-bar__select:focus,
+.booking-bar__input:focus {
+  border-bottom-color: var(--cta-forest);
+}
+
+.booking-bar__btn {
+  height: 48px;
+  white-space: nowrap;
+}
+
+/* Direct Booking Assurance Bar */
+.booking-assurance {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-3) 0;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-stone);
+}
+
+.booking-assurance span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.booking-assurance .gold-gem {
+  color: var(--gold-maha);
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.sanctuary-hero {
+  padding-top: calc(var(--navbar-height) + var(--space-12));
+  padding-bottom: var(--space-16);
+  background: var(--canvas);
+}
+
+.sanctuary-hero__inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.sanctuary-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-silk);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-stone);
+  margin-bottom: var(--space-6);
+}
+
+.sanctuary-hero__title {
+  margin-bottom: var(--space-6);
+}
+
+.sanctuary-hero__title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--cta-forest);
+}
+
+.sanctuary-hero__lead {
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: var(--text-stone);
+  margin-bottom: var(--space-8);
+  max-width: 54ch;
+}
+
+.sanctuary-hero__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sanctuary-hero__card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   Curated Journeys Showcase & Cards
+   ========================================================================== */
+.journeys-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.journey-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.journey-card:hover {
+  border-color: var(--text-onyx);
+  transform: translateY(-2px);
+}
+
+/* Signature Maha Journey - High Margin Highlight */
+.journey-card.signature {
+  border: 1.5px solid var(--gold-maha) !important;
+  background: #FFFFFE;
+}
+
+.journey-card__badge {
+  position: absolute;
+  top: -12px;
+  right: var(--space-6);
+  background: var(--cta-forest);
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold-border);
+}
+
+.journey-card__category {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.journey-card__name {
+  font-size: 1.45rem;
+  margin-bottom: var(--space-3);
+  color: var(--text-onyx);
+}
+
+.journey-card__desc {
+  font-size: 0.9rem;
+  color: var(--text-stone);
+  line-height: 1.55;
+  margin-bottom: var(--space-5);
+  flex-grow: 1;
+}
+
+.journey-card__inclusions {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-6);
+  border-top: 1px solid var(--border-hairline);
+  padding-top: var(--space-4);
+}
+
+.journey-card__inclusions li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-stone);
+  margin-bottom: 6px;
+}
+
+.journey-card__inclusions .check {
+  color: var(--gold-maha);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.journey-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--border-hairline);
+  padding-top: var(--space-4);
+  margin-top: auto;
+}
+
+.journey-card__price-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.journey-card__price {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-onyx);
+}
+
+/* ==========================================================================
+   Booking Multi-Step Overhaul (Form & Summary)
+   ========================================================================== */
+.booking-page {
+  padding-top: calc(var(--navbar-height) + var(--space-8));
+  padding-bottom: var(--space-16);
+  background: var(--canvas);
+}
+
+.booking-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-8) auto var(--space-10);
+  max-width: 680px;
+}
+
+.booking-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.booking-step__number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.booking-step.active .booking-step__number {
+  background: var(--cta-forest);
+  border-color: var(--cta-forest);
+  color: #FFFFFF;
+}
+
+.booking-step.done .booking-step__number {
+  background: var(--surface-silk);
+  border-color: var(--gold-maha);
+  color: var(--gold-maha);
+}
+
+.booking-step__label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.booking-step.active .booking-step__label {
+  color: var(--text-onyx);
+}
+
+.booking-step__connector {
+  flex: 1;
+  height: 1px;
+  background: var(--border-hairline);
+  min-width: 24px;
+}
+
+.booking-step__connector.done {
+  background: var(--gold-maha);
+}
+
+/* Payment Method & Select Cards */
+.payment-method,
+.package-card,
+.service-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+.payment-method.selected,
+.package-card.selected,
+.calendar__day.selected,
+.time-slot.selected {
+  border-color: var(--cta-forest) !important;
+  background: #FAF8F3 !important;
+}
+
+.time-slot.selected {
+  background: var(--cta-forest) !important;
+  color: #FFFFFF !important;
+}
+
+.time-slot:hover {
+  border-color: var(--cta-forest);
+}
+
+/* Booking Summary Card */
+.booking-summary {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.booking-summary__title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-onyx);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-hairline);
+  margin-bottom: var(--space-4);
+}
+
+.booking-summary__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.88rem;
+  color: var(--text-stone);
+}
+
+.booking-summary__row .value {
+  font-weight: 600;
+  color: var(--text-onyx);
+  text-align: right;
+}
+
+.booking-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: var(--space-4);
+  margin-top: var(--space-3);
+  border-top: 1.5px solid var(--border-hairline);
+}
+
+.booking-summary__total .label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.booking-summary__total .value {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--cta-forest);
+}
+
+/* Form Inputs */
+.form-input {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--text-onyx);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus {
+  border-color: var(--cta-forest);
+  box-shadow: 0 0 0 2px rgba(20, 40, 29, 0.08);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.badge--green {
+  background: #E8F5EE;
+  color: #14532D;
+  border: 1px solid #B7E4C7;
+}
+
+.badge--teal {
+  background: var(--surface-silk);
+  color: var(--cta-forest);
+  border: 1px solid var(--border-hairline);
+}
+
+.badge--gold {
+  background: var(--gold-50);
+  color: var(--gold-700);
+  border: 1px solid var(--border-gold-subtle);
+}
+
+/* ==========================================================================
+   Footer (Sanctuary Ground)
+   ========================================================================== */
+.footer {
+  background: #12100E;
+  color: #FAF7F2;
+  border-top: 1px solid #26221D;
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-8);
+}
+
+.footer__title {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--border-gold-subtle);
+  margin-bottom: var(--space-4);
+}
+
+.footer__links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer__links li {
+  margin-bottom: var(--space-2);
+}
+
+.footer__links a {
+  color: #B5AFA4;
+  font-size: 0.88rem;
+  transition: color 0.15s ease;
+}
+
+.footer__links a:hover {
+  color: #FFFFFF;
+}
+
+.footer__contact a,
+.footer__contact span {
+  color: #B5AFA4;
+  font-size: 0.88rem;
+}
+
+.footer__bottom {
+  border-top: 1px solid #26221D;
+  padding-top: var(--space-6);
+  margin-top: var(--space-12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: 0.8rem;
+  color: #7D776C;
+}
+
+/* ==========================================================================
+   Chatbot Minimalist Refinement
+   ========================================================================== */
+.chatbot-fab {
+  background: var(--cta-forest);
+  color: #FFFFFF;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gold-maha);
+}
+
+.chatbot-fab:hover {
+  background: var(--cta-forest-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 960px) {
+  .sanctuary-hero__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .booking-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .booking-bar__btn {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar__logo-text {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+  .booking-bar {
+    grid-template-columns: 1fr;
+  }
+  .booking-bar__btn {
+    grid-column: span 1;
+  }
+  .booking-steps {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}

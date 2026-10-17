@@ -43,19 +43,19 @@ export function renderServices() {
               <div class="service-card" 
                  data-service="${service.service_id}" data-category="${service.category}"
                  data-name="${service.service_name.toLowerCase()}">
-                <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block;">
+                <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block; background: var(--surface-silk); position: relative; overflow: hidden;">
                   <img src="/src/assets/${service.slug}.jpg" alt="${srvName}"
-                       onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #D4A000, #8C6900)';" />
+                       onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-silk)';" />
                   <span class="service-card__badge badge badge--teal">${service.category}</span>
                 </a>
                 <div class="service-card__body">
                   <p class="service-card__category">${service.category}</p>
-                  <h3 class="service-card__title">
+                  <h3 class="service-card__title font-serif">
                     <a href="#/layanan/${service.slug}" style="color: inherit; text-decoration: none;">${srvName}</a>
                   </h3>
                   <p class="service-card__desc">${srvDesc}</p>
                   <div class="service-card__meta">
-                    <span class="service-card__price">
+                    <span class="service-card__price tabular-nums">
                       ${popular ? formatCurrency(popular.price) : ''}<small>${t('services_per_package')}</small>
                     </span>
                     <span class="service-card__duration">
@@ -145,13 +145,13 @@ export function renderServiceDetail(params) {
     <section class="service-detail">
       <div class="container">
         <!-- Hero -->
-        <div class="service-detail__hero fade-in">
+        <div class="service-detail__hero fade-in" style="background: var(--surface-silk); position: relative;">
           <img src="/src/assets/${service.slug}.jpg" alt="${srvName}"
-               onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #5C4228, #2A1E12)';" />
-          <div class="service-detail__hero-overlay"></div>
+               onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-silk)';" />
+          <div class="service-detail__hero-overlay" style="background: rgba(20, 40, 29, 0.45);"></div>
           <div class="service-detail__hero-text">
             <span class="badge badge--teal" style="margin-bottom: var(--space-3);">${service.category}</span>
-            <h1 class="heading-1" style="color: white; font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));">${srvName}</h1>
+            <h1 class="heading-1 font-serif" style="color: white; font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));">${srvName}</h1>
           </div>
         </div>
 

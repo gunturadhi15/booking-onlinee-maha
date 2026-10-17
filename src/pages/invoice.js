@@ -58,24 +58,15 @@ export function renderInvoice(params) {
     <section class="invoice-page" style="padding: calc(var(--navbar-height) + var(--space-8)) 0 var(--space-16);">
       <div class="container" style="max-width: 760px; margin: 0 auto;">
         
-        <!-- Status Banner -->
-        <div class="fade-in" style="background: linear-gradient(135deg, #10B981, #059669); color: white; border-radius: var(--radius-xl); padding: var(--space-6); text-align: center; margin-bottom: var(--space-8); box-shadow: var(--shadow-lg);">
-          <div style="font-size: 40px; margin-bottom: var(--space-2);">✨ 🙏 ✨</div>
-          <h1 style="font-size: var(--text-2xl); font-weight: 700; color: white; margin-bottom: var(--space-2);">${t('inv_success_title')}</h1>
-          <p style="font-size: var(--text-sm); opacity: 0.95; max-width: 500px; margin: 0 auto;">
-            ${t('inv_success_desc').replace('{name}', `<strong>${data.customer_name}</strong>`)}
-          </p>
-        </div>
-
         <!-- Invoice Card (Printable) -->
         <div id="printable-invoice" class="fade-in" style="background: white; border-radius: var(--radius-xl); border: 1px solid var(--cream-300); padding: var(--space-8); box-shadow: var(--shadow-md);">
           
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed var(--cream-200); padding-bottom: var(--space-6); margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4);">
             <div>
-              <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2);">
-                <span style="font-size: var(--text-2xl); color: var(--gold-600);">☸</span>
-                <span style="font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 700; color: var(--earth-800);">${COMPANY.name}</span>
+              <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2);">
+                <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-hairline);" />
+                <h1 style="font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 700; color: var(--text-onyx); margin: 0; letter-spacing: 0.04em;">${COMPANY.name}</h1>
               </div>
               <p style="font-size: var(--text-xs); color: var(--text-muted); line-height: 1.5;">
                 ${COMPANY.address}<br/>
@@ -83,7 +74,7 @@ export function renderInvoice(params) {
               </p>
             </div>
             <div style="text-align: right;">
-              <span class="badge badge--green" style="font-size: var(--text-xs); padding: var(--space-1) var(--space-3); font-weight: 700; letter-spacing: 0.05em;">LUNAS / CONFIRMED</span>
+              <span class="badge badge--green" style="font-size: var(--text-xs); padding: var(--space-1) var(--space-3); font-weight: 700; letter-spacing: 0.05em;">${t('inv_status') || 'LUNAS / CONFIRMED'}</span>
               <p style="font-size: var(--text-sm); font-weight: 700; color: var(--gold-700); margin-top: var(--space-2);">${data.invoice_id}</p>
               <p style="font-size: var(--text-xs); color: var(--text-muted);">${new Date(data.paid_at || Date.now()).toLocaleString(getDateLocale())}</p>
             </div>
@@ -121,8 +112,8 @@ export function renderInvoice(params) {
                     <strong style="color: var(--earth-800); display: block;">${serviceName}</strong>
                     <span style="font-size: var(--text-xs); color: var(--text-muted);">${t('book_package_label')}: ${packageName}</span>
                   </td>
-                  <td style="padding: var(--space-4) var(--space-2); text-align: center;">1 ${t('inv_session')}</td>
-                  <td style="padding: var(--space-4) 0; text-align: right; font-weight: 600; color: var(--earth-800);">${formatCurrency(data.subtotal)}</td>
+                  <td style="padding: var(--space-4) var(--space-2); text-align: center;" class="tabular-nums">1 ${t('inv_session')}</td>
+                  <td style="padding: var(--space-4) 0; text-align: right; font-weight: 600; color: var(--earth-800);" class="tabular-nums">${formatCurrency(data.subtotal)}</td>
                 </tr>
               </tbody>
             </table>
@@ -132,15 +123,15 @@ export function renderInvoice(params) {
           <div style="max-width: 300px; margin-left: auto; border-top: 1px solid var(--cream-200); padding-top: var(--space-3); font-size: var(--text-sm);">
             <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); color: var(--text-secondary);">
               <span>${t('book_subtotal')}</span>
-              <span>${formatCurrency(data.subtotal)}</span>
+              <span class="tabular-nums">${formatCurrency(data.subtotal)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-3); color: var(--text-secondary);">
               <span>${t('book_tax')}</span>
-              <span>${formatCurrency(data.tax)}</span>
+              <span class="tabular-nums">${formatCurrency(data.tax)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: var(--text-lg); font-weight: 700; color: var(--gold-700); border-top: 2px solid var(--cream-300); padding-top: var(--space-3);">
               <span>${t('book_grand_total')}</span>
-              <span>${formatCurrency(data.grand_total)}</span>
+              <span class="tabular-nums">${formatCurrency(data.grand_total)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: var(--space-2); font-size: var(--text-xs); color: var(--text-muted);">
               <span>${t('chk_payment_method')}</span>
@@ -150,8 +141,11 @@ export function renderInvoice(params) {
 
           <!-- Note -->
           <div style="margin-top: var(--space-8); padding: var(--space-4); background: var(--gold-50); border-left: 3px solid var(--gold-500); border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--earth-700); line-height: 1.6;">
-            <strong>📌 ${t('inv_guide_title')}</strong><br/>
-            ${t('inv_guide_desc')}
+            <div style="font-weight: 700; color: var(--earth-800); display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold-600);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>${t('inv_guide_title').replace(/^[📌\s]+/, '')}</span>
+            </div>
+            <div style="color: var(--text-secondary);">${t('inv_guide_desc')}</div>
           </div>
         </div>
 

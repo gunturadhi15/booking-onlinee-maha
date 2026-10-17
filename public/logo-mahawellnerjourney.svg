@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <!-- Warm Metallic Gold Gradients -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DFCBA8" />
+      <stop offset="35%" stop-color="#C59B27" />
+      <stop offset="70%" stop-color="#E5C365" />
+      <stop offset="100%" stop-color="#9E781B" />
+    </linearGradient>
+    <linearGradient id="goldShine" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FDF7E7" />
+      <stop offset="45%" stop-color="#C59B27" />
+      <stop offset="100%" stop-color="#8A6715" />
+    </linearGradient>
+    <linearGradient id="softRing" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C59B27" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#DFCBA8" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#C59B27" stop-opacity="0.4" />
+    </linearGradient>
+    <filter id="subtleAura" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#8A6715" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Clean Sanctuary White Circle Base -->
+  <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#E6DEC8" stroke-width="1.5" />
+  
+  <!-- Outer Sacred Geometry Ring -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.7" />
+  <circle cx="100" cy="100" r="86" fill="none" stroke="url(#softRing)" stroke-width="0.8" />
+
+  <!-- Cardinal Micro Buds / Balinese Filigree Accents -->
+  <circle cx="100" cy="10" r="2.5" fill="#C59B27" />
+  <circle cx="100" cy="190" r="2.5" fill="#C59B27" />
+  <circle cx="10" cy="100" r="2" fill="#DFCBA8" />
+  <circle cx="190" cy="100" r="2" fill="#DFCBA8" />
+
+  <!-- Lotus Pedestal Base -->
+  <g filter="url(#subtleAura)">
+    <!-- Base Ripples / Water of Sanctuary -->
+    <path d="M 60 148 C 80 154, 120 154, 140 148 C 125 158, 75 158, 60 148 Z" fill="url(#goldGrad)" opacity="0.85" />
+    <path d="M 72 153 C 88 157, 112 157, 128 153 C 118 160, 82 160, 72 153 Z" fill="url(#goldShine)" opacity="0.6" />
+
+    <!-- Outer Lotus Petals (Left & Right Wings) -->
+    <path d="M 100 142 C 60 142, 28 122, 38 98 C 48 116, 75 130, 100 135 Z" fill="url(#goldGrad)" />
+    <path d="M 100 142 C 140 142, 172 122, 162 98 C 152 116, 125 130, 100 135 Z" fill="url(#goldGrad)" />
+
+    <!-- Mid Lotus Petals -->
+    <path d="M 100 138 C 70 135, 48 108, 56 82 C 68 104, 88 122, 100 128 Z" fill="url(#goldShine)" />
+    <path d="M 100 138 C 130 135, 152 108, 144 82 C 132 104, 112 122, 100 128 Z" fill="url(#goldShine)" />
+
+    <!-- Inner Elevated Lotus Petals -->
+    <path d="M 100 134 C 80 128, 68 96, 76 68 C 86 92, 96 112, 100 122 Z" fill="url(#goldGrad)" />
+    <path d="M 100 134 C 120 128, 132 96, 124 68 C 114 92, 104 112, 100 122 Z" fill="url(#goldGrad)" />
+
+    <!-- Central Flame Petal / Aura -->
+    <path d="M 100 48 C 92 68, 92 105, 100 126 C 108 105, 108 68, 100 48 Z" fill="url(#goldShine)" opacity="0.9" />
+
+    <!-- Meditating Silhouette in Calm Serenity -->
+    <!-- Head -->
+    <circle cx="100" cy="82" r="7.5" fill="#14281D" />
+    <!-- Ushnisha / Topknot (Crown of Wisdom) -->
+    <ellipse cx="100" cy="73.5" rx="2.5" ry="3" fill="#14281D" />
+    <circle cx="100" cy="70" r="1.5" fill="#C59B27" />
+    
+    <!-- Torso and Folded Arms / Dhyana Mudra -->
+    <path d="M 94 92 C 90 95, 84 104, 84 114 C 88 116, 95 117, 100 117 C 105 117, 112 116, 116 114 C 116 104, 110 95, 106 92 C 103 90, 97 90, 94 92 Z" fill="#14281D" />
+    <!-- Cross-legged Base in Padmasana (Lotus Pose) -->
+    <path d="M 76 117 C 76 126, 88 128, 100 128 C 112 128, 124 126, 124 117 C 116 115, 106 119, 100 119 C 94 119, 84 115, 76 117 Z" fill="#14281D" />
+
+    <!-- Subtle Filigree Veins / Rays of Consciousness -->
+    <path d="M 100 38 L 100 44" stroke="#C59B27" stroke-width="1.5" stroke-linecap="round" />
+    <path d="M 86 44 L 89 49" stroke="#C59B27" stroke-width="1.2" stroke-linecap="round" />
+    <path d="M 114 44 L 111 49" stroke="#C59B27" stroke-width="1.2" stroke-linecap="round" />
+  </g>
+</svg>

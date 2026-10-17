@@ -17,7 +17,7 @@ const TRANSLATIONS = {
     nav_booking: 'Booking',
     nav_about: 'Tentang Kami',
     nav_contact: 'Hubungi Kami',
-    nav_booking_cta: 'Booking Sekarang',
+    nav_booking_cta: 'Book Your Journey',
 
     // Hero
     hero_title_1: 'Temukan',
@@ -204,18 +204,18 @@ const TRANSLATIONS = {
     con_faq_heading: 'Pertanyaan yang Sering Diajukan',
 
     // Footer
-    foot_desc: 'Perjalanan spiritual yang membawa kedamaian, penyembuhan, dan kebahagiaan sejati di Pulau Dewata.',
+    foot_desc: 'Sanctuary resmi dan kurator perjalanan wellness sakral di Ubud, Bali. Menghadirkan ketenangan, pemulihan jiwa, dan transformasi kesadaran autentik.',
     foot_nav: 'Navigasi',
-    foot_services: 'Layanan',
-    foot_contact: 'Hubungi Kami',
-    foot_copyright: '© 2026 Sacred Journey Bali. All rights reserved.',
+    foot_services: 'Curated Journeys',
+    foot_contact: 'Sanctuary Concierge',
+    foot_copyright: '© 2026 Mahawellnerjourney. All rights reserved.',
     time_hours: 'jam',
     time_minutes: 'menit',
 
     // Chatbot
-    chat_title: 'Asisten Sacred Journey',
-    chat_status: 'Online • Siap Membantu',
-    chat_welcome: 'Om Swastyastu! 🙏 Selamat datang di Sacred Journey Bali. Ada yang bisa kami bantu seputar booking wisata spiritual atau konsultasi numerologi?',
+    chat_title: 'Concierge Mahawellnerjourney',
+    chat_status: 'Online • Sanctuary Care',
+    chat_welcome: 'Om Swastyastu! 🙏 Selamat datang di Mahawellnerjourney Bali. Ada yang bisa kami bantu seputar reservasi wellness journey atau jadwal sesi sakral?',
     chat_placeholder: 'Ketik pertanyaan Anda...',
     chat_send: 'Kirim',
     chat_reply_default: 'Terima kasih atas pertanyaannya! Tim kami siap memandu Anda. Anda bisa langsung melakukan pemesanan di menu Booking, atau menghubungi kami via WhatsApp di +62 812 3456 7890.',
@@ -270,7 +270,7 @@ const TRANSLATIONS = {
     nav_booking: 'Booking',
     nav_about: 'About Us',
     nav_contact: 'Contact',
-    nav_booking_cta: 'Book Now',
+    nav_booking_cta: 'Book Your Journey',
 
     hero_title_1: 'Discover',
     hero_title_highlight: 'Inner Peace',
@@ -444,17 +444,17 @@ const TRANSLATIONS = {
     con_faq_overline: 'FAQ',
     con_faq_heading: 'Frequently Asked Questions',
 
-    foot_desc: 'A spiritual journey that brings peace, healing, and true happiness on the Island of Gods.',
+    foot_desc: 'Official direct wellness sanctuary and curated spiritual journey coordinator in Ubud, Bali. Imbuing peace, healing, and authentic consciousness.',
     foot_nav: 'Navigation',
-    foot_services: 'Services',
-    foot_contact: 'Contact Us',
-    foot_copyright: '© 2026 Sacred Journey Bali. All rights reserved.',
+    foot_services: 'Curated Journeys',
+    foot_contact: 'Sanctuary Concierge',
+    foot_copyright: '© 2026 Mahawellnerjourney. All rights reserved.',
     time_hours: 'hours',
     time_minutes: 'minutes',
 
-    chat_title: 'Sacred Journey Assistant',
-    chat_status: 'Online • Ready to Help',
-    chat_welcome: 'Om Swastyastu! 🙏 Welcome to Sacred Journey Bali. How can we help you with spiritual tour booking or numerology consultation?',
+    chat_title: 'Mahawellnerjourney Concierge',
+    chat_status: 'Online • Sanctuary Care',
+    chat_welcome: 'Om Swastyastu! 🙏 Welcome to Mahawellnerjourney Bali. How may we assist your wellness journey reservation or sacred session inquiry?',
     chat_placeholder: 'Type your question...',
     chat_send: 'Send',
     chat_reply_default: 'Thank you for your question! Our team is ready to guide you. You can make a booking directly from the Booking menu, or contact us via WhatsApp at +62 812 3456 7890.',

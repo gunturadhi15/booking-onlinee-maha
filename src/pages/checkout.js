@@ -53,11 +53,11 @@ export function renderCheckout() {
           <!-- Payment Method -->
           <div class="fade-in-left">
             <!-- Booking Info -->
-            <div style="background: var(--gold-50); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3);">
-              <span style="font-size: var(--text-xl);">⏳</span>
+            <div style="background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-maha); flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               <div>
-                <p style="font-size: var(--text-sm); font-weight: 600;">${t('chk_countdown_text')}</p>
-                <p style="font-size: var(--text-sm); color: var(--gold-700); font-weight: 700;" id="countdown-timer">
+                <p style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; margin-bottom: 2px;">${t('chk_countdown_text')}</p>
+                <p style="font-size: var(--text-sm); color: var(--text-onyx); font-weight: 700;" id="countdown-timer">
                   ${expiredAt.toLocaleString(getDateLocale())}
                 </p>
               </div>
@@ -70,7 +70,9 @@ export function renderCheckout() {
             <div class="payment-methods" id="payment-methods">
               <div class="payment-method selected" data-method="qris">
                 <div class="payment-method__radio"></div>
-                <div style="font-size: var(--text-2xl);">📱</div>
+                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--surface-silk); border-radius: var(--radius-sm); color: var(--gold-maha);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
                 <div class="payment-method__info">
                   <h4>QRIS</h4>
                   <p>${t('chk_method_qris')}</p>
@@ -79,7 +81,9 @@ export function renderCheckout() {
               
               <div class="payment-method" data-method="va">
                 <div class="payment-method__radio"></div>
-                <div style="font-size: var(--text-2xl);">🏦</div>
+                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--surface-silk); border-radius: var(--radius-sm); color: var(--gold-maha);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 10v11M9 10v11M15 10v11M19 10v11M12 2L2 7h20L12 2z"/></svg>
+                </div>
                 <div class="payment-method__info">
                   <h4>Virtual Account</h4>
                   <p>${t('chk_method_va')}</p>
@@ -88,7 +92,9 @@ export function renderCheckout() {
               
               <div class="payment-method" data-method="card">
                 <div class="payment-method__radio"></div>
-                <div style="font-size: var(--text-2xl);">💳</div>
+                <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--surface-silk); border-radius: var(--radius-sm); color: var(--gold-maha);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                </div>
                 <div class="payment-method__info">
                   <h4>Kartu Debit / Kredit</h4>
                   <p>${t('chk_method_card')}</p>
@@ -97,11 +103,12 @@ export function renderCheckout() {
             </div>
 
             <button class="btn btn--primary btn--lg" id="pay-now" style="width: 100%; margin-top: var(--space-8);">
-              ${t('chk_pay_now')} — ${formatCurrency(data.grand_total)}
+              ${t('chk_pay_now')} — <span class="tabular-nums">${formatCurrency(data.grand_total)}</span>
             </button>
             
-            <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-4);">
-              🔒 ${t('chk_secure_payment')}
+            <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-4); display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-maha);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>${t('chk_secure_payment').replace(/^[🔒\s]+/, '')}</span>
             </p>
           </div>
 
@@ -147,15 +154,15 @@ export function renderCheckout() {
 
               <div class="booking-summary__row">
                 <span class="label">${t('book_subtotal')}</span>
-                <span class="value">${formatCurrency(data.subtotal)}</span>
+                <span class="value tabular-nums">${formatCurrency(data.subtotal)}</span>
               </div>
               <div class="booking-summary__row">
                 <span class="label">${t('book_tax')} (${SETTINGS.tax_rate * 100}%)</span>
-                <span class="value">${formatCurrency(data.tax)}</span>
+                <span class="value tabular-nums">${formatCurrency(data.tax)}</span>
               </div>
               <div class="booking-summary__total">
                 <span class="label">${t('book_grand_total')}</span>
-                <span class="value">${formatCurrency(data.grand_total)}</span>
+                <span class="value tabular-nums">${formatCurrency(data.grand_total)}</span>
               </div>
             </div>
           </div>
