@@ -2,7 +2,7 @@
  * Services Listing & Detail Pages
  */
 import { SERVICES, PACKAGES, formatCurrency, getPackagesByService, getCategories } from '../data.js';
-import { t, translateDuration } from '../i18n.js';
+import { t, translateDuration, translateBenefit } from '../i18n.js';
 
 export function renderServices() {
   const categories = getCategories();
@@ -43,9 +43,8 @@ export function renderServices() {
               <div class="service-card" 
                  data-service="${service.service_id}" data-category="${service.category}"
                  data-name="${service.service_name.toLowerCase()}">
-                <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block; background: var(--surface-silk); position: relative; overflow: hidden;">
-                  <img src="/src/assets/${service.slug}.jpg" alt="${srvName}"
-                       onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-silk)';" />
+                <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block; background: var(--surface-silk); position: relative; overflow: hidden; height: 220px;">
+                  <img src="${service.image || `/images/${service.slug}.jpg`}" alt="${srvName}" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease;" loading="lazy" />
                   <span class="service-card__badge badge badge--teal">${service.category}</span>
                 </a>
                 <div class="service-card__body">
@@ -67,7 +66,7 @@ export function renderServices() {
                   </div>
                   <div class="service-card__actions" style="display: flex; gap: var(--space-3); margin-top: var(--space-5);">
                     <a href="#/layanan/${service.slug}" class="btn btn--secondary btn--sm" style="flex: 1; text-align: center;">
-                      Detail
+                      ${t('btn_detail')}
                     </a>
                     <a href="#/booking?service=${service.service_id}" class="btn btn--primary btn--sm" style="flex: 1; text-align: center;" data-page="booking">
                       ${t('nav_booking_cta')}
@@ -140,15 +139,26 @@ export function renderServiceDetail(params) {
   const srvKey = service.service_id.toLowerCase();
   const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
   const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
+  const otherServices = SERVICES.filter(s => s.status === 'active' && s.service_id !== service.service_id);
 
   return `
     <section class="service-detail">
       <div class="container">
+        <!-- Top Navigation / Back Button -->
+        <div class="service-detail__top-nav" style="margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: space-between;">
+          <a href="#/layanan" class="service-detail__back-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>${t('svc_back_to_catalog')}</span>
+          </a>
+          <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">
+            ${service.category} • Official Flagship
+          </span>
+        </div>
+
         <!-- Hero -->
-        <div class="service-detail__hero fade-in" style="background: var(--surface-silk); position: relative;">
-          <img src="/src/assets/${service.slug}.jpg" alt="${srvName}"
-               onerror="this.style.display='none'; this.parentElement.style.background='var(--surface-silk)';" />
-          <div class="service-detail__hero-overlay" style="background: rgba(20, 40, 29, 0.45);"></div>
+        <div class="service-detail__hero fade-in" style="background: var(--surface-silk); position: relative; height: 360px; overflow: hidden; border-radius: var(--radius-xl);">
+          <img src="${service.image || `/images/${service.slug}.jpg`}" alt="${srvName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+          <div class="service-detail__hero-overlay" style="background: linear-gradient(180deg, rgba(20,40,29,0.3) 0%, rgba(20,40,29,0.7) 100%); position: absolute; inset: 0;"></div>
           <div class="service-detail__hero-text">
             <span class="badge badge--teal" style="margin-bottom: var(--space-3);">${service.category}</span>
             <h1 class="heading-1 font-serif" style="color: white; font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));">${srvName}</h1>
@@ -190,7 +200,7 @@ export function renderServiceDetail(params) {
 
                   <div class="package-card__benefits">
                     ${pkg.benefits.map(b => `
-                      <div class="package-card__benefit">${b}</div>
+                      <div class="package-card__benefit">${translateBenefit(b)}</div>
                     `).join('')}
                   </div>
 
@@ -242,6 +252,36 @@ export function renderServiceDetail(params) {
                 ${t('svc_ask_wa')}
               </a>
             </div>
+          </div>
+        </div>
+
+        <!-- Visual Journey Switcher (Item 5: Browse visually from one journey to another) -->
+        <div class="journey-nav-section fade-in">
+          <div style="text-align: center; max-width: 600px; margin: 0 auto var(--space-6);">
+            <span class="overline" style="color: var(--gold-maha);">${t('svc_explore_other_overline')}</span>
+            <h3 class="heading-3 font-serif" style="margin-top: var(--space-1);">${t('svc_explore_other_title')}</h3>
+          </div>
+          <div class="journey-nav-grid">
+            ${otherServices.map(other => {
+              const otherKey = other.service_id.toLowerCase();
+              const otherName = t(`data_${otherKey}_name`) !== `data_${otherKey}_name` ? t(`data_${otherKey}_name`) : other.service_name;
+              const otherPkgs = getPackagesByService(other.service_id);
+              const minPrice = otherPkgs.length ? Math.min(...otherPkgs.map(p => p.price)) : 0;
+              return `
+                <a href="#/layanan/${other.slug}" class="journey-nav-card">
+                  <img src="${other.image || `/images/${other.slug}.jpg`}" alt="${otherName}" class="journey-nav-card__img" loading="lazy" />
+                  <div class="journey-nav-card__body">
+                    <span class="journey-nav-card__tag">${other.category}</span>
+                    <h4 class="journey-nav-card__title">${otherName}</h4>
+                    <p class="journey-nav-card__price">
+                      <span style="font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted);">${t('starting_from')}</span>
+                      <strong style="color: var(--text-onyx); margin-left: 4px;">${formatCurrency(minPrice)}</strong>
+                    </p>
+                  </div>
+                  <span style="color: var(--cta-forest); font-size: 1.1rem; flex-shrink: 0; padding-right: 4px;">→</span>
+                </a>
+              `;
+            }).join('')}
           </div>
         </div>
       </div>

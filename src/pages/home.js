@@ -1,173 +1,22 @@
 /**
  * Home Page — Mahawellnerjourney Official Flagship & Direct Booking Engine
  * Aesthetic: Ornate Emblem on a Quiet Sanctuary Canvas
- * Palette: Sacred Lotus Alabaster (#FAF7F2), Deep Sacred Ubud Forest (#14281D), Maha Gold (#C59B27)
+ * Multi-Language: Russian, Spanish, Italian, French, English, Indonesian
+ * Multi-Sensory: High-Resolution Visuals, Ambient Video & Audio Proof
  */
-import { SERVICES, PACKAGES, COMPANY, SETTINGS, formatCurrency, getPackagesByService } from '../data.js';
-import { t, getLang, getDateLocale, translateDuration } from '../i18n.js';
-
-const COPY = {
-  id: {
-    hero_badge: 'Sanctuary Resmi • Ubud, Bali',
-    hero_title: 'Sacred Wellness & Curated Journeys',
-    hero_title_sub: 'di Tanah Sakral Bali.',
-    hero_lead: 'Gerbang reservasi langsung untuk perjalanan spiritual mendalam, melukat sakral, yoga retreat, dan konsultasi numerologi berwibawa di Ubud. Dipandu langsung oleh praktisi lokal senior dalam atmosfer hening dan berkelas.',
-    hero_btn_book: 'Book Your Journey',
-    hero_btn_explore: 'Lihat Paket Signature',
-    
-    // Quick Booking Bar
-    bar_service: 'Pilih Layanan / Journey',
-    bar_date: 'Tanggal Kunjungan',
-    bar_session: 'Waktu Sesi',
-    bar_session_morning: 'Pagi (09:00 WITA)',
-    bar_session_noon: 'Siang (12:00 WITA)',
-    bar_session_afternoon: 'Sore (15:00 WITA)',
-    bar_guests: 'Jumlah Tamu',
-    bar_guest_1: '1 Orang',
-    bar_guest_2: '2 Orang (Best Pair)',
-    bar_guest_3: '3 Orang',
-    bar_guest_4: '4+ Orang (Private Group)',
-    bar_btn: 'Cek Ketersediaan & Pesan',
-
-    // Direct Booking Assurance
-    assure_direct: 'Official Direct Reservation',
-    assure_price: 'Transparent Pricing (No Hidden Fees)',
-    assure_confirm: 'Instant Booking & Official E-Voucher',
-
-    // Curated Showcase
-    showcase_overline: 'Curated Journeys',
-    showcase_title: 'Pilihan Transformasi Jiwa & Raga',
-    showcase_desc: 'Setiap perjalanan dirancang dengan alur sakral yang terstruktur, pendampingan personal, dan fasilitas lengkap tanpa biaya tersembunyi.',
-    signature_badge: 'Signature Maha Journey • Best Value',
-    btn_select_journey: 'Pilih Journey Ini',
-    btn_view_details: 'Lihat Rincian',
-
-    // Experience / Philosophy
-    phil_overline: 'The Sanctuary Experience',
-    phil_title: 'Harmoni Ketenangan di Atas Kanvas Hening Ubud',
-    phil_desc: 'Kami meyakini bahwa penyembuhan sejati berakar dari ruang yang tenang dan bimbingan yang tulus. Menjauh dari hiruk-pikuk wisata massal, Mahawellnerjourney menghadirkan pengalaman spiritual privat yang menjaga martabat dan kesakralan tradisi Bali.',
-    phil_point_1_title: 'Praktisi Senior & Berdedikasi',
-    phil_point_1_desc: 'Dipandu pemangku adat dan instruktur bersertifikasi dengan restu spiritual lokal.',
-    phil_point_2_title: 'Privasi & Jumlah Tamu Dibatasi',
-    phil_point_2_desc: 'Setiap sesi dibatasi kuotanya agar energi sanctuary tetap tenang dan personal.',
-    phil_point_3_title: 'Kepastian & Ketepatan Waktu',
-    phil_point_3_desc: 'Jadwal terkonfirmasi langsung ke email dan WhatsApp tanpa risiko bentrok antrean.',
-
-    // 3-Step Flow
-    flow_overline: 'Alur Reservasi Ringkas',
-    flow_title: 'Tiga Langkah Menuju Sanctuary',
-    flow_desc: 'Proses reservasi dirancang hening dan sangat efisien, selesai dalam waktu kurang dari 3 menit.',
-    step_1_title: '1. Tentukan Layanan & Waktu',
-    step_1_desc: 'Pilih program journey yang selaras dengan panggilan jiwa serta tanggal yang Anda kehendaki.',
-    step_2_title: '2. Lengkapi Data Tamu',
-    step_2_desc: 'Cukup cantumkan nama dan kontak WhatsApp untuk pengiriman detail lokasi dan persiapan.',
-    step_3_title: '3. Konfirmasi & E-Voucher',
-    step_3_desc: 'Pembayaran aman instan via QRIS, Virtual Account, atau Kartu. E-Voucher resmi langsung terbit.',
-
-    // Price Table
-    price_overline: 'Transparansi Tarif Resmi',
-    price_title: 'Katalog Harga Lengkap Seluruh Paket',
-    price_desc: 'Harga tercantum adalah harga bersih per orang. Pajak 11% terhitung secara transparan di rincian akhir.',
-    th_service: 'Program Journey / Paket',
-    th_duration: 'Durasi Sesi',
-    th_price: 'Harga Paket',
-    th_total: 'Total (+ Pajak 11%)',
-    th_action: 'Aksi',
-
-    // CTA
-    cta_title: 'Mulailah Perjalanan Transformasi Anda di Ubud',
-    cta_desc: 'Slot harian kami dibatasi demi menjaga ketenangan sanctuary. Amankan jadwal terbaik Anda hari ini.',
-    cta_btn: 'Reservasi Jadwal Sekarang',
-    cta_wa: 'Konsultasi Concierge via WhatsApp',
-  },
-  en: {
-    hero_badge: 'Official Sanctuary • Ubud, Bali',
-    hero_title: 'Sacred Wellness & Curated Journeys',
-    hero_title_sub: 'in the Sacred Heart of Bali.',
-    hero_lead: 'The official direct booking gateway for profound spiritual journeys, sacred purification (melukat), yoga retreats, and authentic numerology in Ubud. Led by revered local practitioners in an atmosphere of serene dignity.',
-    hero_btn_book: 'Book Your Journey',
-    hero_btn_explore: 'View Signature Journeys',
-
-    // Quick Booking Bar
-    bar_service: 'Select Journey / Service',
-    bar_date: 'Visit Date',
-    bar_session: 'Session Time',
-    bar_session_morning: 'Morning (09:00 WITA)',
-    bar_session_noon: 'Noon (12:00 WITA)',
-    bar_session_afternoon: 'Afternoon (15:00 WITA)',
-    bar_guests: 'Guests',
-    bar_guest_1: '1 Guest',
-    bar_guest_2: '2 Guests (Best Pair)',
-    bar_guest_3: '3 Guests',
-    bar_guest_4: '4+ Guests (Private Group)',
-    bar_btn: 'Check Availability & Book',
-
-    // Direct Booking Assurance
-    assure_direct: 'Official Direct Reservation',
-    assure_price: 'Transparent Pricing (No Hidden Fees)',
-    assure_confirm: 'Instant Booking & Official E-Voucher',
-
-    // Curated Showcase
-    showcase_overline: 'Curated Journeys',
-    showcase_title: 'Holistic Soul & Body Transformations',
-    showcase_desc: 'Each journey is thoughtfully curated with sacred protocols, dedicated guidance, and all-inclusive facilities without hidden charges.',
-    signature_badge: 'Signature Maha Journey • Best Value',
-    btn_select_journey: 'Select This Journey',
-    btn_view_details: 'View Details',
-
-    // Experience / Philosophy
-    phil_overline: 'The Sanctuary Experience',
-    phil_title: 'Serene Harmony on a Quiet Sanctuary Canvas',
-    phil_desc: 'We believe genuine healing flourishes in unhurried stillness and genuine guidance. Away from crowded mass tourism, Mahawellnerjourney provides private spiritual sessions honoring Bali’s sacred ancestral traditions.',
-    phil_point_1_title: 'Senior Dedicated Practitioners',
-    phil_point_1_desc: 'Led by authentic priests and certified masters with local blessings.',
-    phil_point_2_title: 'Intimate Capped Sessions',
-    phil_point_2_desc: 'Capacity is strictly capped to protect the peaceful aura of the sanctuary.',
-    phil_point_3_title: 'Punctuality & Instant Assurance',
-    phil_point_3_desc: 'Schedules are confirmed instantly to your email and WhatsApp without scheduling conflicts.',
-
-    // 3-Step Flow
-    flow_overline: 'Effortless Direct Booking',
-    flow_title: 'Three Steps to the Sanctuary',
-    flow_desc: 'Designed for cognitive ease and serene efficiency, completed in under 3 minutes.',
-    step_1_title: '1. Select Journey & Schedule',
-    step_1_desc: 'Choose the journey that resonates with your intention and pick your preferred date.',
-    step_2_title: '2. Guest Details',
-    step_2_desc: 'Provide your name and WhatsApp contact for instant arrival details and preparation guidance.',
-    step_3_title: '3. Instant Confirmation & E-Voucher',
-    step_3_desc: 'Secure checkout via QRIS, Virtual Account, or Card. Official E-Voucher issued immediately.',
-
-    // Price Table
-    price_overline: 'Transparent Official Rates',
-    price_title: 'Complete Package Price Catalog',
-    price_desc: 'Listed prices are per person. 11% tax is computed transparently in the final invoice.',
-    th_service: 'Journey / Package',
-    th_duration: 'Session Duration',
-    th_price: 'Base Price',
-    th_total: 'Total (incl. 11% Tax)',
-    th_action: 'Action',
-
-    // CTA
-    cta_title: 'Begin Your Transformative Journey in Ubud',
-    cta_desc: 'Sanctuary slots are strictly limited daily to preserve quiet intimacy. Secure your preferred date today.',
-    cta_btn: 'Reserve Your Journey Now',
-    cta_wa: 'Concierge Care on WhatsApp',
-  },
-};
-
-function c(key) {
-  const dict = COPY[getLang()] || COPY.en;
-  return dict[key] ?? COPY.id[key];
-}
+import { SERVICES, PACKAGES, COMPANY, SANCTUARY_MEDIA, formatCurrency, getPackagesByService } from '../data.js';
+import { t, getLang, getDateLocale, translateDuration, translateBenefit } from '../i18n.js';
 
 function serviceName(service) {
   const key = `data_${service.service_id.toLowerCase()}_name`;
-  return t(key) !== key ? t(key) : service.service_name;
+  const val = t(key);
+  return val !== key ? val : service.service_name;
 }
 
 function serviceDesc(service) {
   const key = `data_${service.service_id.toLowerCase()}_desc`;
-  return t(key) !== key ? t(key) : service.description;
+  const val = t(key);
+  return val !== key ? val : service.description;
 }
 
 export function renderHome() {
@@ -196,50 +45,65 @@ export function renderHome() {
         <div class="fade-in-left">
           <div class="sanctuary-hero__badge">
             <span style="color: var(--gold-maha);">✦</span>
-            <span>${c('hero_badge')}</span>
+            <span>${t('hero_badge')}</span>
           </div>
 
           <h1 class="heading-1 sanctuary-hero__title">
-            ${c('hero_title')} <br />
-            <em>${c('hero_title_sub')}</em>
+            ${t('hero_title')} <br />
+            <em>${t('hero_title_sub')}</em>
           </h1>
 
           <p class="sanctuary-hero__lead">
-            ${c('hero_lead')}
+            ${t('hero_lead')}
           </p>
 
           <div class="sanctuary-hero__actions">
             <a href="#/booking" class="btn btn--primary btn--lg" id="hero-book-btn" data-page="booking">
-              ${c('hero_btn_book')}
+              ${t('hero_btn_book')}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <a href="#curated-journeys" class="btn btn--secondary btn--lg" id="hero-explore-btn">
-              ${c('hero_btn_explore')}
+              ${t('hero_btn_explore')}
             </a>
           </div>
         </div>
 
-        <div class="sanctuary-hero__card fade-in-right">
-          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: var(--space-5); padding-bottom: var(--space-4); border-bottom: 1px solid var(--border-hairline);">
-            <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" style="width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
-            <div>
-              <span class="overline" style="margin: 0;">OFFICIAL SANCTUARY FRONT</span>
-              <h3 style="font-size: 1.15rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif);">Mahawellnerjourney</h3>
+        <!-- Ambient Video & Visual Card -->
+        <div class="fade-in-right">
+          <div class="hero-ambient-container">
+            <video class="hero-ambient-video" autoplay muted loop playsinline poster="/images/sanctuary-ambiance.jpg">
+              <source src="${SANCTUARY_MEDIA.hero_ambient.video_mp4}" type="video/mp4" />
+            </video>
+            <div class="hero-ambient-overlay">
+              <div>
+                <p style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">
+                  Ubud Sacred Valley Sanctuary
+                </p>
+                <p style="font-size: 0.75rem; margin: 2px 0 0; opacity: 0.85; font-family: var(--font-mono);">
+                  Tri Hita Karana • Calming Sacred Presence
+                </p>
+              </div>
             </div>
           </div>
 
-          <p style="font-size: 0.92rem; color: var(--text-stone); line-height: 1.6; margin-bottom: var(--space-5);">
-            “Ketenangan bukanlah ketiadaan suara, melainkan kehadiran kedamaian di dalam jiwa. Selamat datang di ruang hening tempat raga dan rasa kembali selaras.”
-          </p>
-
-          <div style="background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); font-size: 0.82rem;">
-            <div>
-              <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase;">Setting Sanctuary</span>
-              <strong style="color: var(--text-onyx);">Ubud Sanctuary Valley</strong>
+          <div class="sanctuary-hero__card" style="margin-top: var(--space-4);">
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-hairline);">
+              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
+              <div>
+                <span class="overline" style="margin: 0; font-size: 0.65rem;">OFFICIAL FLAGSHIP & SANCTUARY DIRECT</span>
+                <h3 style="font-size: 1.1rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif);">Mahawellnerjourney</h3>
+              </div>
             </div>
-            <div>
-              <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase;">Kapasitas Sesi</span>
-              <strong style="color: var(--text-onyx);">Maks. 6 Tamu / Sesi</strong>
+
+            <div style="background: var(--surface-silk); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); font-size: 0.8rem;">
+              <div>
+                <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">${t('hero_card_setting')}</span>
+                <strong style="color: var(--text-onyx);">Ubud Sanctuary Valley</strong>
+              </div>
+              <div>
+                <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">${t('hero_card_capacity')}</span>
+                <strong style="color: var(--text-onyx);">${t('hero_card_capacity_val')}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -250,7 +114,7 @@ export function renderHome() {
     <div class="booking-bar-wrapper fade-in">
       <form class="booking-bar" id="quick-booking-form">
         <div class="booking-bar__item">
-          <label class="booking-bar__label" for="quick-service">${c('bar_service')}</label>
+          <label class="booking-bar__label" for="quick-service">${t('bar_service')}</label>
           <select id="quick-service" class="booking-bar__select">
             ${services.map(s => `
               <option value="${s.service_id}">${serviceName(s)}</option>
@@ -259,40 +123,40 @@ export function renderHome() {
         </div>
 
         <div class="booking-bar__item">
-          <label class="booking-bar__label" for="quick-date">${c('bar_date')}</label>
-          <input type="date" id="quick-date" class="booking-bar__input" value="${defaultDateStr}" min="${defaultDateStr}" />
+          <label class="booking-bar__label" for="quick-date">${t('bar_date')}</label>
+          <input type="date" id="quick-date" class="booking-bar__input" value="${defaultDateStr}" min="${new Date().toISOString().split('T')[0]}" />
         </div>
 
         <div class="booking-bar__item">
-          <label class="booking-bar__label" for="quick-session">${c('bar_session')}</label>
+          <label class="booking-bar__label" for="quick-session">${t('bar_session')}</label>
           <select id="quick-session" class="booking-bar__select">
-            <option value="10:00">${c('bar_session_morning')}</option>
-            <option value="13:00">${c('bar_session_noon')}</option>
-            <option value="15:00">${c('bar_session_afternoon')}</option>
+            <option value="09:00">${t('bar_session_morning')}</option>
+            <option value="12:00">${t('bar_session_noon')}</option>
+            <option value="15:00">${t('bar_session_afternoon')}</option>
           </select>
         </div>
 
         <div class="booking-bar__item">
-          <label class="booking-bar__label" for="quick-guests">${c('bar_guests')}</label>
+          <label class="booking-bar__label" for="quick-guests">${t('bar_guests')}</label>
           <select id="quick-guests" class="booking-bar__select">
-            <option value="1">${c('bar_guest_1')}</option>
-            <option value="2" selected>${c('bar_guest_2')}</option>
-            <option value="3">${c('bar_guest_3')}</option>
-            <option value="4">${c('bar_guest_4')}</option>
+            <option value="1">${t('bar_guest_1')}</option>
+            <option value="2" selected>${t('bar_guest_2')}</option>
+            <option value="3">${t('bar_guest_3')}</option>
+            <option value="4">${t('bar_guest_4')}</option>
           </select>
         </div>
 
         <button type="submit" class="btn btn--primary booking-bar__btn" id="quick-booking-submit">
-          ${c('bar_btn')}
+          ${t('bar_btn')}
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </form>
 
       <!-- Direct Booking Assurance -->
       <div class="booking-assurance">
-        <span><span class="gold-gem">✦</span> ${c('assure_direct')}</span>
-        <span><span class="gold-gem">✦</span> ${c('assure_price')}</span>
-        <span><span class="gold-gem">✦</span> ${c('assure_confirm')}</span>
+        <span><span class="gold-gem">✦</span> ${t('assure_direct')}</span>
+        <span><span class="gold-gem">✦</span> ${t('assure_price')}</span>
+        <span><span class="gold-gem">✦</span> ${t('assure_confirm')}</span>
       </div>
     </div>
 
@@ -303,23 +167,27 @@ export function renderHome() {
       <div class="section-divider__line"></div>
     </div>
 
-    <!-- ==================== CURATED JOURNEYS SHOWCASE ==================== -->
+    <!-- ==================== CURATED JOURNEYS SHOWCASE (WITH REAL PHOTOS) ==================== -->
     <section class="container" id="curated-journeys" style="padding-bottom: var(--space-16);">
       <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10);" class="fade-in">
-        <span class="overline">${c('showcase_overline')}</span>
-        <h2 class="heading-2">${c('showcase_title')}</h2>
-        <p class="subtitle" style="margin: var(--space-3) auto 0;">${c('showcase_desc')}</p>
+        <span class="overline">${t('showcase_overline')}</span>
+        <h2 class="heading-2">${t('showcase_title')}</h2>
+        <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('showcase_desc')}</p>
       </div>
 
       <div class="journeys-grid">
         ${services.map((s, index) => {
-          const isSignature = index === 0 || index === 3; // Highlight Temple Tour & Purification as signature
+          const isSignature = index === 0 || index === 3;
           const pkg = s.popularPkg;
           return `
             <article class="journey-card ${isSignature ? 'signature' : ''} fade-in" data-service="${s.service_id}">
-              ${isSignature ? `<div class="journey-card__badge">${c('signature_badge')}</div>` : ''}
+              <!-- Visual Card Photo -->
+              <div class="journey-card__media">
+                <img src="${s.image}" alt="${serviceName(s)}" class="journey-card__img-photo" loading="lazy" />
+                <span class="journey-card__tag">${s.category} • ${translateDuration(pkg.duration)}</span>
+                ${isSignature ? `<div class="journey-card__badge">${t('signature_badge')}</div>` : ''}
+              </div>
 
-              <span class="journey-card__category">${s.category} • ${translateDuration(pkg.duration)}</span>
               <h3 class="journey-card__name font-serif">${serviceName(s)}</h3>
               <p class="journey-card__desc">${serviceDesc(s)}</p>
 
@@ -327,20 +195,20 @@ export function renderHome() {
                 ${pkg.benefits.slice(0, 4).map(b => `
                   <li>
                     <span class="check">✦</span>
-                    <span>${b}</span>
+                    <span>${translateBenefit(b)}</span>
                   </li>
                 `).join('')}
               </ul>
 
               <div class="journey-card__footer">
-                <div>
-                  <span class="journey-card__price-label">Mulai dari</span>
+                <div class="journey-card__price-row">
+                  <span class="journey-card__price-label">${t('starting_from')}</span>
                   <span class="journey-card__price tabular-nums">${formatCurrency(s.minPrice)}</span>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                  <a href="#/layanan/${s.slug}" class="btn btn--secondary btn--sm">Detail</a>
-                  <a href="#/booking?service=${s.service_id}&package=${pkg.package_id}" class="btn btn--primary btn--sm" data-page="booking">
-                    ${c('btn_select_journey')}
+                <div class="journey-card__actions-row">
+                  <a href="#/layanan/${s.slug}" class="btn btn--secondary btn--sm journey-card__btn-detail">${t('btn_detail')}</a>
+                  <a href="#/booking?service=${s.service_id}&package=${pkg.package_id}" class="btn btn--primary btn--sm journey-card__btn-book" data-page="booking">
+                    ${t('btn_select_journey')}
                   </a>
                 </div>
               </div>
@@ -350,38 +218,67 @@ export function renderHome() {
       </div>
     </section>
 
+    <!-- ==================== SANCTUARY IN MOTION (PHOTO & VIDEO REEL) ==================== -->
+    <section style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);" id="sanctuary-motion">
+      <div class="container">
+        <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-8);" class="fade-in">
+          <span class="overline">${t('video_section_overline')}</span>
+          <h2 class="heading-2">${t('video_section_title')}</h2>
+          <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('video_section_desc')}</p>
+        </div>
+
+        <div class="sanctuary-motion-grid">
+          ${SANCTUARY_MEDIA.gallery.map(item => `
+            <a href="#/layanan/${item.slug}" class="motion-card fade-in">
+              <div class="motion-card__media">
+                <img src="${item.image}" alt="${item.title}" class="motion-card__img" loading="lazy" />
+                <div class="motion-card__play-badge">▶</div>
+              </div>
+              <div class="motion-card__body">
+                <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
+                  ${item.tag}
+                </span>
+                <h4 style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 6px; color: var(--text-onyx);">${item.title}</h4>
+                <p style="font-size: 0.82rem; color: var(--text-stone); line-height: 1.5; margin: 0;">${item.quote}</p>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== SANCTUARY PHILOSOPHY & EXPERIENCE ==================== -->
-    <section style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);">
+    <section style="background: var(--canvas); padding: var(--space-16) 0;">
       <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center;">
         <div class="fade-in-left">
-          <span class="overline">${c('phil_overline')}</span>
-          <h2 class="heading-2" style="margin-bottom: var(--space-4);">${c('phil_title')}</h2>
+          <span class="overline">${t('phil_overline')}</span>
+          <h2 class="heading-2" style="margin-bottom: var(--space-4);">${t('phil_title')}</h2>
           <p style="color: var(--text-stone); line-height: 1.7; margin-bottom: var(--space-6); font-size: 0.98rem;">
-            ${c('phil_desc')}
+            ${t('phil_desc')}
           </p>
 
           <div style="display: flex; flex-direction: column; gap: var(--space-4);">
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${c('phil_point_1_title')}</h4>
-                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${c('phil_point_1_desc')}</p>
+                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_1_title')}</h4>
+                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_1_desc')}</p>
               </div>
             </div>
 
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${c('phil_point_2_title')}</h4>
-                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${c('phil_point_2_desc')}</p>
+                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_2_title')}</h4>
+                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_2_desc')}</p>
               </div>
             </div>
 
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${c('phil_point_3_title')}</h4>
-                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${c('phil_point_3_desc')}</p>
+                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_3_title')}</h4>
+                <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_3_desc')}</p>
               </div>
             </div>
           </div>
@@ -419,50 +316,50 @@ export function renderHome() {
     <!-- ==================== 3-STEP EFFORTLESS BOOKING FLOW ==================== -->
     <section class="container" style="padding: var(--space-16) 0;">
       <div style="text-align: center; max-width: 640px; margin: 0 auto var(--space-10);" class="fade-in">
-        <span class="overline">${c('flow_overline')}</span>
-        <h2 class="heading-2">${c('flow_title')}</h2>
-        <p class="subtitle" style="margin: var(--space-3) auto 0;">${c('flow_desc')}</p>
+        <span class="overline">${t('flow_overline')}</span>
+        <h2 class="heading-2">${t('flow_title')}</h2>
+        <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('flow_desc')}</p>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);">
         <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
           <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 01</div>
-          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${c('step_1_title')}</h3>
-          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${c('step_1_desc')}</p>
+          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_1_title')}</h3>
+          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_1_desc')}</p>
         </div>
 
         <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
           <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 02</div>
-          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${c('step_2_title')}</h3>
-          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${c('step_2_desc')}</p>
+          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_2_title')}</h3>
+          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_2_desc')}</p>
         </div>
 
         <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
           <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 03</div>
-          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${c('step_3_title')}</h3>
-          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${c('step_3_desc')}</p>
+          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_3_title')}</h3>
+          <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_3_desc')}</p>
         </div>
       </div>
     </section>
 
-    <!-- ==================== TRANSPARENT RATES CATALOG (TABLE) ==================== -->
+    <!-- ==================== TRANSPARENT RATES CATALOG (NO TAX!) ==================== -->
     <section id="price-table" style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline);">
       <div class="container">
         <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10);" class="fade-in">
-          <span class="overline">${c('price_overline')}</span>
-          <h2 class="heading-2">${c('price_title')}</h2>
-          <p class="subtitle" style="margin: var(--space-3) auto 0;">${c('price_desc')}</p>
+          <span class="overline">${t('price_overline')}</span>
+          <h2 class="heading-2">${t('price_title')}</h2>
+          <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('price_desc')}</p>
         </div>
 
         <div style="overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);" class="fade-in">
           <table style="width: 100%; min-width: 680px; border-collapse: collapse; font-size: 0.9rem;">
             <thead>
               <tr style="border-bottom: 1.5px solid var(--border-hairline); background: #FAF8F4; text-align: left;">
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${c('th_service')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${c('th_duration')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${c('th_price')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${c('th_total')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: center;">${c('th_action')}</th>
+                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_service')}</th>
+                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_duration')}</th>
+                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_price')}</th>
+                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_total')}</th>
+                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: center;">${t('th_action')}</th>
               </tr>
             </thead>
             <tbody>
@@ -481,7 +378,7 @@ export function renderHome() {
                     </td>
                     <td style="padding: 12px 18px; font-size: 0.85rem; color: var(--text-stone);">${translateDuration(p.duration)}</td>
                     <td style="padding: 12px 18px; text-align: right; font-weight: 500;" class="tabular-nums">${formatCurrency(p.price)}</td>
-                    <td style="padding: 12px 18px; text-align: right; font-weight: 700; color: var(--cta-forest);" class="tabular-nums">${formatCurrency(p.price + Math.round(p.price * SETTINGS.tax_rate))}</td>
+                    <td style="padding: 12px 18px; text-align: right; font-weight: 700; color: var(--cta-forest);" class="tabular-nums">${formatCurrency(p.price)}</td>
                     <td style="padding: 12px 18px; text-align: center;">
                       <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary btn--sm" data-page="booking">Pesan</a>
                     </td>
@@ -498,21 +395,57 @@ export function renderHome() {
     <section class="container" style="padding: var(--space-16) 0;">
       <div class="fade-in" style="background: var(--surface-card); border: 1.5px solid var(--border-gold-subtle); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-8); text-align: center; box-shadow: var(--shadow-sm);">
         <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" style="width: 58px; height: 58px; border-radius: 50%; margin: 0 auto var(--space-4); display: block;" />
-        <h2 class="heading-2" style="margin-bottom: var(--space-3);">${c('cta_title')}</h2>
-        <p class="subtitle" style="margin: 0 auto var(--space-8);">${c('cta_desc')}</p>
+        <h2 class="heading-2" style="margin-bottom: var(--space-3);">${t('cta_title')}</h2>
+        <p class="subtitle" style="margin: 0 auto var(--space-8);">${t('cta_desc')}</p>
 
         <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
           <a href="#/booking" class="btn btn--primary btn--lg" data-page="booking" id="cta-book-btn">
-            ${c('cta_btn')}
+            ${t('cta_btn')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="https://wa.me/${(COMPANY.contact?.whatsapp || '6281234567890').replace(/\D/g, '')}" target="_blank" rel="noopener" class="btn btn--secondary btn--lg" id="cta-wa-btn">
-            ${c('cta_wa')}
+            ${t('cta_wa')}
           </a>
         </div>
       </div>
     </section>
   `;
+}
+
+// Web Audio Ambient Synthesizer for meditative calm (zero external failure)
+let audioCtx = null;
+let ambientInterval = null;
+let isAudioPlaying = false;
+
+function playSingingBowlTone() {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    // 432 Hz healing harmonic frequency
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(432, audioCtx.currentTime);
+
+    // Warm bowl shimmer
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 3.8);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 4.0);
+  } catch (err) {
+    console.log('Audio ambient note skipped:', err);
+  }
 }
 
 export function initHomeEffects() {
@@ -537,6 +470,31 @@ export function initHomeEffects() {
     exploreBtn.addEventListener('click', (e) => {
       e.preventDefault();
       document.getElementById('curated-journeys')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // Ambient sound toggle button in Hero
+  const soundBtn = document.getElementById('ambient-sound-toggle');
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      const soundLabel = document.getElementById('sound-label');
+      const soundIcon = document.getElementById('sound-icon');
+
+      if (!isAudioPlaying) {
+        isAudioPlaying = true;
+        playSingingBowlTone();
+        ambientInterval = setInterval(playSingingBowlTone, 5000);
+        if (soundLabel) soundLabel.textContent = t('video_pause_ambient');
+        if (soundIcon) soundIcon.textContent = '🔊';
+        soundBtn.style.background = 'var(--cta-forest)';
+        soundBtn.style.borderColor = 'var(--gold-maha)';
+      } else {
+        isAudioPlaying = false;
+        clearInterval(ambientInterval);
+        if (soundLabel) soundLabel.textContent = t('video_play_ambient');
+        if (soundIcon) soundIcon.textContent = '🔈';
+        soundBtn.style.background = 'rgba(20,40,29,0.8)';
+      }
     });
   }
 }

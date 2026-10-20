@@ -208,8 +208,20 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody();
       const now = new Date();
       const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-      const rand = String(Math.floor(Math.random() * 9999)).padStart(4, '0');
-      const bookingId = `BKG-${dateStr}-${rand}`;
+      const rand = String(Math.floor(Math.random() * 9000) + 1000);
+      
+      let bookingId = body.booking_id;
+      if (!bookingId) {
+        let prodSlug = 'JOURNEY';
+        if (body.package_id) {
+          const pkgRow = db.prepare('SELECT package_name FROM packages WHERE package_id = ?').get(body.package_id);
+          if (pkgRow?.package_name) prodSlug = pkgRow.package_name.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24);
+        } else if (body.service_id) {
+          const srvRow = db.prepare('SELECT service_name FROM services WHERE service_id = ?').get(body.service_id);
+          if (srvRow?.service_name) prodSlug = srvRow.service_name.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 24);
+        }
+        bookingId = `MWJ-${prodSlug}-${dateStr}-${rand}`;
+      }
       
       let cust = db.prepare('SELECT customer_id FROM customers WHERE email = ? OR phone = ?').get(body.email, body.phone);
       let custId = cust?.customer_id;

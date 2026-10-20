@@ -135,9 +135,6 @@ function updateStaticTexts() {
   if (mobileCta) mobileCta.textContent = t('nav_booking_cta');
 
   // Footer
-  const footerDesc = document.querySelector('.footer__desc');
-  if (footerDesc) footerDesc.textContent = t('foot_desc');
-
   const footerTitles = document.querySelectorAll('.footer__title');
   if (footerTitles.length >= 3) {
     footerTitles[0].textContent = t('foot_nav');
@@ -146,7 +143,10 @@ function updateStaticTexts() {
   }
 
   const footerCopyright = document.querySelector('.footer__bottom p');
-  if (footerCopyright) footerCopyright.textContent = t('foot_copyright');
+  if (footerCopyright) {
+    const cp = t('foot_copyright');
+    footerCopyright.textContent = (cp && cp !== 'foot_copyright') ? cp : '© 2026 Mahawellnerjourney. All rights reserved.';
+  }
 
   // Footer nav links
   const footerNavLinks = document.querySelectorAll('.footer__links:first-of-type ul li a');

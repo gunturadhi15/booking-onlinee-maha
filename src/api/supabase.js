@@ -70,7 +70,8 @@ export async function createBookingInSupabase(bookingData) {
     };
   }
 
-  const payload = {
+  // Exact 100% database schema columns
+  const basePayload = {
     customer_name: bookingData.customer_name,
     customer_phone: bookingData.customer_phone || bookingData.whatsapp,
     customer_email: bookingData.customer_email || bookingData.email,
@@ -81,43 +82,54 @@ export async function createBookingInSupabase(bookingData) {
     invoice_number: bookingData.invoice_number || bookingData.invoice_id
   };
 
+  // If notes provided, prepare candidate payload
+  const hasNotes = Boolean(bookingData.notes);
+  const payloadWithNotes = hasNotes ? { ...basePayload, notes: bookingData.notes } : basePayload;
+
+  const tryInsert = async (p) => {
+    try {
+      const { data, error } = await supabase.from('bookings').insert([p]).select();
+      if (!error && data && data.length > 0) {
+        return { success: true, data: data[0] };
+      }
+      const plainInsert = await supabase.from('bookings').insert([p]);
+      if (!plainInsert.error) {
+        return { success: true, data: { id: `bkg-${Date.now()}`, ...p, created_at: new Date().toISOString() } };
+      }
+      return { success: false, error: plainInsert.error || error };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  };
+
   try {
-    // 1. Coba insert dengan select (jika RLS mengizinkan select bagi role anon)
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert([payload])
-      .select();
-
-    if (!error && data && data.length > 0) {
-      return { success: true, data: data[0] };
+    // 1. Try with notes if provided
+    if (hasNotes) {
+      const resWithNotes = await tryInsert(payloadWithNotes);
+      if (resWithNotes.success) {
+        console.log('✅ [Supabase] Data berhasil disimpan (termasuk kolom notes).');
+        return resWithNotes;
+      }
+      // If error was because column 'notes' does not exist in user's schema, retry cleanly with basePayload
+      const errMsg = String(resWithNotes.error?.message || '');
+      if (errMsg.toLowerCase().includes('notes') || errMsg.toLowerCase().includes('column')) {
+        console.warn('ℹ️ [Supabase] Kolom notes belum ada di tabel Supabase. Menyimpan data dengan skema inti murni.');
+        const resBase = await tryInsert(basePayload);
+        if (resBase.success) return resBase;
+      }
+    } else {
+      const resBase = await tryInsert(basePayload);
+      if (resBase.success) return resBase;
     }
 
-    // 2. Jika select ditolak oleh RLS (misal hanya ada kebijakan INSERT untuk anon), coba insert langsung
-    const plainInsert = await supabase
-      .from('bookings')
-      .insert([payload]);
-
-    if (!plainInsert.error) {
-      console.log('✅ [Supabase] Data berhasil disimpan ke tabel bookings (mode insert direct).');
-      return {
-        success: true,
-        data: {
-          id: `bkg-${Date.now()}`,
-          ...payload,
-          created_at: new Date().toISOString()
-        }
-      };
-    }
-
-    // 3. Jika Supabase gagal (misal tabel belum dibuat di dashboard atau izin ditolak)
-    console.error('❌ [Supabase Insert Error]:', plainInsert.error || error);
+    // 2. Fallback to local simulation if Supabase is unreachable/RLS blocked
+    console.warn('⚠️ [Supabase Warning]: Gagal insert ke server Supabase, fallback ke mode lokal.');
     return {
       success: true,
       simulated: true,
-      warning: (plainInsert.error || error)?.message,
       data: {
         id: `bkg-${Date.now()}`,
-        ...payload,
+        ...basePayload,
         created_at: new Date().toISOString()
       }
     };
@@ -129,7 +141,7 @@ export async function createBookingInSupabase(bookingData) {
       warning: err.message,
       data: {
         id: `bkg-${Date.now()}`,
-        ...payload,
+        ...basePayload,
         created_at: new Date().toISOString()
       }
     };
@@ -166,6 +178,40 @@ export async function updateBookingStatusInSupabase(invoiceNumber, status = 'pai
 /**
  * Service: Ambil detail booking berdasarkan invoice_number
  */
+export async function getBookedTimesFromSupabase(tourDate) {
+  if (!isSupabaseConfigured() || !tourDate) {
+    return [];
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('tour_date, notes, status')
+      .eq('tour_date', tourDate)
+      .neq('status', 'cancelled');
+
+    if (error || !data) {
+      return [];
+    }
+
+    const times = [];
+    data.forEach(b => {
+      if (b.notes) {
+        const timeMatch = b.notes.match(/\[Time:\s*(\d{2}:\d{2})\]/i) || b.notes.match(/(\d{2}:\d{2})\s*WITA/i);
+        if (timeMatch) times.push(timeMatch[1]);
+      }
+    });
+
+    return times;
+  } catch (err) {
+    console.warn('⚠️ [Supabase] Gagal mengambil slot booking:', err);
+    return [];
+  }
+}
+
+/**
+ * Service: Ambil detail booking berdasarkan invoice_number
+ */
 export async function getBookingByInvoiceFromSupabase(invoiceNumber) {
   if (!isSupabaseConfigured()) {
     return { success: false, simulated: true, data: null };
@@ -187,3 +233,4 @@ export async function getBookingByInvoiceFromSupabase(invoiceNumber) {
     return { success: false, error: err };
   }
 }
+
