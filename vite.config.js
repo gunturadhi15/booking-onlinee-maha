@@ -283,15 +283,17 @@ function apiPlugin() {
               const orderId = `TRX-${userIdClean}-${timeStr}-${randKey}`;
 
               // Insert Payment with UNIQUE order_id & idempotency_key
+              const payMethod = body.payment_method || 'card';
               db.prepare(`
                 INSERT INTO payments (payment_id, booking_id, order_id, idempotency_key, payment_reference, payment_method, amount, status, expired_at)
-                VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
               `).run(
                 `PAY-${dateStr}-${rand}`,
                 bookingId,
                 orderId,
                 orderId,
                 `PGW-${randKey}`,
+                payMethod,
                 body.total_amount || 0,
                 new Date(Date.now() + 24 * 3600000).toISOString()
               );

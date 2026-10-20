@@ -34,8 +34,19 @@ import {
   checkSlotCollision,
   saveConfirmedBooking
 } from '../data.js';
-import { t, getDateLocale, translateDuration, getLang, translateBenefit } from '../i18n.js';
-import { createBookingInSupabase, getBookedTimesFromSupabase } from '../api/supabase.js';
+import { 
+  t, 
+  getDateLocale, 
+  translateDuration, 
+  getLang, 
+  translateBenefit,
+  translateServiceName,
+  translateServiceDesc,
+  translatePackageName,
+  translatePackageDesc
+} from '../i18n.js';
+import { createBookingInSupabase, getBookedTimesFromSupabase, updateBookingStatusInSupabase } from '../api/supabase.js';
+import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
 
 let bookingState = {
   step: 1,
@@ -160,12 +171,21 @@ function renderStep(step) {
 function renderStep1() {
   const currentLanguage = getLang();
   return `
+    <!-- Step 1 Guide Banner -->
+    <div class="step-guide-banner">
+      <div>
+        <p class="step-guide-banner__text">
+          <strong>${t('step_label')} 1/5:</strong> ${t('step_guide_1_text')}
+        </p>
+      </div>
+      <span class="step-guide-banner__pill">${t('step_guide_1_pill')}</span>
+    </div>
+
     <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_service')}</h3>
     <div style="display: grid; gap: var(--space-4);">
       ${SERVICES.filter(s => s.status === 'active').map(service => {
-        const srvKey = service.service_id.toLowerCase();
-        const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
-        const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
+        const srvName = translateServiceName(service.service_id) || service.service_name;
+        const srvDesc = translateServiceDesc(service.service_id) || service.description;
         const packages = getPackagesByService(service.service_id);
         const minPrice = Math.min(...packages.map(p => p.price));
         return `
@@ -173,17 +193,19 @@ function renderStep1() {
                   style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);">
             <img src="${service.image || `/images/${service.slug}.jpg`}" alt="${srvName}" 
                  style="width: 84px; height: 64px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;" />
-            <div style="flex: 1;">
+            <div style="flex: 1; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
                 <h4 style="font-size: var(--text-base); margin: 0; color: var(--text-onyx); font-family: var(--font-serif); font-weight: 600;">${srvName}</h4>
                 <span class="badge badge--teal" style="font-size: 0.7rem;">${service.category}</span>
               </div>
-              <p style="margin: 0; font-size: 0.82rem; color: var(--text-stone); line-height: 1.4;">${srvDesc.substring(0, 95)}...</p>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-stone); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${srvDesc}</p>
               <div style="margin-top: 6px; font-size: 0.8rem; color: var(--cta-forest); font-weight: 600;">
                 ${t('starting_from')} <span class="tabular-nums">${formatCurrencyWithApprox(minPrice, currentLanguage)}</span>
               </div>
             </div>
-            <div style="color: var(--gold-maha); font-size: 1.2rem;">→</div>
+            <div style="color: var(--gold-maha); display: flex; align-items: center; flex-shrink: 0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
           </button>
         `;
       }).join('')}
@@ -197,17 +219,26 @@ function renderStep2() {
 
   if (!service) return renderStep1();
 
-  const srvKey = service.service_id.toLowerCase();
-  const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
+  const srvName = translateServiceName(service.service_id) || service.service_name;
   const currentLanguage = getLang();
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
+    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
       <button class="btn btn--sm btn--secondary booking-back" data-step="1">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
       <span style="font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;">${srvName}</span>
+    </div>
+
+    <!-- Step 2 Guide Banner -->
+    <div class="step-guide-banner">
+      <div>
+        <p class="step-guide-banner__text">
+          <strong>${t('step_label')} 2/5:</strong> ${t('step_guide_2_text')}
+        </p>
+      </div>
+      <span class="step-guide-banner__pill">${t('step_guide_2_pill')}</span>
     </div>
     
     <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_package')}</h3>
@@ -218,7 +249,7 @@ function renderStep2() {
           <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-3);">
             <div>
               <div style="display: flex; align-items: center; gap: 8px;">
-                <h3 class="package-card__name font-serif" style="margin: 0;">${pkg.package_name}</h3>
+                <h3 class="package-card__name font-serif" style="margin: 0;">${translatePackageName(pkg.package_id) || pkg.package_name}</h3>
                 ${pkg.popular ? `<span class="badge badge--green" style="font-size: 0.65rem;">${t('signature_badge')}</span>` : ''}
               </div>
               <p class="package-card__duration" style="margin-top: 4px;">
@@ -232,12 +263,23 @@ function renderStep2() {
               ${formatCurrencyWithApprox(pkg.price, currentLanguage)}
             </div>
           </div>
-          <p style="font-size: 0.88rem; color: var(--text-stone); margin: var(--space-2) 0 0;">${pkg.description}</p>
+          <p style="font-size: 0.88rem; color: var(--text-stone); margin: var(--space-2) 0 0;">${translatePackageDesc(pkg.package_id) || pkg.description}</p>
           <div class="package-card__benefits" style="margin-top: var(--space-4);">
             ${pkg.benefits.slice(0, 4).map(b => `
-              <div class="package-card__benefit">${translateBenefit(b)}</div>
+              <div class="package-card__benefit">
+                <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>${translateBenefit(b)}</span>
+              </div>
             `).join('')}
-            ${pkg.benefits.length > 4 ? `<p style="font-size: var(--text-xs); color: var(--text-muted);">+${pkg.benefits.length - 4} more</p>` : ''}
+            ${pkg.benefits.length > 4 ? `<p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 4px;">+${pkg.benefits.length - 4} more</p>` : ''}
+          </div>
+          <div style="margin-top: var(--space-3); text-align: right;">
+            <span style="font-size: 0.82rem; color: var(--cta-forest); font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+              ${t('step_guide_2_tap_action')}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
           </div>
         </div>
       `).join('')}
@@ -248,14 +290,26 @@ function renderStep2() {
 function renderStep3() {
   const service = getServiceById(bookingState.service_id);
   const pkg = getPackageById(bookingState.package_id);
+  const srvName = translateServiceName(service?.service_id) || service?.service_name;
+  const pkgName = translatePackageName(pkg?.package_id) || pkg?.package_name;
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
+    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
       <button class="btn btn--sm btn--secondary booking-back" data-step="2">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
-      <span style="font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;">${service?.service_name} • ${pkg?.package_name}</span>
+      <span style="font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;">${srvName} • ${pkgName}</span>
+    </div>
+
+    <!-- Step 3 Guide Banner -->
+    <div class="step-guide-banner">
+      <div>
+        <p class="step-guide-banner__text">
+          <strong>${t('step_label')} 3/5:</strong> ${t('step_guide_3_text')}
+        </p>
+      </div>
+      <span class="step-guide-banner__pill">${t('step_guide_3_pill')}</span>
     </div>
 
     <!-- WITA Timezone Locked Banner (Section 2.A.5 Requirement) -->
@@ -272,13 +326,19 @@ function renderStep3() {
     <div class="booking-schedule-grid">
       <!-- Calendar -->
       <div>
-        <h4 style="font-weight: 600; margin-bottom: var(--space-4); font-family: var(--font-serif);">${t('book_choose_date')}</h4>
+        <h4 style="font-weight: 600; margin-bottom: var(--space-4); font-family: var(--font-serif); display: flex; align-items: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-maha);" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>${t('book_choose_date')}</span>
+        </h4>
         <div class="calendar" id="booking-calendar"></div>
       </div>
       
       <!-- Fixed Time Slots (With Practitioner Rest Interval) -->
       <div>
-        <h4 style="font-weight: 600; margin-bottom: var(--space-4); font-family: var(--font-serif);">${t('book_choose_time')}</h4>
+        <h4 style="font-weight: 600; margin-bottom: var(--space-4); font-family: var(--font-serif); display: flex; align-items: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-maha);" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>${t('book_choose_time')}</span>
+        </h4>
         <div id="time-slots-container">
           <p style="text-align: center; color: var(--text-muted); padding: var(--space-8);">
             ${t('book_select_date_first')}
@@ -308,11 +368,21 @@ function renderStep4() {
   const currentSubtotal = unitPrice * bookingState.pax;
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
+    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
       <button class="btn btn--sm btn--secondary booking-back" data-step="3">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
+    </div>
+
+    <!-- Step 4 Guide Banner -->
+    <div class="step-guide-banner">
+      <div>
+        <p class="step-guide-banner__text">
+          <strong>${t('step_label')} 4/5:</strong> ${t('step_guide_4_text')}
+        </p>
+      </div>
+      <span class="step-guide-banner__pill">${t('step_guide_4_pill')}</span>
     </div>
 
     <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_customer_data')}</h3>
@@ -387,7 +457,7 @@ function renderStep4() {
       ${isNumerology ? `
         <div class="conditional-card">
           <div class="conditional-card__title">
-            <span style="color: var(--gold-maha);">✦</span>
+            <span class="subtle-bullet" style="color: var(--gold-maha);">•</span>
             <span>${t('book_cond_numerology_title')}</span>
           </div>
           <div class="form-group" style="margin-bottom: 0;">
@@ -456,17 +526,29 @@ function renderStep5() {
   if (!service || !pkg) return renderStep1();
 
   const currentLanguage = getLang();
+  const srvName = translateServiceName(service.service_id) || service.service_name;
+  const pkgName = translatePackageName(pkg.package_id) || pkg.package_name;
   const subtotal = pkg.price * bookingState.pax;
   const grandTotal = subtotal; // 100% Tax-Free per explicit user instruction!
   const previewBookingCode = generateBookingCode(pkg.package_name);
   const isNumerology = service?.category === 'Numerology' || service?.service_id === 'SRV003';
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
+    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
       <button class="btn btn--sm btn--secondary booking-back" data-step="4">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
+    </div>
+
+    <!-- Step 5 Guide Banner -->
+    <div class="step-guide-banner">
+      <div>
+        <p class="step-guide-banner__text">
+          <strong>${t('step_label')} 5/5:</strong> ${t('step_guide_5_text')}
+        </p>
+      </div>
+      <span class="step-guide-banner__pill">${t('step_guide_5_pill')}</span>
     </div>
 
     <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_summary_title')}</h3>
@@ -490,11 +572,11 @@ function renderStep5() {
       
       <div class="booking-summary__row">
         <span class="label">${t('book_service_label')}</span>
-        <span class="value">${service.service_name}</span>
+        <span class="value">${srvName}</span>
       </div>
       <div class="booking-summary__row">
         <span class="label">${t('book_package_label')}</span>
-        <span class="value">${pkg.package_name}</span>
+        <span class="value">${pkgName}</span>
       </div>
       <div class="booking-summary__row">
         <span class="label">${t('book_pax_label')}</span>
@@ -522,7 +604,7 @@ function renderStep5() {
         
         ${isNumerology && bookingState.dob ? `
           <p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;">
-            ✦ Tanggal Lahir (Chart): ${bookingState.dob}
+            • Tanggal Lahir (Chart): ${bookingState.dob}
           </p>
         ` : ''}
 
@@ -554,7 +636,12 @@ function renderStep5() {
 
       <!-- Reschedule Trust Notice -->
       <div class="reschedule-trust-badge" style="margin-top: var(--space-5);">
-        <span>✦ ${t('reschedule_badge')}</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ${t('reschedule_badge')}
+        </span>
       </div>
 
       <!-- Book Now CTA -->
@@ -563,7 +650,15 @@ function renderStep5() {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
 
-      <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-4);">
+      ${(typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? `
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
+          <button type="button" id="simulate-error-trigger" style="background: none; border: 1px dashed var(--border-hairline); border-radius: var(--radius-sm); font-size: 0.68rem; color: var(--text-stone); text-decoration: none; cursor: pointer; padding: 3px 8px; font-family: var(--font-mono); opacity: 0.65;">
+            [Dev: Test Payment Failure Modal]
+          </button>
+        </div>
+      ` : ''}
+
+      <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-3);">
         ${t('book_agree_terms')}
       </p>
     </div>
@@ -702,7 +797,7 @@ function renderTimeSlots(container, dateStr) {
       <span class="legend-item"><span class="legend-dot buffer"></span> ${t('slot_legend_buffer')}</span>
     </div>
     <div class="buffer-policy-banner">
-      ✦ ${t('book_2h_rule_note')}
+      <span class="subtle-bullet">•</span> ${t('book_2h_rule_note')}
     </div>
   `;
 
@@ -788,23 +883,39 @@ export function initBooking() {
       return;
     }
 
-    // Calendar day selection
+    // Calendar day selection with auto-scroll to time slots
     const dayBtn = e.target.closest('.calendar__day:not(.disabled):not(.other-month)');
     if (dayBtn) {
       bookingState.booking_date = dayBtn.dataset.date;
       bookingState.booking_time = null; // Reset time
       initCalendarAndSlots();
       updateContinueBtn();
+      
+      // Auto-guide user to time slot selection
+      setTimeout(() => {
+        const timeBox = document.getElementById('time-slots-container');
+        if (timeBox) {
+          timeBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 120);
       return;
     }
 
-    // Fixed time slot selection
+    // Fixed time slot selection with auto-scroll towards Continue button
     const slotBtn = e.target.closest('.fixed-slot-btn:not(:disabled)');
     if (slotBtn) {
       bookingState.booking_time = slotBtn.dataset.time;
       content.querySelectorAll('.fixed-slot-btn').forEach(s => s.classList.remove('selected'));
       slotBtn.classList.add('selected');
       updateContinueBtn();
+
+      // Auto-guide user toward Continue button
+      setTimeout(() => {
+        const contBtn = document.getElementById('continue-to-step4');
+        if (contBtn) {
+          contBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 120);
       return;
     }
 
@@ -916,9 +1027,13 @@ export function initBooking() {
       return;
     }
 
-    // Proceed & Confirm Order (Section 3 Serialization & Section 4.4 Anti-Popup Blocker Flow)
+    // Proceed & Confirm Order with Payment Processing (Success & Failed Handlers)
     const checkoutBtn = e.target.closest('#proceed-checkout');
-    if (checkoutBtn) {
+    const simulateErrorBtn = e.target.closest('#simulate-error-trigger');
+
+    if (checkoutBtn || simulateErrorBtn) {
+      const isSimulateError = Boolean(simulateErrorBtn);
+      const activeBtn = document.getElementById('proceed-checkout') || checkoutBtn;
       const service = getServiceById(bookingState.service_id);
       const pkg = getPackageById(bookingState.package_id);
       const subtotal = (pkg?.price || 0) * bookingState.pax;
@@ -927,15 +1042,27 @@ export function initBooking() {
       const bookingCode = generateBookingCode(pkg?.package_name || 'JOURNEY');
       const invoiceId = `INV-${Date.now().toString().slice(-8)}`;
 
-      checkoutBtn.disabled = true;
-      checkoutBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-        </svg>
-        ${t('chk_processing')}
-      `;
+      if (activeBtn) {
+        activeBtn.disabled = true;
+        activeBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px;">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          ${t('chk_processing')}
+        `;
+      }
 
-      // Structure Serialized Notes (Section 3 Requirement)
+      const restoreBtn = () => {
+        if (activeBtn) {
+          activeBtn.disabled = false;
+          activeBtn.innerHTML = `
+            ${t('chk_pay_now')}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          `;
+        }
+      };
+
+      // Structure Serialized Notes
       const serializedNotes = `[Origin: ${bookingState.nationality}] | [Category: ${service?.category || 'Wellness'}] | [Pax: ${bookingState.pax}] | [Time: ${bookingState.booking_time} WITA]` +
         (bookingState.dob ? ` | [DOB: ${bookingState.dob}]` : '') +
         ` | [Payment: ${bookingState.payment_method.toUpperCase()}]` +
@@ -953,10 +1080,38 @@ export function initBooking() {
         notes: serializedNotes
       };
 
+      // Realistic gateway roundtrip delay
+      await new Promise(r => setTimeout(r, 850));
+
+      // Handle simulated error / gangguan test
+      if (isSimulateError) {
+        restoreBtn();
+        showPaymentFailedModal({
+          booking: {
+            ...bookingState,
+            booking_id: bookingCode,
+            invoice_id: invoiceId,
+            grand_total: grandTotal,
+            service_name: service?.service_name,
+            package_name: pkg?.package_name
+          },
+          errorMsg: 'Koneksi gateway pembayaran terputus atau otorisasi ditolak oleh bank penerbit.',
+          errorCode: 'ERR_GATEWAY_TIMEOUT',
+          onRetry: () => {
+            document.getElementById('proceed-checkout')?.click();
+          },
+          onChangeMethod: () => {
+            bookingState.step = 4;
+            updateBookingUI();
+          }
+        });
+        return;
+      }
+
       try {
-        // Sync local API
+        // 1. Sync local SQLite API
         try {
-          fetch('/api/bookings', {
+          await fetch('/api/bookings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -969,21 +1124,39 @@ export function initBooking() {
               booking_date: bookingState.booking_date,
               booking_time: bookingState.booking_time,
               pax: bookingState.pax,
+              payment_method: bookingState.payment_method,
               notes: serializedNotes,
               subtotal,
               tax: 0,
               total_amount: grandTotal
             })
-          }).catch(() => {});
+          });
         } catch (_) {}
 
-        // Insert to Supabase (resilient with schema fallback)
+        // 2. Insert to Supabase (resilient with schema fallback)
         const result = await createBookingInSupabase(bookingPayload);
 
-        // Store full booking state in sessionStorage
+        // 3. Confirm Payment as PAID in SQLite & Supabase
+        try {
+          await fetch('/api/payments/charge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              order_id: invoiceId,
+              payment_method: bookingState.payment_method,
+              amount: grandTotal
+            })
+          });
+        } catch (_) {}
+
+        try {
+          await updateBookingStatusInSupabase(invoiceId, 'paid');
+        } catch (_) {}
+
+        // Store full confirmed booking state in sessionStorage
         const savedSession = {
           ...bookingState,
-          id: result.data?.id || bookingCode,
+          id: result?.data?.id || bookingCode,
           booking_id: bookingCode,
           kode_pemesanan: bookingCode,
           booking_code: bookingCode,
@@ -994,41 +1167,46 @@ export function initBooking() {
           package_name: bookingPayload.package_name,
           invoice_id: invoiceId,
           invoice_number: invoiceId,
-          status: 'pending',
+          status: 'paid',
+          payment_status: 'PAID',
+          paid_at: new Date().toISOString(),
           serialized_notes: serializedNotes,
-          created_at: result.data?.created_at || new Date().toISOString(),
+          created_at: result?.data?.created_at || new Date().toISOString(),
           expired_at: new Date(Date.now() + SETTINGS.payment_expiry_hours * 3600000).toISOString(),
         };
 
         sessionStorage.setItem('bookingData', JSON.stringify(savedSession));
-        // Save to local storage to lock 2-hour window on this date immediately
         saveConfirmedBooking(savedSession);
 
-        // Display Anti-Popup Blocker Confirmation Modal (Section 4.4)
-        showConfirmationModal(savedSession);
+        restoreBtn();
+
+        // 4. Show Payment Success Modal
+        showPaymentSuccessModal(savedSession);
       } catch (err) {
-        console.error('Error saat proses booking:', err);
-        const fallbackSession = {
+        console.error('Error saat proses pembayaran:', err);
+        restoreBtn();
+
+        const errorSession = {
           ...bookingState,
-          id: bookingCode,
           booking_id: bookingCode,
-          kode_pemesanan: bookingCode,
-          booking_code: bookingCode,
-          subtotal,
-          tax: 0,
-          grand_total: grandTotal,
-          total_price: grandTotal,
-          package_name: bookingPayload.package_name,
           invoice_id: invoiceId,
-          invoice_number: invoiceId,
-          status: 'pending',
-          serialized_notes: serializedNotes,
-          created_at: new Date().toISOString(),
-          expired_at: new Date(Date.now() + SETTINGS.payment_expiry_hours * 3600000).toISOString(),
+          grand_total: grandTotal,
+          service_name: service?.service_name,
+          package_name: pkg?.package_name
         };
-        sessionStorage.setItem('bookingData', JSON.stringify(fallbackSession));
-        saveConfirmedBooking(fallbackSession);
-        showConfirmationModal(fallbackSession);
+
+        showPaymentFailedModal({
+          booking: errorSession,
+          errorMsg: err?.message || 'Terjadi gangguan jaringan atau gateway saat verifikasi pembayaran.',
+          errorCode: 'ERR_PAYMENT_FAILED',
+          onRetry: () => {
+            document.getElementById('proceed-checkout')?.click();
+          },
+          onChangeMethod: () => {
+            bookingState.step = 4;
+            updateBookingUI();
+          }
+        });
       }
       return;
     }
@@ -1051,6 +1229,9 @@ function showConfirmationModal(booking) {
   const pkg = getPackageById(booking.package_id);
   const currentLanguage = getLang();
 
+  const srvTitle = translateServiceName(service?.service_id) || service?.service_name;
+  const pkgTitle = translatePackageName(pkg?.package_id) || pkg?.package_name;
+
   // Generate structured WhatsApp pre-filled message
   const waText = encodeURIComponent(
     `Om Swastyastu / Hello Mahawellnerjourney Sanctuary Team,\n\n` +
@@ -1059,7 +1240,7 @@ function showConfirmationModal(booking) {
     `• Invoice Ref: ${booking.invoice_id}\n` +
     `• Guest Name: ${booking.customer_name} (${booking.nationality})\n` +
     `• Phone: +${booking.whatsapp}\n` +
-    `• Service: ${service?.service_name} - ${pkg?.package_name}\n` +
+    `• Service: ${srvTitle} - ${pkgTitle}\n` +
     `• Participants: ${booking.pax} Person(s)\n` +
     `• Schedule: ${formatDateSafe(booking.booking_date)} at ${booking.booking_time} WITA\n` +
     (booking.dob ? `• Date of Birth: ${booking.dob}\n` : '') +
@@ -1075,7 +1256,12 @@ function showConfirmationModal(booking) {
       <div class="confirm-modal-box">
         
         <div class="confirm-modal-header">
-          <span class="confirm-modal-badge">✦ Official Sanctuary Reservation</span>
+          <span class="confirm-modal-badge">
+            <svg class="luxury-check-icon" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color: var(--cta-forest); margin-right: 4px; vertical-align: -1px;">
+              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Official Sanctuary Reservation
+          </span>
           <h2 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--cta-forest); margin: var(--space-2) 0;">
             ${t('modal_confirmed_title')}
           </h2>
@@ -1104,7 +1290,7 @@ function showConfirmationModal(booking) {
         <div style="background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); font-size: 0.82rem;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <span style="color: var(--text-muted);">${t('book_service_label')}:</span>
-            <strong style="color: var(--text-onyx);">${service?.service_name} (${pkg?.package_name})</strong>
+            <strong style="color: var(--text-onyx);">${srvTitle} (${pkgTitle})</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <span style="color: var(--text-muted);">${t('book_date_label')}:</span>

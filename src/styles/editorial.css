@@ -466,6 +466,7 @@ h1, h2, h3, h4,
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--space-8);
   margin-top: var(--space-8);
+  padding-top: 14px;
 }
 
 .journey-card {
@@ -494,16 +495,19 @@ h1, h2, h3, h4,
   position: absolute;
   top: -12px;
   right: var(--space-6);
+  z-index: 10;
   background: var(--cta-forest);
   color: #FFFFFF;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid var(--gold-border);
+  border: 1px solid var(--gold-maha);
+  box-shadow: 0 4px 12px rgba(20, 40, 29, 0.22);
+  white-space: nowrap;
 }
 
 .journey-card__category {
@@ -1804,5 +1808,499 @@ h1, h2, h3, h4,
   flex: 1;
 }
 
+/* ==========================================================================
+   Mobile Responsiveness & Viewport Auto-Adaptation (Anti-Overflow & Auto-Scale)
+   ========================================================================== */
 
+/* 1. Global Viewport Safety */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 2. Responsive Navbar Header (< 860px) */
+@media (max-width: 860px) {
+  .navbar {
+    height: 64px;
+  }
+
+  .navbar__inner {
+    padding: 0 16px !important;
+    height: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar__menu {
+    display: none !important;
+  }
+
+  /* CRITICAL: Hide navbar CTA on mobile to completely prevent squeezing and text overlapping */
+  .navbar__cta,
+  #nav-booking-btn {
+    display: none !important;
+  }
+
+  .navbar__logo {
+    gap: 8px;
+    max-width: calc(100% - 110px);
+    overflow: hidden;
+  }
+
+  .navbar__logo-img {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0;
+  }
+
+  .navbar__logo-text {
+    font-size: clamp(0.78rem, 3.8vw, 0.98rem) !important;
+    letter-spacing: 0.06em !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar__toggle {
+    display: flex !important;
+  }
+}
+
+/* 3. Hero Section on Mobile (< 768px) */
+@media (max-width: 768px) {
+  .sanctuary-hero {
+    padding-top: calc(64px + var(--space-4));
+    padding-bottom: var(--space-8);
+  }
+
+  .sanctuary-hero__inner {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-6);
+  }
+
+  .sanctuary-hero__title {
+    font-size: clamp(1.85rem, 7vw, 2.5rem) !important;
+    line-height: 1.25;
+  }
+
+  .sanctuary-hero__lead {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+  }
+
+  .sanctuary-hero__actions {
+    display: flex;
+    flex-direction: column !important;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .sanctuary-hero__actions .btn {
+    width: 100% !important;
+    min-height: 48px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.94rem;
+  }
+}
+
+/* 4. Quick Booking Bar Auto-Stacking (< 768px) */
+@media (max-width: 768px) {
+  .booking-bar-wrapper {
+    margin: var(--space-2) auto var(--space-6) !important;
+    padding: 0 16px !important;
+  }
+
+  .booking-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: var(--space-4) !important;
+    padding: var(--space-5) var(--space-4) !important;
+  }
+
+  .booking-bar__item {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+  }
+
+  .booking-bar__select,
+  .booking-bar__input {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    padding: 8px 0;
+    width: 100%;
+  }
+
+  .booking-bar__btn {
+    width: 100% !important;
+    min-height: 50px;
+    flex: 1 1 100% !important;
+    font-size: 0.96rem;
+    justify-content: center;
+  }
+
+  .booking-assurance {
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* 5. Journey Cards Squeezing & Collision Fix (< 640px) */
+@media (max-width: 640px) {
+  .journeys-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-6) !important;
+  }
+
+  .journey-card {
+    padding: 20px 18px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .journey-card__badge {
+    position: static !important;
+    display: inline-block !important;
+    margin-bottom: var(--space-3);
+    align-self: flex-start;
+  }
+
+  .journey-card__name {
+    font-size: 1.3rem !important;
+  }
+
+  .journey-card__price-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .journey-card__price {
+    font-size: 1.35rem !important;
+    color: var(--cta-forest) !important;
+  }
+
+  /* Full-width balanced action buttons on mobile */
+  .journey-card__actions-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .journey-card__btn-detail,
+  .journey-card__btn-book {
+    width: 100% !important;
+    min-height: 46px;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 0.92rem !important;
+  }
+}
+
+/* 6. Package Catalog Mobile Alternative (Eliminating Horizontal Table Scrolling on Phones) */
+.price-catalog-desktop {
+  display: block;
+}
+
+.price-catalog-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .price-catalog-desktop {
+    display: none !important;
+  }
+
+  .price-catalog-mobile {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .catalog-mobile-group {
+    background: var(--surface-card);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .catalog-mobile-header {
+    background: var(--surface-silk);
+    padding: 12px 16px;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text-onyx);
+    border-bottom: 1px solid var(--border-hairline);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .catalog-mobile-card {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-hairline);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .catalog-mobile-card:last-child {
+    border-bottom: none;
+  }
+
+  .catalog-mobile-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .catalog-mobile-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-onyx);
+    margin: 0;
+  }
+
+  .catalog-mobile-card__badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    background: var(--cta-forest);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .catalog-mobile-card__desc {
+    font-size: 0.84rem;
+    color: var(--text-stone);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  .catalog-mobile-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    font-size: 0.88rem;
+  }
+
+  .catalog-mobile-card__duration {
+    color: var(--text-stone);
+    font-size: 0.82rem;
+  }
+
+  .catalog-mobile-card__price {
+    font-weight: 700;
+    font-size: 1.08rem;
+    color: var(--cta-forest);
+  }
+
+  .catalog-mobile-card__cta {
+    width: 100% !important;
+    min-height: 44px;
+    margin-top: 6px;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+}
+
+/* 7. Floating Chatbot Positioning on Mobile (Zero Button Overlap) */
+@media (max-width: 640px) {
+  .chatbot-fab,
+  #chatbot-fab {
+    bottom: 16px !important;
+    right: 14px !important;
+    width: 44px !important;
+    height: 44px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .chatbot-fab svg,
+  #chatbot-fab svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  /* Safe bottom padding for pages so floating elements don't block CTAs */
+  .section,
+  .booking-page,
+  .service-detail,
+  .checkout-section {
+    padding-bottom: 72px !important;
+  }
+}
+
+/* 8. Modern Understated Luxury Elements (Replacing Loud AI Sparkles) */
+.subtle-bullet {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-maha);
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.subtle-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cta-forest);
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.luxury-check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--gold-maha);
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Suppress redundant pseudo checkmark on package benefits to prevent double icons */
+.package-card__benefit::before {
+  display: none !important;
+}
+
+/* Suppress redundant untranslated ::before badge on package card */
+.package-card.popular::before {
+  display: none !important;
+  content: none !important;
+}
+
+.package-card__benefit {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 0.88rem !important;
+  color: var(--text-stone) !important;
+  line-height: 1.4 !important;
+  margin-bottom: 6px !important;
+}
+
+/* 9. Guided Booking Flow Navigators */
+.step-guide-banner {
+  background: var(--surface-silk);
+  border: 1px solid var(--border-hairline);
+  border-left: 3px solid var(--cta-forest);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.step-guide-banner__text {
+  font-size: 0.86rem;
+  color: var(--text-stone);
+  margin: 0;
+}
+
+.step-guide-banner__pill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--cta-forest);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.slot-selection-indicator {
+  background: #EBF5EE;
+  border: 1px solid #C3E6CB;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 0.86rem;
+  color: var(--cta-forest);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Payment Result Modals (Success & Failed) */
+.payment-modal-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.payment-modal-icon-circle.success {
+  background: #ECFDF5;
+  color: #059669;
+  border: 2px solid #A7F3D0;
+}
+
+.payment-modal-icon-circle.failed {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 2px solid #FECACA;
+}
+
+.payment-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.payment-status-badge.success {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.payment-status-badge.failed {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.payment-success-box {
+  border-color: #059669 !important;
+}
+
+.payment-failed-box {
+  border-color: #DC2626 !important;
+}

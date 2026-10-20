@@ -2,7 +2,15 @@
  * Services Listing & Detail Pages
  */
 import { SERVICES, PACKAGES, formatCurrency, getPackagesByService, getCategories } from '../data.js';
-import { t, translateDuration, translateBenefit } from '../i18n.js';
+import { 
+  t, 
+  translateDuration, 
+  translateBenefit, 
+  translateServiceName, 
+  translateServiceDesc, 
+  translatePackageName, 
+  translatePackageDesc 
+} from '../i18n.js';
 
 export function renderServices() {
   const categories = getCategories();
@@ -36,9 +44,8 @@ export function renderServices() {
           ${SERVICES.filter(s => s.status === 'active').map(service => {
             const packages = getPackagesByService(service.service_id);
             const popular = packages.find(p => p.popular) || packages[0];
-            const srvKey = service.service_id.toLowerCase();
-            const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
-            const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
+            const srvName = translateServiceName(service.service_id) || service.service_name;
+            const srvDesc = translateServiceDesc(service.service_id) || service.description;
             return `
               <div class="service-card" 
                  data-service="${service.service_id}" data-category="${service.category}"
@@ -136,9 +143,8 @@ export function renderServiceDetail(params) {
   }
 
   const packages = getPackagesByService(service.service_id);
-  const srvKey = service.service_id.toLowerCase();
-  const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
-  const srvDesc = t(`data_${srvKey}_desc`) !== `data_${srvKey}_desc` ? t(`data_${srvKey}_desc`) : service.description;
+  const srvName = translateServiceName(service.service_id) || service.service_name;
+  const srvDesc = translateServiceDesc(service.service_id) || service.description;
   const otherServices = SERVICES.filter(s => s.status === 'active' && s.service_id !== service.service_id);
 
   return `
@@ -180,7 +186,7 @@ export function renderServiceDetail(params) {
                 <div class="package-card ${pkg.popular ? 'popular' : ''}" data-package="${pkg.package_id}">
                   <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
                     <div>
-                      <h3 class="package-card__name">${pkg.package_name}</h3>
+                      <h3 class="package-card__name font-serif">${translatePackageName(pkg.package_id) || pkg.package_name}</h3>
                       <p class="package-card__duration">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                           <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
@@ -188,14 +194,14 @@ export function renderServiceDetail(params) {
                         ${translateDuration(pkg.duration)}
                       </p>
                     </div>
-                    <div class="package-card__price">
+                    <div class="package-card__price tabular-nums">
                       ${formatCurrency(pkg.price)}
                       <small>${t('svc_per_person')}</small>
                     </div>
                   </div>
                   
                   <p style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-5);">
-                    ${pkg.description}
+                    ${translatePackageDesc(pkg.package_id) || pkg.description}
                   </p>
 
                   <div class="package-card__benefits">
@@ -263,8 +269,7 @@ export function renderServiceDetail(params) {
           </div>
           <div class="journey-nav-grid">
             ${otherServices.map(other => {
-              const otherKey = other.service_id.toLowerCase();
-              const otherName = t(`data_${otherKey}_name`) !== `data_${otherKey}_name` ? t(`data_${otherKey}_name`) : other.service_name;
+              const otherName = translateServiceName(other.service_id) || other.service_name;
               const otherPkgs = getPackagesByService(other.service_id);
               const minPrice = otherPkgs.length ? Math.min(...otherPkgs.map(p => p.price)) : 0;
               return `

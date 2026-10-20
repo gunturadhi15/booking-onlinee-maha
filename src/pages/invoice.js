@@ -71,8 +71,10 @@ export function renderInvoice(params) {
           <!-- Prominent Booking Code Banner (Note 1) -->
           <div class="booking-code-card" style="background: var(--canvas); border: 1.5px solid var(--gold-maha); margin-bottom: var(--space-6);">
             <div style="display: flex; align-items: center; gap: var(--space-3);">
-              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-card); border: 1.5px solid var(--gold-maha); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); font-size: 1.1rem; flex-shrink: 0;">
-                ✦
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-card); border: 1.5px solid var(--gold-maha); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); flex-shrink: 0;">
+                <svg class="luxury-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color: var(--gold-maha); margin: 0;">
+                  <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </div>
               <div>
                 <span style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; display: block;">
@@ -115,7 +117,7 @@ export function renderInvoice(params) {
               <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${data.customer_name} ${data.nationality ? `(${data.nationality})` : ''}</p>
               <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${data.email}</p>
               <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${data.whatsapp}</p>
-              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;">✦ DOB: ${data.dob}</p>` : ''}
+              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${data.dob}</p>` : ''}
             </div>
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin: 0 0 var(--space-2); font-family: var(--font-mono);">${t('inv_schedule_info')}</h4>
@@ -176,7 +178,12 @@ export function renderInvoice(params) {
 
           <!-- Reschedule Policy Trust Notice -->
           <div class="reschedule-trust-badge" style="margin-top: var(--space-6);">
-            <span>✦ ${t('reschedule_badge')}</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;">
+              <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              ${t('reschedule_badge')}
+            </span>
           </div>
 
           <!-- Sanctuary Protocol Guide -->

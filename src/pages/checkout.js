@@ -10,6 +10,7 @@
 import { getServiceById, getPackageById, formatCurrency, formatDateSafe, formatCurrencyWithApprox } from '../data.js';
 import { t, getDateLocale, getLang } from '../i18n.js';
 import { updateBookingStatusInSupabase } from '../api/supabase.js';
+import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
 import { resetBooking } from './booking.js';
 
 let countdownInterval = null;
@@ -62,8 +63,10 @@ export function renderCheckout() {
         <!-- Prominent Official Booking Code Card (Note 1) -->
         <div class="booking-code-card fade-in" style="max-width: 960px; margin: 0 auto var(--space-8);">
           <div style="display: flex; align-items: center; gap: var(--space-4);">
-            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1.5px solid var(--gold-maha); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); font-size: 1.2rem; flex-shrink: 0;">
-              ✦
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1.5px solid var(--gold-maha); display: flex; align-items: center; justify-content: center; color: var(--gold-maha); flex-shrink: 0;">
+              <svg class="luxury-check-icon" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color: var(--gold-maha); margin: 0;">
+                <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <div>
               <span style="font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em;">
@@ -144,7 +147,12 @@ export function renderCheckout() {
             <!-- Reschedule Policy Trust Badge (Section 4.3) -->
             <div class="reschedule-trust-badge" style="margin: var(--space-5) 0;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-maha); flex-shrink: 0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>✦ ${t('reschedule_badge')}</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px;">
+                <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                ${t('reschedule_badge')}
+              </span>
             </div>
 
             <button class="btn btn--primary btn--lg" id="pay-now" style="width: 100%; margin-top: var(--space-6);">
@@ -179,7 +187,7 @@ export function renderCheckout() {
               </div>
               <div class="booking-summary__row">
                 <span class="label">${t('book_package_label')}</span>
-                <span class="value">${pkg.package_name}</span>
+                <span class="value">${pkg?.package_id ? (translatePackageName(pkg.package_id) || pkg.package_name) : pkg.package_name}</span>
               </div>
               ${data.pax && data.pax > 1 ? `
                 <div class="booking-summary__row">
@@ -202,8 +210,8 @@ export function renderCheckout() {
                 <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${data.email}</p>
                 <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${data.whatsapp}</p>
                 
-                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;">✦ DOB: ${data.dob}</p>` : ''}
-                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;">✦ Transport: ${data.transport_option === 'need_pickup' ? 'Pickup (' + (data.pickup_address || '') + ')' : 'Direct Meet Bindu'}</p>` : ''}
+                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${data.dob}</p>` : ''}
+                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> Transport: ${data.transport_option === 'need_pickup' ? 'Pickup (' + (data.pickup_address || '') + ')' : 'Direct Meet Bindu'}</p>` : ''}
               </div>
 
               <div class="booking-summary__row">
@@ -322,6 +330,18 @@ export function initCheckout() {
           }
         }
 
+        try {
+          await fetch('/api/payments/charge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              order_id: invoiceNumber,
+              payment_method: paymentMethod,
+              amount: bookingData.grand_total || bookingData.total_price || 0
+            })
+          });
+        } catch (_) {}
+
         bookingData.payment_method = paymentMethod;
         bookingData.payment_status = 'PAID';
         bookingData.status = 'paid';
@@ -332,12 +352,31 @@ export function initCheckout() {
         sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
         resetBooking();
         if (countdownInterval) clearInterval(countdownInterval);
-        window.location.hash = `/invoice/${invoiceNumber}`;
-      } catch (err) {
-        console.error('Error saat pemrosesan pembayaran:', err);
-        alert('Terjadi kendala saat memproses pembayaran. Silakan coba kembali.');
+
         payBtn.disabled = false;
         payBtn.innerHTML = originalBtnText;
+
+        // Show Luxury Payment Success Modal
+        showPaymentSuccessModal(bookingData);
+      } catch (err) {
+        console.error('Error saat pemrosesan pembayaran:', err);
+        payBtn.disabled = false;
+        payBtn.innerHTML = originalBtnText;
+
+        showPaymentFailedModal({
+          booking: bookingData,
+          errorMsg: err?.message || 'Otorisasi transaksi terganggu. Saldo atau koneksi gateway tidak dapat divalidasi.',
+          errorCode: 'ERR_PAYMENT_DECLINED',
+          onRetry: () => {
+            payBtn.click();
+          },
+          onChangeMethod: () => {
+            const methodsContainer = document.getElementById('payment-methods');
+            if (methodsContainer) {
+              methodsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        });
       }
     });
   }

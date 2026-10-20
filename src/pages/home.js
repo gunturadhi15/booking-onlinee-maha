@@ -5,18 +5,32 @@
  * Multi-Sensory: High-Resolution Visuals, Ambient Video & Audio Proof
  */
 import { SERVICES, PACKAGES, COMPANY, SANCTUARY_MEDIA, formatCurrency, getPackagesByService } from '../data.js';
-import { t, getLang, getDateLocale, translateDuration, translateBenefit } from '../i18n.js';
+import { 
+  t, 
+  getLang, 
+  getDateLocale, 
+  translateDuration, 
+  translateBenefit, 
+  translateServiceName, 
+  translateServiceDesc, 
+  translatePackageName, 
+  translatePackageDesc 
+} from '../i18n.js';
 
 function serviceName(service) {
-  const key = `data_${service.service_id.toLowerCase()}_name`;
-  const val = t(key);
-  return val !== key ? val : service.service_name;
+  return translateServiceName(service.service_id) || service.service_name;
 }
 
 function serviceDesc(service) {
-  const key = `data_${service.service_id.toLowerCase()}_desc`;
-  const val = t(key);
-  return val !== key ? val : service.description;
+  return translateServiceDesc(service.service_id) || service.description;
+}
+
+function packageName(pkg) {
+  return translatePackageName(pkg.package_id) || pkg.package_name;
+}
+
+function packageDesc(pkg) {
+  return translatePackageDesc(pkg.package_id) || pkg.description;
 }
 
 export function renderHome() {
@@ -44,7 +58,7 @@ export function renderHome() {
       <div class="container sanctuary-hero__inner">
         <div class="fade-in-left">
           <div class="sanctuary-hero__badge">
-            <span style="color: var(--gold-maha);">✦</span>
+            <span class="subtle-bullet"></span>
             <span>${t('hero_badge')}</span>
           </div>
 
@@ -154,16 +168,16 @@ export function renderHome() {
 
       <!-- Direct Booking Assurance -->
       <div class="booking-assurance">
-        <span><span class="gold-gem">✦</span> ${t('assure_direct')}</span>
-        <span><span class="gold-gem">✦</span> ${t('assure_price')}</span>
-        <span><span class="gold-gem">✦</span> ${t('assure_confirm')}</span>
+        <span><span class="subtle-bullet"></span> ${t('assure_direct')}</span>
+        <span><span class="subtle-bullet"></span> ${t('assure_price')}</span>
+        <span><span class="subtle-bullet"></span> ${t('assure_confirm')}</span>
       </div>
     </div>
 
     <!-- Echoing Geometry Section Divider -->
     <div class="section-divider">
       <div class="section-divider__line"></div>
-      <span class="section-divider__motif">✦</span>
+      <span class="section-divider__motif">•</span>
       <div class="section-divider__line"></div>
     </div>
 
@@ -177,15 +191,16 @@ export function renderHome() {
 
       <div class="journeys-grid">
         ${services.map((s, index) => {
-          const isSignature = index === 0 || index === 3;
+          const isSignature = index === 0;
           const pkg = s.popularPkg;
           return `
             <article class="journey-card ${isSignature ? 'signature' : ''} fade-in" data-service="${s.service_id}">
+              ${isSignature ? `<div class="journey-card__badge">${t('signature_badge')}</div>` : ''}
+
               <!-- Visual Card Photo -->
               <div class="journey-card__media">
                 <img src="${s.image}" alt="${serviceName(s)}" class="journey-card__img-photo" loading="lazy" />
                 <span class="journey-card__tag">${s.category} • ${translateDuration(pkg.duration)}</span>
-                ${isSignature ? `<div class="journey-card__badge">${t('signature_badge')}</div>` : ''}
               </div>
 
               <h3 class="journey-card__name font-serif">${serviceName(s)}</h3>
@@ -194,7 +209,9 @@ export function renderHome() {
               <ul class="journey-card__inclusions">
                 ${pkg.benefits.slice(0, 4).map(b => `
                   <li>
-                    <span class="check">✦</span>
+                    <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <span>${translateBenefit(b)}</span>
                   </li>
                 `).join('')}
@@ -232,7 +249,11 @@ export function renderHome() {
             <a href="#/layanan/${item.slug}" class="motion-card fade-in">
               <div class="motion-card__media">
                 <img src="${item.image}" alt="${item.title}" class="motion-card__img" loading="lazy" />
-                <div class="motion-card__play-badge">▶</div>
+                <div class="motion-card__play-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="6 3 20 12 6 21 6 3"/>
+                  </svg>
+                </div>
               </div>
               <div class="motion-card__body">
                 <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
@@ -249,7 +270,7 @@ export function renderHome() {
 
     <!-- ==================== SANCTUARY PHILOSOPHY & EXPERIENCE ==================== -->
     <section style="background: var(--canvas); padding: var(--space-16) 0;">
-      <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center;">
+      <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-10); align-items: center;">
         <div class="fade-in-left">
           <span class="overline">${t('phil_overline')}</span>
           <h2 class="heading-2" style="margin-bottom: var(--space-4);">${t('phil_title')}</h2>
@@ -259,7 +280,7 @@ export function renderHome() {
 
           <div style="display: flex; flex-direction: column; gap: var(--space-4);">
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
+              <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
                 <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_1_title')}</h4>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_1_desc')}</p>
@@ -267,7 +288,7 @@ export function renderHome() {
             </div>
 
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
+              <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
                 <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_2_title')}</h4>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_2_desc')}</p>
@@ -275,7 +296,7 @@ export function renderHome() {
             </div>
 
             <div style="display: flex; gap: 14px; align-items: flex-start;">
-              <span style="color: var(--gold-maha); font-size: 1.1rem; line-height: 1.4;">✦</span>
+              <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
                 <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_3_title')}</h4>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_3_desc')}</p>
@@ -293,12 +314,12 @@ export function renderHome() {
 
           <div style="border-top: 1px solid var(--border-hairline); padding-top: var(--space-4); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); font-size: 0.84rem;">
             <div>
-              <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; display: block;">Lokasi Sanctuary</span>
-              <strong>Jl. Raya Ubud No. 88</strong>
+              <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; display: block;">${t('svc_location')}</span>
+              <strong>Desa Adat Bindu, Ubud</strong>
               <p style="color: var(--text-stone); margin: 2px 0 0;">Gianyar, Bali 80571</p>
             </div>
             <div>
-              <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; display: block;">Jam Kedatangan</span>
+              <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; display: block;">${t('svc_hours')}</span>
               <strong>09:00 - 17:00 WITA</strong>
               <p style="color: var(--text-stone); margin: 2px 0 0;">Respon Concierge 24 Jam</p>
             </div>
@@ -306,7 +327,7 @@ export function renderHome() {
 
           <div style="margin-top: var(--space-6); text-align: center;">
             <a href="#/tentang-kami" class="btn btn--secondary" style="width: 100%;" data-page="about">
-              Baca Kisah Filosofi Lengkap →
+              ${t('nav_about')} →
             </a>
           </div>
         </div>
@@ -342,7 +363,7 @@ export function renderHome() {
       </div>
     </section>
 
-    <!-- ==================== TRANSPARENT RATES CATALOG (NO TAX!) ==================== -->
+    <!-- ==================== TRANSPARENT RATES CATALOG (DUAL DESKTOP / MOBILE RESPONSIVE) ==================== -->
     <section id="price-table" style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline);">
       <div class="container">
         <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10);" class="fade-in">
@@ -351,7 +372,8 @@ export function renderHome() {
           <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('price_desc')}</p>
         </div>
 
-        <div style="overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);" class="fade-in">
+        <!-- 1. Desktop Catalog View (Clean Table) -->
+        <div class="price-catalog-desktop fade-in" style="overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);">
           <table style="width: 100%; min-width: 680px; border-collapse: collapse; font-size: 0.9rem;">
             <thead>
               <tr style="border-bottom: 1.5px solid var(--border-hairline); background: #FAF8F4; text-align: left;">
@@ -366,21 +388,21 @@ export function renderHome() {
               ${services.map(s => `
                 <tr style="background: var(--surface-silk); border-bottom: 1px solid var(--border-hairline);">
                   <td colspan="5" style="padding: 10px 18px; font-family: var(--font-serif); font-weight: 700; color: var(--text-onyx); font-size: 0.98rem;">
-                    ✦ ${serviceName(s)}
+                    • ${serviceName(s)}
                   </td>
                 </tr>
                 ${s.packages.map(p => `
                   <tr style="border-bottom: 1px solid var(--border-hairline);">
                     <td style="padding: 12px 18px;">
-                      <strong style="color: var(--text-onyx);">${p.package_name}</strong>
+                      <strong style="color: var(--text-onyx);">${packageName(p)}</strong>
                       ${p.popular ? `<span style="margin-left: 8px; font-family: var(--font-mono); font-size: 0.65rem; background: var(--cta-forest); color: white; padding: 2px 6px; border-radius: 3px;">POPULAR</span>` : ''}
-                      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0;">${p.description}</p>
+                      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0;">${packageDesc(p)}</p>
                     </td>
                     <td style="padding: 12px 18px; font-size: 0.85rem; color: var(--text-stone);">${translateDuration(p.duration)}</td>
                     <td style="padding: 12px 18px; text-align: right; font-weight: 500;" class="tabular-nums">${formatCurrency(p.price)}</td>
                     <td style="padding: 12px 18px; text-align: right; font-weight: 700; color: var(--cta-forest);" class="tabular-nums">${formatCurrency(p.price)}</td>
                     <td style="padding: 12px 18px; text-align: center;">
-                      <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary btn--sm" data-page="booking">Pesan</a>
+                      <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary btn--sm" data-page="booking">${t('svc_book_package')}</a>
                     </td>
                   </tr>
                 `).join('')}
@@ -388,6 +410,44 @@ export function renderHome() {
             </tbody>
           </table>
         </div>
+
+        <!-- 2. Mobile Responsive Catalog View (Zero Horizontal Cutoffs on Phones) -->
+        <div class="price-catalog-mobile fade-in">
+          ${services.map(s => `
+            <div class="catalog-mobile-group">
+              <div class="catalog-mobile-header">
+                <span class="subtle-bullet"></span>
+                <span>${serviceName(s)}</span>
+              </div>
+              <div class="catalog-mobile-body">
+                ${s.packages.map(p => `
+                  <div class="catalog-mobile-card">
+                    <div class="catalog-mobile-card__top">
+                      <h4 class="catalog-mobile-card__title">${packageName(p)}</h4>
+                      ${p.popular ? `<span class="catalog-mobile-card__badge">POPULAR</span>` : ''}
+                    </div>
+                    <p class="catalog-mobile-card__desc">${packageDesc(p)}</p>
+                    <div class="catalog-mobile-card__meta">
+                      <span class="catalog-mobile-card__duration">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;" aria-hidden="true">
+                          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                        </svg>
+                        ${translateDuration(p.duration)}
+                      </span>
+                      <span class="catalog-mobile-card__price tabular-nums">
+                        ${formatCurrency(p.price)}
+                      </span>
+                    </div>
+                    <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary catalog-mobile-card__cta" data-page="booking">
+                      ${t('svc_book_package')}
+                    </a>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
       </div>
     </section>
 

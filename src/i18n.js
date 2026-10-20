@@ -142,11 +142,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Jadwal & Waktu',
     book_step_info: 'Data Tamu',
     book_step_summary: 'Ringkasan',
+    step_label: 'Langkah',
+    step_guide_1_text: 'Sentuh perjalanan di bawah untuk memilih paket yang sesuai.',
+    step_guide_1_pill: '1 • Pilih Layanan',
+    step_guide_2_text: 'Pilih paket & durasi yang paling tepat. Sentuh paket untuk lanjut.',
+    step_guide_2_pill: '2 • Pilih Paket',
+    step_guide_2_tap_action: 'Sentuh untuk memilih jadwal',
+    step_guide_3_text: 'Pilih tanggal di kalender, lalu pilih jam sesi yang tersedia.',
+    step_guide_3_pill: '3 • Jadwal & Waktu',
+    step_guide_4_text: 'Isi data tamu dengan benar untuk konfirmasi WhatsApp dan invoice resmi.',
+    step_guide_4_pill: '4 • Data Pemesan',
+    step_guide_5_text: 'Periksa ringkasan pesanan Anda. Klik tombol di bawah untuk menyelesaikan.',
+    step_guide_5_pill: '5 • Konfirmasi Akhir',
     book_choose_service: 'Pilih Layanan Sanctuary',
     book_choose_package: 'Pilih Tingkat Paket Journey',
     book_choose_schedule: 'Pilih Tanggal & Waktu Sesi',
-    book_choose_date: '📅 Pilih Tanggal Kunjungan',
-    book_choose_time: '🕐 Pilih Jam Sesi (WITA)',
+    book_choose_date: 'Pilih Tanggal Kunjungan',
+    book_choose_time: 'Pilih Jam Sesi (WITA)',
     book_select_date_first: 'Silakan klik tanggal pada kalender terlebih dahulu',
     book_continue: 'Lanjutkan',
     book_back: 'Kembali',
@@ -506,11 +518,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Дата и время',
     book_step_info: 'Данные гостя',
     book_step_summary: 'Итог',
+    step_label: 'Шаг',
+    step_guide_1_text: 'Выберите программу путешествия ниже, чтобы перейти к выбору пакета.',
+    step_guide_1_pill: '1 • Выбор услуги',
+    step_guide_2_text: 'Выберите подходящий пакет и длительность. Нажмите для продолжения.',
+    step_guide_2_pill: '2 • Выбор пакета',
+    step_guide_2_tap_action: 'Нажмите, чтобы выбрать дату и время',
+    step_guide_3_text: 'Укажите дату в календаре, затем выберите доступное время сессии.',
+    step_guide_3_pill: '3 • Дата и время',
+    step_guide_4_text: 'Заполните данные гостя для ваучера и связи через WhatsApp.',
+    step_guide_4_pill: '4 • Данные гостя',
+    step_guide_5_text: 'Проверьте детали бронирования. Нажмите кнопку ниже для завершения.',
+    step_guide_5_pill: '5 • Подтверждение',
     book_choose_service: 'Выберите услугу',
     book_choose_package: 'Выберите пакет',
     book_choose_schedule: 'Выберите дату и время',
-    book_choose_date: '📅 Дата визита',
-    book_choose_time: '🕐 Время сессии (WITA)',
+    book_choose_date: 'Дата визита',
+    book_choose_time: 'Время сессии (WITA)',
     book_select_date_first: 'Сначала выберите дату в календаре',
     book_continue: 'Далее',
     book_back: 'Назад',
@@ -864,11 +888,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Horario',
     book_step_info: 'Datos Personales',
     book_step_summary: 'Resumen',
+    step_label: 'Paso',
+    step_guide_1_text: 'Toque el viaje a continuación para seleccionar su paquete preferido.',
+    step_guide_1_pill: '1 • Elegir Servicio',
+    step_guide_2_text: 'Elija el nivel de paquete y duración. Toque el paquete para continuar.',
+    step_guide_2_pill: '2 • Elegir Paquete',
+    step_guide_2_tap_action: 'Toque para elegir horario',
+    step_guide_3_text: 'Seleccione la fecha en el calendario y elija la hora disponible.',
+    step_guide_3_pill: '3 • Horario y Fecha',
+    step_guide_4_text: 'Complete los datos del huésped para la factura oficial y WhatsApp.',
+    step_guide_4_pill: '4 • Datos del Huésped',
+    step_guide_5_text: 'Revise el resumen de su reserva. Haga clic abajo para completar.',
+    step_guide_5_pill: '5 • Confirmación Final',
     book_choose_service: 'Seleccione un Servicio',
     book_choose_package: 'Seleccione el Nivel de Paquete',
     book_choose_schedule: 'Seleccione Fecha y Hora',
-    book_choose_date: '📅 Seleccione Fecha',
-    book_choose_time: '🕐 Seleccione Hora (WITA)',
+    book_choose_date: 'Seleccione Fecha',
+    book_choose_time: 'Seleccione Hora (WITA)',
     book_select_date_first: 'Por favor, elija una fecha en el calendario primero',
     book_continue: 'Continuar',
     book_back: 'Volver',
@@ -1222,11 +1258,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Calendario',
     book_step_info: 'Dati Ospite',
     book_step_summary: 'Riepilogo',
+    step_label: 'Passo',
+    step_guide_1_text: 'Tocca il viaggio sottostante per selezionare il pacchetto desiderato.',
+    step_guide_1_pill: '1 • Scegli Servizio',
+    step_guide_2_text: 'Scegli il pacchetto e la durata adatta. Tocca per continuare.',
+    step_guide_2_pill: '2 • Scegli Pacchetto',
+    step_guide_2_tap_action: 'Tocca per scegliere orario',
+    step_guide_3_text: 'Seleziona la data sul calendario e l’orario della sessione.',
+    step_guide_3_pill: '3 • Data e Orario',
+    step_guide_4_text: 'Compila i dati dell’ospite per la fattura ufficiale e WhatsApp.',
+    step_guide_4_pill: '4 • Dati Ospite',
+    step_guide_5_text: 'Verifica il riepilogo della prenotazione. Clicca sotto per completare.',
+    step_guide_5_pill: '5 • Conferma Finale',
     book_choose_service: 'Scegli il Servizio',
     book_choose_package: 'Scegli il Livello del Pacchetto',
     book_choose_schedule: 'Scegli Data e Ora',
-    book_choose_date: '📅 Seleziona la Data',
-    book_choose_time: '🕐 Seleziona l’Orario (WITA)',
+    book_choose_date: 'Seleziona la Data',
+    book_choose_time: 'Seleziona l’Orario (WITA)',
     book_select_date_first: 'Seleziona prima una data nel calendario',
     book_continue: 'Avanti',
     book_back: 'Indietro',
@@ -1580,11 +1628,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Date & Heure',
     book_step_info: 'Coordonnées',
     book_step_summary: 'Récapitulatif',
+    step_label: 'Étape',
+    step_guide_1_text: 'Touchez le voyage ci-dessous pour choisir votre formule idéale.',
+    step_guide_1_pill: '1 • Choisir Service',
+    step_guide_2_text: 'Choisissez le forfait et la durée. Touchez le forfait pour continuer.',
+    step_guide_2_pill: '2 • Choisir Forfait',
+    step_guide_2_tap_action: 'Touchez pour choisir l’horaire',
+    step_guide_3_text: 'Choisissez la date sur le calendrier, puis l’horaire disponible.',
+    step_guide_3_pill: '3 • Date et Heure',
+    step_guide_4_text: 'Remplissez vos coordonnées pour la facture officielle et confirmation WhatsApp.',
+    step_guide_4_pill: '4 • Coordonnées',
+    step_guide_5_text: 'Vérifiez le récapitulatif. Cliquez ci-dessous pour finaliser.',
+    step_guide_5_pill: '5 • Confirmation Finale',
     book_choose_service: 'Choisir le Service',
     book_choose_package: 'Choisir le Forfait',
     book_choose_schedule: 'Sélectionner la Date et l’Heure',
-    book_choose_date: '📅 Choisir la Date',
-    book_choose_time: '🕐 Choisir l’Heure (WITA)',
+    book_choose_date: 'Choisir la Date',
+    book_choose_time: 'Choisir l’Heure (WITA)',
     book_select_date_first: 'Veuillez d’abord sélectionner une date sur le calendrier',
     book_continue: 'Continuer',
     book_back: 'Retour',
@@ -1938,11 +1998,23 @@ const TRANSLATIONS = {
     book_step_schedule: 'Schedule',
     book_step_info: 'Guest Info',
     book_step_summary: 'Summary',
+    step_label: 'Step',
+    step_guide_1_text: 'Tap a sanctuary journey below to explore and choose packages.',
+    step_guide_1_pill: '1 • Select Journey',
+    step_guide_2_text: 'Choose your preferred package & duration. Tap to continue.',
+    step_guide_2_pill: '2 • Select Package',
+    step_guide_2_tap_action: 'Tap to select schedule',
+    step_guide_3_text: 'Select your date on the calendar, then choose an available session time.',
+    step_guide_3_pill: '3 • Schedule & Time',
+    step_guide_4_text: 'Provide guest details for official invoice and WhatsApp concierge confirmation.',
+    step_guide_4_pill: '4 • Guest Details',
+    step_guide_5_text: 'Review your reservation summary. Complete payment to secure your session.',
+    step_guide_5_pill: '5 • Final Confirmation',
     book_choose_service: 'Select Sanctuary Journey',
     book_choose_package: 'Select Journey Tier',
     book_choose_schedule: 'Select Date & Session Time',
-    book_choose_date: '📅 Select Date',
-    book_choose_time: '🕐 Select Session Time (WITA)',
+    book_choose_date: 'Select Visit Date',
+    book_choose_time: 'Select Session Time (WITA)',
     book_select_date_first: 'Please select a date on the calendar first',
     book_continue: 'Continue',
     book_back: 'Back',
@@ -2286,7 +2358,47 @@ export function translateDuration(durationStr) {
   return str;
 }
 
-/** Translate package inclusion benefit according to current language */
+import { 
+  translateServiceName as translateServiceNameBase, 
+  translateServiceDesc as translateServiceDescBase, 
+  translatePackageName as translatePackageNameBase, 
+  translatePackageDesc as translatePackageDescBase 
+} from './packageTranslations.js';
+
+export function translateServiceName(serviceId, lang) {
+  return translateServiceNameBase(serviceId, lang || currentLang);
+}
+
+export function translateServiceDesc(serviceId, lang) {
+  return translateServiceDescBase(serviceId, lang || currentLang);
+}
+
+export function translatePackageName(packageId, lang) {
+  return translatePackageNameBase(packageId, lang || currentLang);
+}
+
+export function translatePackageDesc(packageId, lang) {
+  return translatePackageDescBase(packageId, lang || currentLang);
+}
+
+export function getTranslatedService(service, lang) {
+  const l = lang || currentLang;
+  if (!service) return { name: '', desc: '' };
+  const srvId = service.service_id;
+  const name = translateServiceName(srvId, l) || service.service_name || '';
+  const desc = translateServiceDesc(srvId, l) || service.description || '';
+  return { ...service, service_name: name, description: desc };
+}
+
+export function getTranslatedPackage(pkg, lang) {
+  const l = lang || currentLang;
+  if (!pkg) return { name: '', desc: '' };
+  const pkgId = pkg.package_id;
+  const name = translatePackageName(pkgId, l) || pkg.package_name || '';
+  const desc = translatePackageDesc(pkgId, l) || pkg.description || '';
+  return { ...pkg, package_name: name, description: desc };
+}
+
 export function translateBenefit(benefitStr, lang) {
   return translateBenefitBase(benefitStr, lang || currentLang);
 }

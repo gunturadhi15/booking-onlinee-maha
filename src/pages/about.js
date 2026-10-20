@@ -11,11 +11,11 @@ export function renderAbout() {
     <!-- ==================== HERO SECTION ==================== -->
     <section class="page-hero" style="padding-top: calc(var(--navbar-height) + var(--space-12)); padding-bottom: var(--space-12); background: var(--canvas); border-bottom: 1px solid var(--border-hairline);">
       <div class="container" style="max-width: 960px; margin: 0 auto; text-align: center;">
-        <span class="overline" style="color: var(--gold-maha); letter-spacing: 0.12em;">✦ ${t('abt_overline')}</span>
+        <span class="overline" style="color: var(--gold-maha); letter-spacing: 0.12em;">${t('abt_overline')}</span>
         <h1 class="heading-1 font-serif" style="margin-bottom: var(--space-4);">${t('abt_heading')}</h1>
         <div class="section-divider" style="margin: var(--space-4) auto var(--space-6);">
           <div class="section-divider__line"></div>
-          <span class="section-divider__motif">✦</span>
+          <span class="section-divider__motif">•</span>
           <div class="section-divider__line"></div>
         </div>
         <p class="subtitle" style="margin: 0 auto; font-size: 1.15rem; max-width: 720px; line-height: 1.7;">
@@ -67,7 +67,7 @@ export function renderAbout() {
               <img src="/images/sanctuary-ambiance.jpg" alt="Ubud Sanctuary Grounds" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy" />
               <div style="padding: var(--space-6); background: var(--surface-card);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                  <span style="color: var(--gold-maha); font-size: 0.9rem;">✦</span>
+                  <span class="subtle-bullet" style="color: var(--gold-maha);">•</span>
                   <span style="font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);">
                     Official Sanctuary Grounds • Ubud
                   </span>
@@ -194,8 +194,8 @@ export function renderAbout() {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-6);" class="stagger">
           <!-- Persona 1 -->
           <div class="about-persona-card">
-            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-size: 1.25rem; margin-bottom: var(--space-4);">
-              ✦
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-4);">
+              I
             </div>
             <h3 class="heading-3 font-serif" style="font-size: 1.2rem; margin-bottom: var(--space-3); color: var(--text-onyx);">
               ${t('abt_for_1_title')}
@@ -207,8 +207,8 @@ export function renderAbout() {
 
           <!-- Persona 2 -->
           <div class="about-persona-card">
-            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-size: 1.25rem; margin-bottom: var(--space-4);">
-              ✦
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-4);">
+              II
             </div>
             <h3 class="heading-3 font-serif" style="font-size: 1.2rem; margin-bottom: var(--space-3); color: var(--text-onyx);">
               ${t('abt_for_2_title')}
@@ -220,8 +220,8 @@ export function renderAbout() {
 
           <!-- Persona 3 -->
           <div class="about-persona-card">
-            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-size: 1.25rem; margin-bottom: var(--space-4);">
-              ✦
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-gold-subtle); color: var(--gold-maha); font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; margin-bottom: var(--space-4);">
+              III
             </div>
             <h3 class="heading-3 font-serif" style="font-size: 1.2rem; margin-bottom: var(--space-3); color: var(--text-onyx);">
               ${t('abt_for_3_title')}
@@ -327,19 +327,19 @@ export function renderAbout() {
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);" class="stagger">
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-8); text-align: left; box-shadow: var(--shadow-xs);">
-            <div style="color: var(--gold-maha); font-size: 1.35rem; margin-bottom: var(--space-3); line-height: 1;">✦</div>
+            <div style="color: var(--gold-maha); font-size: 1.2rem; margin-bottom: var(--space-3); line-height: 1;"><span class="subtle-bullet">•</span></div>
             <h3 class="heading-3 font-serif" style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('abt_val_1_title')}</h3>
             <p style="font-size: 0.9rem; color: var(--text-stone); line-height: 1.6; margin: 0;">${t('abt_val_1_desc')}</p>
           </div>
 
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-8); text-align: left; box-shadow: var(--shadow-xs);">
-            <div style="color: var(--gold-maha); font-size: 1.35rem; margin-bottom: var(--space-3); line-height: 1;">✦</div>
+            <div style="color: var(--gold-maha); font-size: 1.2rem; margin-bottom: var(--space-3); line-height: 1;"><span class="subtle-bullet">•</span></div>
             <h3 class="heading-3 font-serif" style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('abt_val_2_title')}</h3>
             <p style="font-size: 0.9rem; color: var(--text-stone); line-height: 1.6; margin: 0;">${t('abt_val_2_desc')}</p>
           </div>
 
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-8); text-align: left; box-shadow: var(--shadow-xs);">
-            <div style="color: var(--gold-maha); font-size: 1.35rem; margin-bottom: var(--space-3); line-height: 1;">✦</div>
+            <div style="color: var(--gold-maha); font-size: 1.2rem; margin-bottom: var(--space-3); line-height: 1;"><span class="subtle-bullet">•</span></div>
             <h3 class="heading-3 font-serif" style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('abt_val_3_title')}</h3>
             <p style="font-size: 0.9rem; color: var(--text-stone); line-height: 1.6; margin: 0;">${t('abt_val_3_desc')}</p>
           </div>
