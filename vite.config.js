@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -394,9 +395,41 @@ function apiPlugin() {
   };
 }
 
+function inlineCssPlugin() {
+  return {
+    name: 'inline-css-plugin',
+    apply: 'build',
+    enforce: 'post',
+    closeBundle() {
+      const distDir = path.join(__dirname, 'dist');
+      const htmlPath = path.join(distDir, 'index.html');
+      if (!fs.existsSync(htmlPath)) return;
+
+      let html = fs.readFileSync(htmlPath, 'utf-8');
+      const assetsDir = path.join(distDir, 'assets');
+      if (fs.existsSync(assetsDir)) {
+        const files = fs.readdirSync(assetsDir);
+        const cssFiles = files.filter(f => f.endsWith('.css'));
+
+        for (const cssFile of cssFiles) {
+          const cssPath = path.join(assetsDir, cssFile);
+          const cssContent = fs.readFileSync(cssPath, 'utf-8');
+          const linkRegex = new RegExp(`<link[^>]*href="[^"]*${cssFile}"[^>]*>`, 'gi');
+          if (linkRegex.test(html)) {
+            html = html.replace(linkRegex, `<style id="inlined-critical-css">${cssContent}</style>`);
+          } else {
+            html = html.replace('</head>', `<style id="inlined-critical-css">${cssContent}</style></head>`);
+          }
+        }
+        fs.writeFileSync(htmlPath, html, 'utf-8');
+      }
+    }
+  };
+}
+
 export default defineConfig({
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
-  plugins: [apiPlugin()],
+  plugins: [apiPlugin(), inlineCssPlugin()],
   server: {
     port: 5173,
     host: true

@@ -191,7 +191,6 @@ function renderStep1() {
           <button class="payment-method booking-service-select" data-service="${service.service_id}"
                   style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);">
             <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="84" height="64" loading="lazy" decoding="async"
-                 onerror="this.onerror=null; this.src='/images/${service.slug}.jpg';"
                  style="width: 84px; height: 64px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;" />
             <div style="flex: 1; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">

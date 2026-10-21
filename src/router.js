@@ -69,19 +69,22 @@ export class Router {
     }
 
     if (handler) {
+      const isInitial = !this.currentPage;
       this.currentPage = path;
       const content = await handler(params);
       const container = document.getElementById('page-content');
       if (container) {
-        container.innerHTML = '';
         if (typeof content === 'string') {
           container.innerHTML = content;
         } else if (content instanceof HTMLElement) {
+          container.innerHTML = '';
           container.appendChild(content);
         }
       }
-      if (window.scrollY > 0) {
-        window.scrollTo(0, 0);
+      if (!isInitial) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+        });
       }
       this.updateActiveNav(path);
       this.initAnimations();

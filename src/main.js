@@ -5,32 +5,13 @@ import './styles/index.css';
 import './styles/editorial.css';
 import { Router } from './router.js';
 import { t, getLang, setLang, getLanguages } from './i18n.js';
-
-// Universal resilient image fallback handler (Guarantees zero broken images across all routes)
-window.addEventListener('error', (e) => {
-  const target = e.target;
-  if (target && target.tagName === 'IMG' && !target.dataset.hasFallbackAttempted) {
-    target.dataset.hasFallbackAttempted = 'true';
-    if (target.hasAttribute('srcset')) {
-      target.removeAttribute('srcset');
-    }
-    const currentSrc = target.getAttribute('src') || '';
-    if (currentSrc.includes('-sm.webp')) {
-      target.src = currentSrc.replace('-sm.webp', '.webp');
-    } else if (currentSrc.endsWith('.webp')) {
-      target.src = currentSrc.replace('.webp', '.jpg');
-    } else if (currentSrc.endsWith('.svg') && currentSrc.includes('logo')) {
-      target.src = '/favicon.svg';
-    }
-  }
-}, true);
+import { renderHome, initHomeEffects } from './pages/home.js';
 
 // Initialize SPA Router
 const router = new Router();
 
-// Route Definitions with Dynamic Code Splitting (Lazy-loaded per route)
-router.addRoute('/', async () => {
-  const { renderHome, initHomeEffects } = await import('./pages/home.js');
+// Route Definitions: Static import for Home eliminates network dependency chain (<14 KiB bundled in main)
+router.addRoute('/', () => {
   const html = renderHome();
   setTimeout(() => initHomeEffects(), 20);
   return html;
