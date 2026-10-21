@@ -120,31 +120,31 @@ export function renderBooking(params = {}) {
         </div>
 
         <!-- Steps Indicator -->
-        <div class="booking-steps fade-in" id="booking-steps">
-          <div class="booking-step ${bookingState.step >= 1 ? 'active' : ''} ${bookingState.step > 1 ? 'done' : ''}">
+        <div class="booking-steps fade-in" id="booking-steps" role="navigation" aria-label="Booking Steps">
+          <button type="button" class="booking-step ${bookingState.step === 1 ? 'active' : ''} ${bookingState.step > 1 ? 'done' : ''}" data-step-target="1" aria-label="Step 1: ${t('book_step_service')}" ${bookingState.step === 1 ? 'aria-current="step"' : ''}>
             <span class="booking-step__number">${bookingState.step > 1 ? '✓' : '1'}</span>
             <span class="booking-step__label">${t('book_step_service')}</span>
-          </div>
+          </button>
           <div class="booking-step__connector ${bookingState.step > 1 ? 'done' : ''}"></div>
-          <div class="booking-step ${bookingState.step >= 2 ? 'active' : ''} ${bookingState.step > 2 ? 'done' : ''}">
+          <button type="button" class="booking-step ${bookingState.step === 2 ? 'active' : ''} ${bookingState.step > 2 ? 'done' : ''}" data-step-target="2" aria-label="Step 2: ${t('book_step_package')}" ${bookingState.step === 2 ? 'aria-current="step"' : ''}>
             <span class="booking-step__number">${bookingState.step > 2 ? '✓' : '2'}</span>
             <span class="booking-step__label">${t('book_step_package')}</span>
-          </div>
+          </button>
           <div class="booking-step__connector ${bookingState.step > 2 ? 'done' : ''}"></div>
-          <div class="booking-step ${bookingState.step >= 3 ? 'active' : ''} ${bookingState.step > 3 ? 'done' : ''}">
+          <button type="button" class="booking-step ${bookingState.step === 3 ? 'active' : ''} ${bookingState.step > 3 ? 'done' : ''}" data-step-target="3" aria-label="Step 3: ${t('book_step_schedule')}" ${bookingState.step === 3 ? 'aria-current="step"' : ''}>
             <span class="booking-step__number">${bookingState.step > 3 ? '✓' : '3'}</span>
             <span class="booking-step__label">${t('book_step_schedule')}</span>
-          </div>
+          </button>
           <div class="booking-step__connector ${bookingState.step > 3 ? 'done' : ''}"></div>
-          <div class="booking-step ${bookingState.step >= 4 ? 'active' : ''} ${bookingState.step > 4 ? 'done' : ''}">
+          <button type="button" class="booking-step ${bookingState.step === 4 ? 'active' : ''} ${bookingState.step > 4 ? 'done' : ''}" data-step-target="4" aria-label="Step 4: ${t('book_step_info')}" ${bookingState.step === 4 ? 'aria-current="step"' : ''}>
             <span class="booking-step__number">${bookingState.step > 4 ? '✓' : '4'}</span>
             <span class="booking-step__label">${t('book_step_info')}</span>
-          </div>
+          </button>
           <div class="booking-step__connector ${bookingState.step > 4 ? 'done' : ''}"></div>
-          <div class="booking-step ${bookingState.step >= 5 ? 'active' : ''}">
+          <button type="button" class="booking-step ${bookingState.step === 5 ? 'active' : ''}" data-step-target="5" aria-label="Step 5: ${t('book_step_summary')}" ${bookingState.step === 5 ? 'aria-current="step"' : ''}>
             <span class="booking-step__number">5</span>
             <span class="booking-step__label">${t('book_step_summary')}</span>
-          </div>
+          </button>
         </div>
 
         <!-- Step Content -->
@@ -172,15 +172,15 @@ function renderStep1() {
   return `
     <!-- Step 1 Guide Banner -->
     <div class="step-guide-banner">
-      <div>
+      <div class="step-guide-banner__content">
+        <svg class="step-guide-banner__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p class="step-guide-banner__text">
           <strong>${t('step_label')} 1/5:</strong> ${t('step_guide_1_text')}
         </p>
       </div>
-      <span class="step-guide-banner__pill">${t('step_guide_1_pill')}</span>
     </div>
 
-    <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_service')}</h3>
+    <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_service')}</h2>
     <div style="display: grid; gap: var(--space-4);">
       ${SERVICES.filter(s => s.status === 'active').map(service => {
         const srvName = translateServiceName(service.service_id) || service.service_name;
@@ -191,6 +191,7 @@ function renderStep1() {
           <button class="payment-method booking-service-select" data-service="${service.service_id}"
                   style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);">
             <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="84" height="64" loading="lazy" decoding="async"
+                 onerror="this.onerror=null; this.src='/images/${service.slug}.jpg';"
                  style="width: 84px; height: 64px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;" />
             <div style="flex: 1; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
@@ -222,25 +223,25 @@ function renderStep2() {
   const currentLanguage = getLang();
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-      <button class="btn btn--sm btn--secondary booking-back" data-step="1">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
+      <button class="btn btn--sm btn--secondary booking-back" data-step="1" style="display: inline-flex; align-items: center; gap: 6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
-      <span style="font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;">${srvName}</span>
+      <span class="badge badge--gold" style="font-size: 0.75rem; font-weight: 600;">${srvName}</span>
     </div>
 
     <!-- Step 2 Guide Banner -->
     <div class="step-guide-banner">
-      <div>
+      <div class="step-guide-banner__content">
+        <svg class="step-guide-banner__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p class="step-guide-banner__text">
           <strong>${t('step_label')} 2/5:</strong> ${t('step_guide_2_text')}
         </p>
       </div>
-      <span class="step-guide-banner__pill">${t('step_guide_2_pill')}</span>
     </div>
     
-    <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_package')}</h3>
+    <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_package')}</h2>
     <div style="display: flex; flex-direction: column; gap: var(--space-5);">
       ${packages.map(pkg => `
         <div class="package-card ${pkg.popular ? 'popular' : ''} booking-package-select" 
@@ -293,22 +294,22 @@ function renderStep3() {
   const pkgName = translatePackageName(pkg?.package_id) || pkg?.package_name;
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-      <button class="btn btn--sm btn--secondary booking-back" data-step="2">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
+      <button class="btn btn--sm btn--secondary booking-back" data-step="2" style="display: inline-flex; align-items: center; gap: 6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
-      <span style="font-size: var(--text-sm); color: var(--text-muted); font-weight: 500;">${srvName} • ${pkgName}</span>
+      <span class="badge badge--gold" style="font-size: 0.75rem; font-weight: 600;">${srvName} • ${pkgName}</span>
     </div>
 
     <!-- Step 3 Guide Banner -->
     <div class="step-guide-banner">
-      <div>
+      <div class="step-guide-banner__content">
+        <svg class="step-guide-banner__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p class="step-guide-banner__text">
           <strong>${t('step_label')} 3/5:</strong> ${t('step_guide_3_text')}
         </p>
       </div>
-      <span class="step-guide-banner__pill">${t('step_guide_3_pill')}</span>
     </div>
 
     <!-- WITA Timezone Locked Banner (Section 2.A.5 Requirement) -->
@@ -320,7 +321,7 @@ function renderStep3() {
       </div>
     </div>
 
-    <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_schedule')}</h3>
+    <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_schedule')}</h2>
     
     <div class="booking-schedule-grid">
       <!-- Calendar -->
@@ -367,24 +368,25 @@ function renderStep4() {
   const currentSubtotal = unitPrice * bookingState.pax;
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-      <button class="btn btn--sm btn--secondary booking-back" data-step="3">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
+      <button class="btn btn--sm btn--secondary booking-back" data-step="3" style="display: inline-flex; align-items: center; gap: 6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
+      <span class="badge badge--gold" style="font-size: 0.75rem; font-weight: 600;">${srvName} • ${bookingState.booking_date || ''} (${bookingState.booking_time || ''} WITA)</span>
     </div>
 
     <!-- Step 4 Guide Banner -->
     <div class="step-guide-banner">
-      <div>
+      <div class="step-guide-banner__content">
+        <svg class="step-guide-banner__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p class="step-guide-banner__text">
           <strong>${t('step_label')} 4/5:</strong> ${t('step_guide_4_text')}
         </p>
       </div>
-      <span class="step-guide-banner__pill">${t('step_guide_4_pill')}</span>
     </div>
 
-    <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_customer_data')}</h3>
+    <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_customer_data')}</h2>
     
     <div class="contact-form" style="max-width: 620px; margin: 0 auto; background: var(--surface-card); padding: var(--space-6); border-radius: var(--radius-lg); border: 1px solid var(--border-hairline);">
       
@@ -533,24 +535,25 @@ function renderStep5() {
   const isNumerology = service?.category === 'Numerology' || service?.service_id === 'SRV003';
 
   return `
-    <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-      <button class="btn btn--sm btn--secondary booking-back" data-step="4">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
+      <button class="btn btn--sm btn--secondary booking-back" data-step="4" style="display: inline-flex; align-items: center; gap: 6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         ${t('book_back')}
       </button>
+      <span class="badge badge--teal" style="font-size: 0.75rem; font-weight: 600;">Official Direct Summary</span>
     </div>
 
     <!-- Step 5 Guide Banner -->
     <div class="step-guide-banner">
-      <div>
+      <div class="step-guide-banner__content">
+        <svg class="step-guide-banner__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p class="step-guide-banner__text">
           <strong>${t('step_label')} 5/5:</strong> ${t('step_guide_5_text')}
         </p>
       </div>
-      <span class="step-guide-banner__pill">${t('step_guide_5_pill')}</span>
     </div>
 
-    <h3 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_summary_title')}</h3>
+    <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_summary_title')}</h2>
     
     <div class="booking-summary" style="position: static; max-width: 650px; margin: 0 auto;">
       
@@ -852,6 +855,22 @@ export function initBooking() {
       }
     }
   });
+
+  // Stepper node click delegation: jump directly to any previously completed step
+  const stepsContainer = document.getElementById('booking-steps');
+  if (stepsContainer && !stepsContainer.dataset.hasStepClick) {
+    stepsContainer.dataset.hasStepClick = 'true';
+    stepsContainer.addEventListener('click', (e) => {
+      const stepBtn = e.target.closest('.booking-step.done');
+      if (stepBtn) {
+        const targetStep = parseInt(stepBtn.dataset.stepTarget, 10);
+        if (targetStep && targetStep < bookingState.step) {
+          bookingState.step = targetStep;
+          updateBookingUI();
+        }
+      }
+    });
+  }
 
   // Event delegation
   content.addEventListener('click', async (e) => {
@@ -1404,10 +1423,17 @@ function updateBookingUI() {
 
     steps.forEach((step, i) => {
       const stepNum = i + 1;
-      step.classList.toggle('active', stepNum <= bookingState.step);
-      step.classList.toggle('done', stepNum < bookingState.step);
+      const isCurrent = stepNum === bookingState.step;
+      const isDone = stepNum < bookingState.step;
+      step.classList.toggle('active', isCurrent);
+      step.classList.toggle('done', isDone);
+      if (isCurrent) {
+        step.setAttribute('aria-current', 'step');
+      } else {
+        step.removeAttribute('aria-current');
+      }
       const numEl = step.querySelector('.booking-step__number');
-      if (numEl) numEl.textContent = stepNum < bookingState.step ? '✓' : stepNum;
+      if (numEl) numEl.textContent = isDone ? '✓' : stepNum;
     });
 
     connectors.forEach((conn, i) => {

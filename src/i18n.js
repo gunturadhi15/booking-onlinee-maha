@@ -2255,10 +2255,10 @@ const TRANSLATIONS = {
 export const SUPPORTED_LANGS = ['ru', 'es', 'it', 'fr', 'en', 'id'];
 export const DEFAULT_LANG = 'id';
 
-let currentLang = localStorage.getItem('lang') || 'en';
-// Default to en or id, fallback if invalid
+let currentLang = (typeof localStorage !== 'undefined' ? localStorage.getItem('lang') : null) || 'id';
+// Default to id or en, fallback if invalid
 if (!SUPPORTED_LANGS.includes(currentLang)) {
-  currentLang = 'en';
+  currentLang = 'id';
 }
 
 /** Get translation by key with full fallback across languages */

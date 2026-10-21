@@ -80,7 +80,9 @@ export class Router {
           container.appendChild(content);
         }
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.scrollY > 0) {
+        window.scrollTo(0, 0);
+      }
       this.updateActiveNav(path);
       this.initAnimations();
     }
@@ -119,7 +121,7 @@ export class Router {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.05, rootMargin: '60px 0px 60px 0px' });
 
     document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in, .stagger').forEach(el => {
       observer.observe(el);

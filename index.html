@@ -23,18 +23,17 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/logo-mahawellnerjourney.svg" />
 
-  <!-- Preconnect & DNS-Prefetch for External CDNs & Fonts -->
+  <!-- Preconnect & DNS-Prefetch for External Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-  <link rel="dns-prefetch" href="https://assets.mixkit.co" />
 
-  <!-- Preload Critical Above-The-Fold Assets -->
+  <!-- Preload Critical Above-The-Fold Assets (LCP Acceleration) -->
   <link rel="preload" as="image" href="/logo-mahawellnerjourney.svg" type="image/svg+xml" fetchpriority="high" />
   <link rel="preload" as="image" href="/images/sanctuary-ambiance.webp" type="image/webp" fetchpriority="high" />
 
-  <!-- Google Fonts: Non-render-blocking with font-display: swap -->
+  <!-- Google Fonts: Non-render-blocking Asynchronous Loading with font-display: swap -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'" />
   <noscript>
@@ -51,7 +50,7 @@
     <nav id="navbar" class="navbar">
       <div class="container navbar__inner">
         <a href="#/" class="navbar__logo" id="logo-link">
-          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Logo" class="navbar__logo-img" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" />
+          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Logo" class="navbar__logo-img" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='/favicon.svg';" />
           <span class="navbar__logo-text">MAHAWELLNERJOURNEY</span>
         </a>
         <ul class="navbar__menu" id="nav-menu">
@@ -94,8 +93,147 @@
       </div>
     </div>
 
-    <!-- Main Content -->
-    <main id="page-content"></main>
+    <!-- Main Content (Pre-rendered Critical Above-The-Fold for Instant FCP & LCP) -->
+    <main id="page-content">
+      <!-- ==================== SANCTUARY HERO ==================== -->
+      <section class="sanctuary-hero" id="hero-section">
+        <div class="container sanctuary-hero__inner">
+          <div class="sanctuary-hero__content">
+            <div class="sanctuary-hero__badge">
+              <span class="subtle-bullet"></span>
+              <span>Sanctuary Resmi • Ubud, Bali</span>
+            </div>
+
+            <h1 class="heading-1 sanctuary-hero__title">
+              Sacred Wellness & Curated Journeys <br />
+              <em>di Tanah Sakral Bali</em>
+            </h1>
+
+            <p class="sanctuary-hero__lead">
+              Gerbang reservasi langsung untuk perjalanan spiritual mendalam, melukat sakral, yoga retreat, dan konsultasi numerologi berwibawa di Ubud. Dipandu langsung oleh praktisi lokal senior dalam atmosfer hening dan berkelas.
+            </p>
+
+            <div class="sanctuary-hero__actions">
+              <a href="#/booking" class="btn btn--primary btn--lg" id="hero-book-btn" data-page="booking">
+                Book Your Journey
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#curated-journeys" class="btn btn--secondary btn--lg" id="hero-explore-btn">
+                Lihat Paket Signature
+              </a>
+            </div>
+          </div>
+
+          <!-- Ambient Visual Card -->
+          <div class="sanctuary-hero__visual">
+            <div class="hero-ambient-container">
+              <img 
+                src="/images/sanctuary-ambiance.webp" 
+                srcset="/images/sanctuary-ambiance-sm.webp 480w, /images/sanctuary-ambiance.webp 720w"
+                sizes="(max-width: 768px) 100vw, 600px"
+                alt="Ubud Sacred Valley Sanctuary" 
+                class="hero-ambient-img" 
+                width="600" 
+                height="220" 
+                fetchpriority="high" 
+                loading="eager" 
+                decoding="sync"
+                onerror="this.onerror=null; if(this.hasAttribute('srcset'))this.removeAttribute('srcset'); this.src='/images/sanctuary-ambiance.jpg';"
+              />
+              <div class="hero-ambient-overlay">
+                <div>
+                  <p style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">
+                    Ubud Sacred Valley Sanctuary
+                  </p>
+                  <p style="font-size: 0.75rem; margin: 2px 0 0; opacity: 0.9; font-family: var(--font-mono);">
+                    Tri Hita Karana • Calming Sacred Presence
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="sanctuary-hero__card" style="margin-top: var(--space-4);">
+              <div style="display: flex; align-items: center; gap: 14px; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-hairline);">
+                <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
+                <div>
+                  <span class="overline" style="margin: 0; font-size: 0.65rem;">OFFICIAL FLAGSHIP & SANCTUARY DIRECT</span>
+                  <p style="font-size: 1.1rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif); font-weight: 700;">Mahawellnerjourney</p>
+                </div>
+              </div>
+
+              <div style="background: var(--surface-silk); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); font-size: 0.8rem;">
+                <div>
+                  <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">Setting Sanctuary</span>
+                  <strong style="color: var(--text-onyx);">Ubud Sanctuary Valley</strong>
+                </div>
+                <div>
+                  <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">Kapasitas Sesi</span>
+                  <strong style="color: var(--text-onyx);">Maks. 6 Tamu / Sesi</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== DIRECT JOURNEY BOOKING BAR ==================== -->
+      <div class="booking-bar-wrapper fade-in">
+        <form class="booking-bar" id="quick-booking-form">
+          <div class="booking-bar__item">
+            <label class="booking-bar__label" for="quick-service">Pilih Layanan / Journey</label>
+            <select id="quick-service" class="booking-bar__select">
+              <option value="SRV001">Wisata Pura Spiritual</option>
+              <option value="SRV002">Retreat Yoga & Meditasi</option>
+              <option value="SRV003">Konsultasi Numerologi Bali</option>
+              <option value="SRV004">Penyembuhan & Melukat Sakral</option>
+            </select>
+          </div>
+
+          <div class="booking-bar__item">
+            <label class="booking-bar__label" for="quick-date">Tanggal Kunjungan</label>
+            <input type="date" id="quick-date" class="booking-bar__input" />
+          </div>
+
+          <div class="booking-bar__item">
+            <label class="booking-bar__label" for="quick-session">Waktu Sesi</label>
+            <select id="quick-session" class="booking-bar__select">
+              <option value="09:00">Pagi (09:00 WITA)</option>
+              <option value="12:00">Siang (12:00 WITA)</option>
+              <option value="15:00">Sore (15:00 WITA)</option>
+            </select>
+          </div>
+
+          <div class="booking-bar__item">
+            <label class="booking-bar__label" for="quick-guests">Jumlah Tamu</label>
+            <select id="quick-guests" class="booking-bar__select">
+              <option value="1">1 Orang</option>
+              <option value="2" selected>2 Orang (Pasangan/Best Pair)</option>
+              <option value="3">3 Orang</option>
+              <option value="4">4+ Orang (Grup Privat)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn--primary booking-bar__btn" id="quick-booking-submit">
+            Cek Ketersediaan & Pesan
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <!-- Direct Booking Assurance -->
+        <div class="booking-assurance">
+          <span><span class="subtle-bullet"></span> Official Direct Reservation</span>
+          <span><span class="subtle-bullet"></span> Harga Bersih Tanpa Pajak Tambahan</span>
+          <span><span class="subtle-bullet"></span> Konfirmasi Instan & E-Voucher Resmi</span>
+        </div>
+      </div>
+
+      <!-- Echoing Geometry Section Divider -->
+      <div class="section-divider">
+        <div class="section-divider__line"></div>
+        <span class="section-divider__motif">•</span>
+        <div class="section-divider__line"></div>
+      </div>
+    </main>
 
     <!-- Chatbot Floating Widget -->
     <button class="chatbot-fab" id="chatbot-fab" aria-label="Open chatbot">
@@ -109,9 +247,9 @@
       <div
         style="background: linear-gradient(135deg, var(--gold-500), var(--gold-700)); color: white; padding: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="24" height="24" loading="lazy" decoding="async" style="width: 24px; height: 24px; border-radius: 50%;" />
+          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="24" height="24" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 24px; height: 24px; border-radius: 50%;" />
           <div>
-            <h4 style="font-size: var(--text-sm); font-weight: 700; color: white;">Concierge Mahawellnerjourney</h4>
+            <p class="chat-title" style="font-size: var(--text-sm); font-weight: 700; color: white; margin: 0;">Concierge Mahawellnerjourney</p>
             <span style="font-size: 10px; opacity: 0.9;">Online • Sanctuary Assistant</span>
           </div>
         </div>
@@ -139,12 +277,12 @@
         <div class="footer__grid">
           <div class="footer__brand">
             <a href="#/" class="footer__logo" style="display: inline-flex; align-items: center; gap: 12px;">
-              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="44" height="44" loading="lazy" decoding="async" style="width: 44px; height: 44px; border-radius: 50%;" />
+              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="44" height="44" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 44px; height: 44px; border-radius: 50%;" />
               <span class="footer__logo-text" style="font-family: var(--font-serif); font-size: 1.1rem; letter-spacing: 0.1em; font-weight: 600; color: #FAF7F2;">MAHAWELLNERJOURNEY</span>
             </a>
           </div>
           <div class="footer__links">
-            <h4 class="footer__title">Navigasi</h4>
+            <h3 class="footer__title">Navigasi</h3>
             <ul>
               <li><a href="#/" data-page="home">Beranda</a></li>
               <li><a href="#/layanan" data-page="services">Layanan</a></li>
@@ -154,7 +292,7 @@
             </ul>
           </div>
           <div class="footer__links">
-            <h4 class="footer__title">Curated Journeys</h4>
+            <h3 class="footer__title">Curated Journeys</h3>
             <ul>
               <li><a href="#/layanan/spiritual-tour-pura-sakral" data-page="services">Spiritual Temple Tour</a></li>
               <li><a href="#/layanan/yoga-meditasi-retreat" data-page="services">Yoga & Meditation Retreat</a></li>
@@ -163,7 +301,7 @@
             </ul>
           </div>
           <div class="footer__contact">
-            <h4 class="footer__title">Sanctuary Concierge</h4>
+            <h3 class="footer__title">Sanctuary Concierge</h3>
             <ul>
               <li>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

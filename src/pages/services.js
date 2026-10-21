@@ -27,6 +27,7 @@ export function renderServices() {
 
     <section class="section">
       <div class="container">
+        <h2 class="sr-only">${t('svc_page_heading')}</h2>
         <!-- Search & Filter -->
         <div class="search-bar fade-in" id="search-filter">
           <input type="text" class="search-bar__input" placeholder="${t('svc_search_placeholder')}" 
@@ -51,7 +52,11 @@ export function renderServices() {
                  data-service="${service.service_id}" data-category="${service.category}"
                  data-name="${service.service_name.toLowerCase()}">
                 <a href="#/layanan/${service.slug}" class="service-card__img" style="display: block; background: var(--surface-silk); position: relative; overflow: hidden; height: 220px;">
-                  <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="600" height="340" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease;" loading="lazy" decoding="async" />
+                  <img src="${service.image || `/images/${service.slug}.webp`}" 
+                       srcset="${service.image_sm || (service.image || `/images/${service.slug}.webp`).replace('.webp', '-sm.webp')} 480w, ${service.image || `/images/${service.slug}.webp`} 720w"
+                       sizes="(max-width: 768px) 100vw, 50vw"
+                       alt="${srvName}" width="600" height="340" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease;" loading="lazy" decoding="async"
+                       onerror="this.onerror=null; if(this.hasAttribute('srcset'))this.removeAttribute('srcset'); this.src='/images/${service.slug}.jpg';" />
                   <span class="service-card__badge badge badge--teal">${service.category}</span>
                 </a>
                 <div class="service-card__body">
@@ -163,7 +168,7 @@ export function renderServiceDetail(params) {
 
         <!-- Hero -->
         <div class="service-detail__hero fade-in" style="background: var(--surface-silk); position: relative; height: 360px; overflow: hidden; border-radius: var(--radius-xl);">
-          <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="1200" height="360" style="width: 100%; height: 100%; object-fit: cover; display: block;" fetchpriority="high" loading="eager" decoding="sync" />
+          <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="1200" height="360" style="width: 100%; height: 100%; object-fit: cover; display: block;" fetchpriority="high" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='/images/${service.slug}.jpg';" />
           <div class="service-detail__hero-overlay" style="background: linear-gradient(180deg, rgba(20,40,29,0.3) 0%, rgba(20,40,29,0.7) 100%); position: absolute; inset: 0;"></div>
           <div class="service-detail__hero-text">
             <span class="badge badge--teal" style="margin-bottom: var(--space-3);">${service.category}</span>
@@ -274,7 +279,7 @@ export function renderServiceDetail(params) {
               const minPrice = otherPkgs.length ? Math.min(...otherPkgs.map(p => p.price)) : 0;
               return `
                 <a href="#/layanan/${other.slug}" class="journey-nav-card">
-                  <img src="${other.image || `/images/${other.slug}.webp`}" alt="${otherName}" class="journey-nav-card__img" width="300" height="180" loading="lazy" decoding="async" />
+                  <img src="${other.image || `/images/${other.slug}.webp`}" alt="${otherName}" class="journey-nav-card__img" width="300" height="180" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/images/${other.slug}.jpg';" />
                   <div class="journey-nav-card__body">
                     <span class="journey-nav-card__tag">${other.category}</span>
                     <h4 class="journey-nav-card__title">${otherName}</h4>

@@ -22,7 +22,7 @@ export function renderContact() {
           
           <!-- Kontak Info -->
           <div class="fade-in-left">
-            <h3 class="heading-3" style="margin-bottom: var(--space-4);">${t('con_info_title')}</h3>
+            <h2 class="heading-2 font-serif" style="margin-bottom: var(--space-4); font-size: var(--text-2xl);">${t('con_info_title')}</h2>
             <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--space-6);">
               ${t('con_info_desc')}
             </p>
@@ -33,7 +33,7 @@ export function renderContact() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_office')}</h4>
+                  <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx); margin: 0;">${t('con_office')}</h3>
                   <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.address}</p>
                 </div>
               </div>
@@ -43,7 +43,7 @@ export function renderContact() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
                 </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_wa_care')}</h4>
+                  <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx); margin: 0;">${t('con_wa_care')}</h3>
                   <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.phone} ${t('con_wa_hours')}</p>
                 </div>
               </div>
@@ -53,7 +53,7 @@ export function renderContact() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
                 <div>
-                  <h4 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx);">${t('con_email_official')}</h4>
+                  <h3 style="font-size: var(--text-sm); font-weight: 700; color: var(--text-onyx); margin: 0;">${t('con_email_official')}</h3>
                   <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">${COMPANY.email}</p>
                 </div>
               </div>
@@ -68,7 +68,7 @@ export function renderContact() {
           <!-- Quick Message Form -->
           <div class="fade-in-right">
             <div style="background: white; border: 1px solid var(--cream-200); border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow-sm);">
-              <h3 class="heading-3" style="margin-bottom: var(--space-4); font-size: var(--text-xl);">${t('con_form_title')}</h3>
+              <h2 class="heading-2 font-serif" style="margin-bottom: var(--space-4); font-size: var(--text-xl);">${t('con_form_title')}</h2>
               
               <form id="contact-form">
                 <div class="form-group">

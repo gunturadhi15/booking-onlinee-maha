@@ -14,6 +14,7 @@ export const SERVICES = [
     category: 'Tour',
     status: 'active',
     image: '/images/spiritual-temple-tour.webp',
+    image_sm: '/images/spiritual-temple-tour-sm.webp',
     slug: 'spiritual-temple-tour',
   },
   {
@@ -23,6 +24,7 @@ export const SERVICES = [
     category: 'Retreat',
     status: 'active',
     image: '/images/yoga-meditation-retreat.webp',
+    image_sm: '/images/yoga-meditation-retreat-sm.webp',
     slug: 'yoga-meditation-retreat',
   },
   {
@@ -32,6 +34,7 @@ export const SERVICES = [
     category: 'Numerology',
     status: 'active',
     image: '/images/numerology-consultation.webp',
+    image_sm: '/images/numerology-consultation-sm.webp',
     slug: 'numerology-consultation',
   },
   {
@@ -41,6 +44,7 @@ export const SERVICES = [
     category: 'Healing',
     status: 'active',
     image: '/images/healing-purification.webp',
+    image_sm: '/images/healing-purification-sm.webp',
     slug: 'healing-purification',
   },
 ];
@@ -372,7 +376,7 @@ export const SANCTUARY_MEDIA = {
   hero_ambient: {
     title: 'The Sacred Ubud Sanctuary',
     poster: '/images/sanctuary-ambiance.webp',
-    video_mp4: 'https://assets.mixkit.co/videos/preview/mixkit-sun-rays-in-the-forest-41584-large.mp4',
+    poster_sm: '/images/sanctuary-ambiance-sm.webp',
     badge: 'Sanctuary in Motion'
   },
   gallery: [
@@ -382,6 +386,7 @@ export const SANCTUARY_MEDIA = {
       title: 'Sacred Water Melukat Blessing',
       category: 'Healing & Purification',
       image: '/images/healing-purification.webp',
+      image_sm: '/images/healing-purification-sm.webp',
       badge: 'Upacara Melukat',
       quote: 'Penyucian diri melalui tirta suci alami untuk meluruhkan beban energi dan merestorasi ketenangan batin.',
       tag: 'Sacred Springs'
@@ -392,6 +397,7 @@ export const SANCTUARY_MEDIA = {
       title: 'Tibetan Sound Bath & Forest Meditation',
       category: 'Retreat',
       image: '/images/yoga-meditation-retreat.webp',
+      image_sm: '/images/yoga-meditation-retreat-sm.webp',
       badge: 'Sound Healing & Yoga',
       quote: 'Resonansi mangkuk Tibet dan pernapasan berkesadaran di pavilion kayu jati yang hening di tengah rimba Ubud.',
       tag: 'Forest Pavilion'
@@ -402,6 +408,7 @@ export const SANCTUARY_MEDIA = {
       title: 'Ancient Temple & Spiritual Pilgrimage',
       category: 'Tour',
       image: '/images/spiritual-temple-tour.webp',
+      image_sm: '/images/spiritual-temple-tour-sm.webp',
       badge: 'Ziarah Pura Sakral',
       quote: 'Menelusuri gapura candi berukir kuno dan mendalami filosofi Tri Hita Karana dengan bimbingan pemangku senior.',
       tag: 'Sacred Temples'
@@ -412,6 +419,7 @@ export const SANCTUARY_MEDIA = {
       title: 'Sacred Lontar & Numerology Reading',
       category: 'Numerology',
       image: '/images/numerology-consultation.webp',
+      image_sm: '/images/numerology-consultation-sm.webp',
       badge: 'Peta Kehidupan',
       quote: 'Menyingkap cetak biru jiwa, potensi diri, dan siklus karma melalui hitungan lontar sakral Bali.',
       tag: 'Personal Blueprint'

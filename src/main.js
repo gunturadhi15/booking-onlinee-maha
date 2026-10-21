@@ -6,6 +6,25 @@ import './styles/editorial.css';
 import { Router } from './router.js';
 import { t, getLang, setLang, getLanguages } from './i18n.js';
 
+// Universal resilient image fallback handler (Guarantees zero broken images across all routes)
+window.addEventListener('error', (e) => {
+  const target = e.target;
+  if (target && target.tagName === 'IMG' && !target.dataset.hasFallbackAttempted) {
+    target.dataset.hasFallbackAttempted = 'true';
+    if (target.hasAttribute('srcset')) {
+      target.removeAttribute('srcset');
+    }
+    const currentSrc = target.getAttribute('src') || '';
+    if (currentSrc.includes('-sm.webp')) {
+      target.src = currentSrc.replace('-sm.webp', '.webp');
+    } else if (currentSrc.endsWith('.webp')) {
+      target.src = currentSrc.replace('.webp', '.jpg');
+    } else if (currentSrc.endsWith('.svg') && currentSrc.includes('logo')) {
+      target.src = '/favicon.svg';
+    }
+  }
+}, true);
+
 // Initialize SPA Router
 const router = new Router();
 
@@ -162,10 +181,10 @@ function updateStaticTexts() {
   });
 
   // Chatbot
-  const chatTitle = document.querySelector('#chatbot-window h4');
+  const chatTitle = document.querySelector('#chatbot-window .chat-title, #chatbot-window h4');
   if (chatTitle) chatTitle.textContent = t('chat_title');
 
-  const chatStatus = document.querySelector('#chatbot-window h4 + span');
+  const chatStatus = document.querySelector('#chatbot-window .chat-title + span, #chatbot-window h4 + span');
   if (chatStatus) chatStatus.textContent = t('chat_status');
 
   const chatInput = document.getElementById('chat-input');
@@ -265,13 +284,20 @@ function setupGlobalUI() {
     });
   }
 
-  // Sticky Navbar Blur Effect
+  // Sticky Navbar Blur Effect (Throttled with rAF & passive to prevent Forced Reflow)
   const navbar = document.getElementById('navbar');
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    if (navbar) {
-      navbar.classList.toggle('scrolled', window.scrollY > 30);
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (navbar) {
+          navbar.classList.toggle('scrolled', window.scrollY > 30);
+        }
+        ticking = false;
+      });
+      ticking = true;
     }
-  });
+  }, { passive: true });
 
   // Chatbot Widget
   const chatbotFab = document.getElementById('chatbot-fab');

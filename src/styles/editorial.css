@@ -13,26 +13,26 @@
   --border-hairline: #E6DEC8; /* Champagne Hairline Border */
   --border-gold-subtle: #DFCBA8;
 
-  /* Maha Gold (Exclusively for Micro Accents, Badges, & Hairlines) */
-  --gold-maha: #C59B27;
-  --gold-maha-hover: #B38728;
+  /* Maha Gold (Exclusively for Micro Accents, Badges, & Hairlines) - WCAG AA Compliant (#8A6818 = 4.82:1 on #FAF7F2) */
+  --gold-maha: #8A6818;
+  --gold-maha-hover: #73540F;
   --gold-50: #FDF9EE;
   --gold-100: #F7EECD;
   --gold-200: #EED798;
   --gold-300: #E5C365;
-  --gold-500: #C59B27;
-  --gold-600: #B38728;
-  --gold-700: #8E6818;
+  --gold-500: #8A6818;
+  --gold-600: #7A5B12;
+  --gold-700: #6B4E0A;
 
   /* Royal Contrast & Primary Action (Deep Sacred Ubud Forest) */
   --cta-forest: #14281D;
   --cta-forest-hover: #0D1B13;
   --cta-forest-active: #08110C;
 
-  /* Typography Colors */
-  --text-onyx: #1C1915;       /* Deep Onyx - 100% Crisp Legibility */
-  --text-stone: #6E675F;      /* Warm Stone - Balanced Secondary */
-  --text-muted: #8E877E;      /* Calm Neutral */
+  /* Typography Colors - 100% WCAG AA Legibility */
+  --text-onyx: #1C1915;       /* Deep Onyx - 100% Crisp Legibility (15.6:1) */
+  --text-stone: #524B43;      /* Warm Stone - Balanced Secondary (8.5:1) */
+  --text-muted: #635C53;      /* Calm Neutral (6.3:1) */
 
   /* Aliases for Global CSS Compatibility */
   --paper: var(--canvas);
@@ -619,16 +619,46 @@ h1, h2, h3, h4,
 .booking-steps {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: nowrap !important;
   gap: var(--space-2);
-  margin: var(--space-8) auto var(--space-10);
+  margin: var(--space-6) auto var(--space-8);
   max-width: 680px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-xl);
+  padding: 12px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  user-select: none;
 }
 
 .booking-step {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  border-radius: var(--radius-full);
+  cursor: default;
+  transition: all 0.25s ease;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+
+.booking-step.done {
+  cursor: pointer;
+}
+
+.booking-step.done:hover {
+  background: var(--surface-silk);
+}
+
+.booking-step.done:hover .booking-step__number {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.2);
 }
 
 .booking-step__number {
@@ -640,43 +670,56 @@ h1, h2, h3, h4,
   justify-content: center;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  font-weight: 600;
-  background: var(--surface-card);
-  border: 1px solid var(--border-hairline);
-  color: var(--text-muted);
-  transition: all 0.2s ease;
+  font-weight: 700;
+  background: var(--surface-silk);
+  border: 1.5px solid var(--border-hairline);
+  color: var(--text-stone);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
 }
 
 .booking-step.active .booking-step__number {
   background: var(--cta-forest);
   border-color: var(--cta-forest);
   color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(18, 48, 38, 0.16);
 }
 
 .booking-step.done .booking-step__number {
   background: var(--surface-silk);
   border-color: var(--gold-maha);
   color: var(--gold-maha);
+  font-weight: 800;
 }
 
 .booking-step__label {
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--text-muted);
+  color: var(--text-stone);
   text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .booking-step.active .booking-step__label {
   color: var(--text-onyx);
+  font-weight: 700;
+}
+
+.booking-step.done .booking-step__label {
+  color: var(--gold-maha);
 }
 
 .booking-step__connector {
-  flex: 1;
-  height: 1px;
+  flex: 1 1 8px;
+  height: 2px;
   background: var(--border-hairline);
-  min-width: 24px;
+  min-width: 8px;
+  max-width: 48px;
+  border-radius: 2px;
+  transition: background 0.3s ease;
 }
 
 .booking-step__connector.done {
@@ -921,8 +964,38 @@ h1, h2, h3, h4,
     width: 100%;
   }
   .booking-steps {
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    flex-wrap: nowrap !important;
+    padding: 10px 14px;
+    gap: 4px;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+  }
+  .booking-step {
+    gap: 6px;
+    padding: 2px 4px;
+  }
+  .booking-step__number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  .booking-step:not(.active) .booking-step__label {
+    display: none !important;
+  }
+  .booking-step.active .booking-step__label {
+    display: inline-block !important;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--cta-forest);
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .booking-step__connector {
+    flex: 1 1 6px;
+    min-width: 6px;
+    max-width: 24px;
   }
 }
 
@@ -977,11 +1050,12 @@ h1, h2, h3, h4,
   overflow: hidden;
   border: 1px solid var(--border-hairline);
   box-shadow: var(--shadow-sm);
-  background: var(--surface-card);
+  background: linear-gradient(135deg, #1C2E24 0%, #2B4536 100%);
   margin-bottom: var(--space-5);
 }
 
-.hero-ambient-video {
+.hero-ambient-video,
+.hero-ambient-img {
   width: 100%;
   height: 220px;
   aspect-ratio: 16 / 9;
@@ -2115,7 +2189,8 @@ img, video, iframe {
     overflow: hidden !important;
   }
 
-  .hero-ambient-video {
+  .hero-ambient-video,
+  .hero-ambient-img {
     width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
@@ -2363,36 +2438,34 @@ img, video, iframe {
   margin-bottom: 6px !important;
 }
 
-/* 9. Guided Booking Flow Navigators */
 .step-guide-banner {
   background: var(--surface-silk);
   border: 1px solid var(--border-hairline);
-  border-left: 3px solid var(--cta-forest);
+  border-left: 3px solid var(--gold-maha);
   border-radius: var(--radius-md);
-  padding: 12px 16px;
+  padding: 10px 16px;
   margin-bottom: var(--space-6);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.step-guide-banner__content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-guide-banner__icon {
+  color: var(--gold-maha);
+  flex-shrink: 0;
 }
 
 .step-guide-banner__text {
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   color: var(--text-stone);
   margin: 0;
-}
-
-.step-guide-banner__pill {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: var(--cta-forest);
-  color: white;
-  padding: 3px 8px;
-  border-radius: 4px;
-  flex-shrink: 0;
+  line-height: 1.45;
 }
 
 .slot-selection-indicator {

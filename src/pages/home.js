@@ -82,18 +82,28 @@ export function renderHome() {
           </div>
         </div>
 
-        <!-- Ambient Video & Visual Card -->
+        <!-- Ambient Visual Card -->
         <div class="sanctuary-hero__visual">
           <div class="hero-ambient-container">
-            <video class="hero-ambient-video" autoplay muted loop playsinline preload="metadata" poster="/images/sanctuary-ambiance.webp" width="600" height="220">
-              <source src="${SANCTUARY_MEDIA.hero_ambient.video_mp4}" type="video/mp4" />
-            </video>
+            <img 
+              src="/images/sanctuary-ambiance.webp" 
+              srcset="/images/sanctuary-ambiance-sm.webp 480w, /images/sanctuary-ambiance.webp 720w"
+              sizes="(max-width: 768px) 100vw, 600px"
+              alt="Ubud Sacred Valley Sanctuary" 
+              class="hero-ambient-img" 
+              width="600" 
+              height="220" 
+              fetchpriority="high" 
+              loading="eager" 
+              decoding="sync"
+              onerror="this.onerror=null; if(this.hasAttribute('srcset'))this.removeAttribute('srcset'); this.src='/images/sanctuary-ambiance.jpg';"
+            />
             <div class="hero-ambient-overlay">
               <div>
                 <p style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">
                   Ubud Sacred Valley Sanctuary
                 </p>
-                <p style="font-size: 0.75rem; margin: 2px 0 0; opacity: 0.85; font-family: var(--font-mono);">
+                <p style="font-size: 0.75rem; margin: 2px 0 0; opacity: 0.9; font-family: var(--font-mono);">
                   Tri Hita Karana • Calming Sacred Presence
                 </p>
               </div>
@@ -102,10 +112,10 @@ export function renderHome() {
 
           <div class="sanctuary-hero__card" style="margin-top: var(--space-4);">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-hairline);">
-              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
+              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
               <div>
                 <span class="overline" style="margin: 0; font-size: 0.65rem;">OFFICIAL FLAGSHIP & SANCTUARY DIRECT</span>
-                <h3 style="font-size: 1.1rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif);">Mahawellnerjourney</h3>
+                <p style="font-size: 1.1rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif); font-weight: 700;">Mahawellnerjourney</p>
               </div>
             </div>
 
@@ -199,7 +209,18 @@ export function renderHome() {
 
               <!-- Visual Card Photo -->
               <div class="journey-card__media">
-                <img src="${s.image}" alt="${serviceName(s)}" class="journey-card__img-photo" width="600" height="340" loading="lazy" decoding="async" />
+                <img 
+                  src="${s.image}" 
+                  srcset="${s.image_sm || s.image.replace('.webp', '-sm.webp')} 480w, ${s.image} 720w"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  alt="${serviceName(s)}" 
+                  class="journey-card__img-photo" 
+                  width="600" 
+                  height="340" 
+                  loading="lazy" 
+                  decoding="async" 
+                  onerror="this.onerror=null; if(this.hasAttribute('srcset'))this.removeAttribute('srcset'); this.src=this.src.replace(/\-sm\.webp$|\.webp$/, '.jpg');"
+                />
                 <span class="journey-card__tag">${s.category} • ${translateDuration(pkg.duration)}</span>
               </div>
 
@@ -248,7 +269,18 @@ export function renderHome() {
           ${SANCTUARY_MEDIA.gallery.map(item => `
             <a href="#/layanan/${item.slug}" class="motion-card fade-in">
               <div class="motion-card__media">
-                <img src="${item.image}" alt="${item.title}" class="motion-card__img" width="400" height="225" loading="lazy" decoding="async" />
+                <img 
+                  src="${item.image}" 
+                  srcset="${item.image_sm || item.image.replace('.webp', '-sm.webp')} 480w, ${item.image} 720w"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  alt="${item.title}" 
+                  class="motion-card__img" 
+                  width="400" 
+                  height="225" 
+                  loading="lazy" 
+                  decoding="async" 
+                  onerror="this.onerror=null; if(this.hasAttribute('srcset'))this.removeAttribute('srcset'); this.src=this.src.replace(/\-sm\.webp$|\.webp$/, '.jpg');"
+                />
                 <div class="motion-card__play-badge">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <polygon points="6 3 20 12 6 21 6 3"/>
@@ -259,7 +291,7 @@ export function renderHome() {
                 <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
                   ${item.tag}
                 </span>
-                <h4 style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 6px; color: var(--text-onyx);">${item.title}</h4>
+                <h3 style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 6px; color: var(--text-onyx);">${item.title}</h3>
                 <p style="font-size: 0.82rem; color: var(--text-stone); line-height: 1.5; margin: 0;">${item.quote}</p>
               </div>
             </a>
@@ -282,7 +314,7 @@ export function renderHome() {
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_1_title')}</h4>
+                <h3 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_1_title')}</h3>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_1_desc')}</p>
               </div>
             </div>
@@ -290,7 +322,7 @@ export function renderHome() {
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_2_title')}</h4>
+                <h3 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_2_title')}</h3>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_2_desc')}</p>
               </div>
             </div>
@@ -298,7 +330,7 @@ export function renderHome() {
             <div style="display: flex; gap: 14px; align-items: flex-start;">
               <span class="subtle-bullet" style="margin-top: 8px;"></span>
               <div>
-                <h4 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_3_title')}</h4>
+                <h3 style="font-size: 1rem; margin: 0 0 4px; color: var(--text-onyx); font-family: var(--font-serif);">${t('phil_point_3_title')}</h3>
                 <p style="font-size: 0.88rem; color: var(--text-stone); margin: 0;">${t('phil_point_3_desc')}</p>
               </div>
             </div>
@@ -307,7 +339,7 @@ export function renderHome() {
 
         <div class="fade-in-right" style="background: var(--surface-card); padding: var(--space-8); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
           <div style="text-align: center; margin-bottom: var(--space-6);">
-            <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="72" height="72" loading="lazy" decoding="async" style="width: 72px; height: 72px; border-radius: 50%; margin: 0 auto var(--space-3); display: block;" />
+            <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="72" height="72" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 72px; height: 72px; border-radius: 50%; margin: 0 auto var(--space-3); display: block;" />
             <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0; color: var(--text-onyx);">MAHAWELLNERJOURNEY</h3>
             <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold-maha); letter-spacing: 0.12em; text-transform: uppercase;">Direct Wellness Sanctuary</span>
           </div>
@@ -417,7 +449,7 @@ export function renderHome() {
             <div class="catalog-mobile-group">
               <div class="catalog-mobile-header">
                 <span class="subtle-bullet"></span>
-                <span>${serviceName(s)}</span>
+                <h3 class="catalog-mobile-header__title" style="margin: 0; font-size: 1rem; font-family: var(--font-serif); color: var(--text-onyx);">${serviceName(s)}</h3>
               </div>
               <div class="catalog-mobile-body">
                 ${s.packages.map(p => `
@@ -454,7 +486,7 @@ export function renderHome() {
     <!-- ==================== FINAL CALM CALL TO ACTION ==================== -->
     <section class="container" style="padding: var(--space-16) 0;">
       <div class="fade-in" style="background: var(--surface-card); border: 1.5px solid var(--border-gold-subtle); border-radius: var(--radius-lg); padding: var(--space-12) var(--space-8); text-align: center; box-shadow: var(--shadow-sm);">
-        <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="58" height="58" loading="lazy" decoding="async" style="width: 58px; height: 58px; border-radius: 50%; margin: 0 auto var(--space-4); display: block;" />
+        <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="58" height="58" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/favicon.svg';" style="width: 58px; height: 58px; border-radius: 50%; margin: 0 auto var(--space-4); display: block;" />
         <h2 class="heading-2" style="margin-bottom: var(--space-3);">${t('cta_title')}</h2>
         <p class="subtitle" style="margin: 0 auto var(--space-8);">${t('cta_desc')}</p>
 
