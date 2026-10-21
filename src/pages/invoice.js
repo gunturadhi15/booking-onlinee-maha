@@ -95,7 +95,7 @@ export function renderInvoice(params) {
           <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed var(--cream-200); padding-bottom: var(--space-6); margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4);">
             <div>
               <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2);">
-                <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-hairline);" />
+                <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="40" height="40" loading="lazy" decoding="async" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-hairline);" />
                 <h1 style="font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 700; color: var(--text-onyx); margin: 0; letter-spacing: 0.04em;">${COMPANY.name}</h1>
               </div>
               <p style="font-size: var(--text-xs); color: var(--text-muted); line-height: 1.5; margin: 0;">

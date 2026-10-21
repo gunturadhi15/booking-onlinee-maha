@@ -46,7 +46,6 @@ import {
   translatePackageDesc
 } from '../i18n.js';
 import { createBookingInSupabase, getBookedTimesFromSupabase, updateBookingStatusInSupabase } from '../api/supabase.js';
-import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
 
 let bookingState = {
   step: 1,
@@ -191,7 +190,7 @@ function renderStep1() {
         return `
           <button class="payment-method booking-service-select" data-service="${service.service_id}"
                   style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);">
-            <img src="${service.image || `/images/${service.slug}.jpg`}" alt="${srvName}" 
+            <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="84" height="64" loading="lazy" decoding="async"
                  style="width: 84px; height: 64px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;" />
             <div style="flex: 1; min-width: 0;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
@@ -1180,7 +1179,8 @@ export function initBooking() {
 
         restoreBtn();
 
-        // 4. Show Payment Success Modal
+        // 4. Show Payment Success Modal (Lazy-loaded component)
+        const { showPaymentSuccessModal } = await import('../components/paymentModal.js');
         showPaymentSuccessModal(savedSession);
       } catch (err) {
         console.error('Error saat proses pembayaran:', err);
@@ -1195,6 +1195,7 @@ export function initBooking() {
           package_name: pkg?.package_name
         };
 
+        const { showPaymentFailedModal } = await import('../components/paymentModal.js');
         showPaymentFailedModal({
           booking: errorSession,
           errorMsg: err?.message || 'Terjadi gangguan jaringan atau gateway saat verifikasi pembayaran.',

@@ -400,5 +400,28 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true
+  },
+  esbuild: {
+    drop: ['console', 'debugger']
+  },
+  build: {
+    cssCodeSplit: true,
+    cssMinify: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@supabase')) {
+              return 'vendor-supabase';
+            }
+            return 'vendor';
+          }
+          if (id.includes('/src/i18n.js') || id.includes('/src/benefitTranslations.js') || id.includes('/src/packageTranslations.js')) {
+            return 'translations';
+          }
+        }
+      }
+    }
   }
 });

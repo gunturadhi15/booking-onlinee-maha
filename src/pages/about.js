@@ -64,7 +64,7 @@ export function renderAbout() {
           <!-- Story Photo Card -->
           <div class="fade-in-right">
             <div style="background: var(--surface-card); border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border-hairline); box-shadow: var(--shadow-md);">
-              <img src="/images/sanctuary-ambiance.jpg" alt="Ubud Sanctuary Grounds" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy" />
+              <img src="/images/sanctuary-ambiance.webp" alt="Ubud Sanctuary Grounds" width="600" height="380" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy" decoding="async" />
               <div style="padding: var(--space-6); background: var(--surface-card);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
                   <span class="subtle-bullet" style="color: var(--gold-maha);">•</span>
@@ -102,7 +102,7 @@ export function renderAbout() {
           <!-- Pillar 1: Melukat -->
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); transition: all 0.25s ease;">
             <div style="height: 190px; overflow: hidden; position: relative;">
-              <img src="/images/healing-purification.jpg" alt="${t('abt_pillar_1_title')}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+              <img src="/images/healing-purification.webp" alt="${t('abt_pillar_1_title')}" width="300" height="190" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async" />
               <span class="badge badge--teal" style="position: absolute; top: 12px; left: 12px;">Pilar I • Melukat</span>
             </div>
             <div style="padding: var(--space-6);">
@@ -121,7 +121,7 @@ export function renderAbout() {
           <!-- Pillar 2: Sound & Yoga -->
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); transition: all 0.25s ease;">
             <div style="height: 190px; overflow: hidden; position: relative;">
-              <img src="/images/yoga-meditation-retreat.jpg" alt="${t('abt_pillar_2_title')}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+              <img src="/images/yoga-meditation-retreat.webp" alt="${t('abt_pillar_2_title')}" width="300" height="190" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async" />
               <span class="badge badge--teal" style="position: absolute; top: 12px; left: 12px;">Pilar II • Sound & Yoga</span>
             </div>
             <div style="padding: var(--space-6);">
@@ -140,7 +140,7 @@ export function renderAbout() {
           <!-- Pillar 3: Numerology -->
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); transition: all 0.25s ease;">
             <div style="height: 190px; overflow: hidden; position: relative;">
-              <img src="/images/numerology-consultation.jpg" alt="${t('abt_pillar_3_title')}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+              <img src="/images/numerology-consultation.webp" alt="${t('abt_pillar_3_title')}" width="300" height="190" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async" />
               <span class="badge badge--teal" style="position: absolute; top: 12px; left: 12px;">Pilar III • Wariga</span>
             </div>
             <div style="padding: var(--space-6);">
@@ -159,7 +159,7 @@ export function renderAbout() {
           <!-- Pillar 4: Temple Tour -->
           <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); transition: all 0.25s ease;">
             <div style="height: 190px; overflow: hidden; position: relative;">
-              <img src="/images/spiritual-temple-tour.jpg" alt="${t('abt_pillar_4_title')}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+              <img src="/images/spiritual-temple-tour.webp" alt="${t('abt_pillar_4_title')}" width="300" height="190" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async" />
               <span class="badge badge--teal" style="position: absolute; top: 12px; left: 12px;">Pilar IV • Ziarah Pura</span>
             </div>
             <div style="padding: var(--space-6);">
@@ -250,7 +250,7 @@ export function renderAbout() {
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-6);" class="stagger">
           <!-- Master 1: Jero Mangku -->
           <div class="practitioner-card">
-            <img src="/images/balinese-elder-portrait.jpg" alt="${t('abt_master_1_name')}" class="practitioner-card__img" loading="lazy" />
+            <img src="/images/balinese-elder-portrait.webp" alt="${t('abt_master_1_name')}" class="practitioner-card__img" width="300" height="260" loading="lazy" decoding="async" />
             <div class="practitioner-card__body">
               <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">
                 ${t('abt_master_1_role')}
@@ -266,7 +266,7 @@ export function renderAbout() {
 
           <!-- Master 2: Ida Ayu Gayatri -->
           <div class="practitioner-card">
-            <img src="/images/balinese-healer-portrait.jpg" alt="${t('abt_master_2_name')}" class="practitioner-card__img" loading="lazy" />
+            <img src="/images/balinese-healer-portrait.webp" alt="${t('abt_master_2_name')}" class="practitioner-card__img" width="300" height="260" loading="lazy" decoding="async" />
             <div class="practitioner-card__body">
               <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">
                 ${t('abt_master_2_role')}
@@ -282,7 +282,7 @@ export function renderAbout() {
 
           <!-- Master 3: I Made Ariawan -->
           <div class="practitioner-card">
-            <img src="/images/balinese-numerology-master.jpg" alt="${t('abt_master_3_name')}" class="practitioner-card__img" loading="lazy" />
+            <img src="/images/balinese-numerology-master.webp" alt="${t('abt_master_3_name')}" class="practitioner-card__img" width="300" height="260" loading="lazy" decoding="async" />
             <div class="practitioner-card__body">
               <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">
                 ${t('abt_master_3_role')}
@@ -298,7 +298,7 @@ export function renderAbout() {
 
           <!-- Master 4: Ni Kadek Sukerti -->
           <div class="practitioner-card">
-            <img src="/images/sanctuary-ambiance.jpg" alt="${t('abt_master_4_name')}" class="practitioner-card__img" loading="lazy" />
+            <img src="/images/sanctuary-ambiance.webp" alt="${t('abt_master_4_name')}" class="practitioner-card__img" width="300" height="260" loading="lazy" decoding="async" />
             <div class="practitioner-card__body">
               <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px;">
                 ${t('abt_master_4_role')}
@@ -351,7 +351,7 @@ export function renderAbout() {
     <section class="section" style="padding: var(--space-16) 0; background: var(--canvas);">
       <div class="container" style="max-width: 860px; margin: 0 auto;">
         <div class="fade-in" style="background: var(--surface-card); border: 1.5px solid var(--border-gold-subtle); border-radius: var(--radius-xl); padding: var(--space-12) var(--space-8); text-align: center; box-shadow: var(--shadow-sm);">
-          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" style="width: 56px; height: 56px; border-radius: 50%; margin: 0 auto var(--space-4); display: block;" />
+          <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="56" height="56" loading="lazy" decoding="async" style="width: 56px; height: 56px; border-radius: 50%; margin: 0 auto var(--space-4); display: block;" />
           <span class="overline" style="color: var(--gold-maha); letter-spacing: 0.12em;">DIRECT SANCTUARY ACCESS</span>
           <h2 class="heading-2 font-serif" style="font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: var(--space-3); color: var(--text-onyx);">
             ${t('abt_cta_heading')}

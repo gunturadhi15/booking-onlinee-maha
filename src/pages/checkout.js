@@ -10,7 +10,6 @@
 import { getServiceById, getPackageById, formatCurrency, formatDateSafe, formatCurrencyWithApprox } from '../data.js';
 import { t, getDateLocale, getLang } from '../i18n.js';
 import { updateBookingStatusInSupabase } from '../api/supabase.js';
-import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
 import { resetBooking } from './booking.js';
 
 let countdownInterval = null;
@@ -357,12 +356,14 @@ export function initCheckout() {
         payBtn.innerHTML = originalBtnText;
 
         // Show Luxury Payment Success Modal
+        const { showPaymentSuccessModal } = await import('../components/paymentModal.js');
         showPaymentSuccessModal(bookingData);
       } catch (err) {
         console.error('Error saat pemrosesan pembayaran:', err);
         payBtn.disabled = false;
         payBtn.innerHTML = originalBtnText;
 
+        const { showPaymentFailedModal } = await import('../components/paymentModal.js');
         showPaymentFailedModal({
           booking: bookingData,
           errorMsg: err?.message || 'Otorisasi transaksi terganggu. Saldo atau koneksi gateway tidak dapat divalidasi.',

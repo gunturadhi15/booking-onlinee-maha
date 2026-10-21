@@ -4,66 +4,68 @@
 import './styles/index.css';
 import './styles/editorial.css';
 import { Router } from './router.js';
-import { renderHome, initHomeEffects } from './pages/home.js';
-import { renderServices, initServicesFilter, renderServiceDetail } from './pages/services.js';
-import { renderBooking, initBooking } from './pages/booking.js';
-import { renderCheckout, initCheckout } from './pages/checkout.js';
-import { renderInvoice, initInvoice } from './pages/invoice.js';
-import { renderAbout } from './pages/about.js';
-import { renderContact, initContact } from './pages/contact.js';
 import { t, getLang, setLang, getLanguages } from './i18n.js';
 
 // Initialize SPA Router
 const router = new Router();
 
-// Route Definitions
+// Route Definitions with Dynamic Code Splitting (Lazy-loaded per route)
 router.addRoute('/', async () => {
+  const { renderHome, initHomeEffects } = await import('./pages/home.js');
   const html = renderHome();
-  setTimeout(() => initHomeEffects(), 50);
+  setTimeout(() => initHomeEffects(), 20);
   return html;
 });
 
 router.addRoute('/layanan', async () => {
+  const { renderServices, initServicesFilter } = await import('./pages/services.js');
   const html = renderServices();
-  setTimeout(() => initServicesFilter(), 50);
+  setTimeout(() => initServicesFilter(), 20);
   return html;
 });
 
 router.addRoute('/layanan/:slug', async (params) => {
+  const { renderServiceDetail } = await import('./pages/services.js');
   return renderServiceDetail(params);
 });
 
 router.addRoute('/booking', async (params) => {
+  const { renderBooking, initBooking } = await import('./pages/booking.js');
   const html = renderBooking(params);
-  setTimeout(() => initBooking(params), 50);
+  setTimeout(() => initBooking(params), 20);
   return html;
 });
 
 router.addRoute('/checkout', async () => {
+  const { renderCheckout, initCheckout } = await import('./pages/checkout.js');
   const html = renderCheckout();
-  setTimeout(() => initCheckout(), 50);
+  setTimeout(() => initCheckout(), 20);
   return html;
 });
 
 router.addRoute('/invoice', async () => {
+  const { renderInvoice, initInvoice } = await import('./pages/invoice.js');
   const html = renderInvoice();
-  setTimeout(() => initInvoice(), 50);
+  setTimeout(() => initInvoice(), 20);
   return html;
 });
 
 router.addRoute('/invoice/:id', async (params) => {
+  const { renderInvoice, initInvoice } = await import('./pages/invoice.js');
   const html = renderInvoice(params);
-  setTimeout(() => initInvoice(params), 50);
+  setTimeout(() => initInvoice(params), 20);
   return html;
 });
 
 router.addRoute('/tentang-kami', async () => {
+  const { renderAbout } = await import('./pages/about.js');
   return renderAbout();
 });
 
 router.addRoute('/hubungi-kami', async () => {
+  const { renderContact, initContact } = await import('./pages/contact.js');
   const html = renderContact();
-  setTimeout(() => initContact(), 50);
+  setTimeout(() => initContact(), 20);
   return html;
 });
 

@@ -13,7 +13,7 @@ export const SERVICES = [
     description: 'Jelajahi pura-pura suci Bali dengan panduan spiritual yang berpengalaman. Nikmati upacara pembersihan diri, meditasi di tempat-tempat sakral, dan pelajari filosofi Hindu-Bali yang mendalam.',
     category: 'Tour',
     status: 'active',
-    image: '/images/spiritual-temple-tour.jpg',
+    image: '/images/spiritual-temple-tour.webp',
     slug: 'spiritual-temple-tour',
   },
   {
@@ -22,7 +22,7 @@ export const SERVICES = [
     description: 'Retreat yoga dan meditasi intensif di tengah alam Ubud. Temukan kedamaian batin melalui praktik yoga harian, meditasi mindfulness, dan terapi penyembuhan tradisional Bali.',
     category: 'Retreat',
     status: 'active',
-    image: '/images/yoga-meditation-retreat.jpg',
+    image: '/images/yoga-meditation-retreat.webp',
     slug: 'yoga-meditation-retreat',
   },
   {
@@ -31,7 +31,7 @@ export const SERVICES = [
     description: 'Konsultasi numerologi personal untuk memahami potensi diri, jodoh, karier, dan keberuntungan berdasarkan angka kelahiran. Dipandu oleh praktisi numerologi berpengalaman.',
     category: 'Numerology',
     status: 'active',
-    image: '/images/numerology-consultation.jpg',
+    image: '/images/numerology-consultation.webp',
     slug: 'numerology-consultation',
   },
   {
@@ -40,7 +40,7 @@ export const SERVICES = [
     description: 'Sesi penyembuhan holistik yang menggabungkan melukat (upacara pembersihan air suci), terapi energi, dan ritual pembersihan aura tradisional Bali untuk memulihkan keseimbangan jiwa.',
     category: 'Healing',
     status: 'active',
-    image: '/images/healing-purification.jpg',
+    image: '/images/healing-purification.webp',
     slug: 'healing-purification',
   },
 ];
@@ -371,7 +371,7 @@ export const SETTINGS = {
 export const SANCTUARY_MEDIA = {
   hero_ambient: {
     title: 'The Sacred Ubud Sanctuary',
-    poster: '/images/sanctuary-ambiance.jpg',
+    poster: '/images/sanctuary-ambiance.webp',
     video_mp4: 'https://assets.mixkit.co/videos/preview/mixkit-sun-rays-in-the-forest-41584-large.mp4',
     badge: 'Sanctuary in Motion'
   },
@@ -381,7 +381,7 @@ export const SANCTUARY_MEDIA = {
       slug: 'healing-purification',
       title: 'Sacred Water Melukat Blessing',
       category: 'Healing & Purification',
-      image: '/images/healing-purification.jpg',
+      image: '/images/healing-purification.webp',
       badge: 'Upacara Melukat',
       quote: 'Penyucian diri melalui tirta suci alami untuk meluruhkan beban energi dan merestorasi ketenangan batin.',
       tag: 'Sacred Springs'
@@ -391,7 +391,7 @@ export const SANCTUARY_MEDIA = {
       slug: 'yoga-meditation-retreat',
       title: 'Tibetan Sound Bath & Forest Meditation',
       category: 'Retreat',
-      image: '/images/yoga-meditation-retreat.jpg',
+      image: '/images/yoga-meditation-retreat.webp',
       badge: 'Sound Healing & Yoga',
       quote: 'Resonansi mangkuk Tibet dan pernapasan berkesadaran di pavilion kayu jati yang hening di tengah rimba Ubud.',
       tag: 'Forest Pavilion'
@@ -401,7 +401,7 @@ export const SANCTUARY_MEDIA = {
       slug: 'spiritual-temple-tour',
       title: 'Ancient Temple & Spiritual Pilgrimage',
       category: 'Tour',
-      image: '/images/spiritual-temple-tour.jpg',
+      image: '/images/spiritual-temple-tour.webp',
       badge: 'Ziarah Pura Sakral',
       quote: 'Menelusuri gapura candi berukir kuno dan mendalami filosofi Tri Hita Karana dengan bimbingan pemangku senior.',
       tag: 'Sacred Temples'
@@ -411,7 +411,7 @@ export const SANCTUARY_MEDIA = {
       slug: 'numerology-consultation',
       title: 'Sacred Lontar & Numerology Reading',
       category: 'Numerology',
-      image: '/images/numerology-consultation.jpg',
+      image: '/images/numerology-consultation.webp',
       badge: 'Peta Kehidupan',
       quote: 'Menyingkap cetak biru jiwa, potensi diri, dan siklus karma melalui hitungan lontar sakral Bali.',
       tag: 'Personal Blueprint'
@@ -419,37 +419,60 @@ export const SANCTUARY_MEDIA = {
   ]
 };
 
+// Memoization caches for high-frequency queries
+const serviceIdCache = new Map();
+const packageIdCache = new Map();
+const packagesByServiceCache = new Map();
+const currencyFormatters = new Map();
+
 // Helper functions
 export function getServiceById(id) {
   if (!id) return undefined;
+  if (serviceIdCache.has(id)) return serviceIdCache.get(id);
   const clean = String(id).trim().toLowerCase().replace(/[-_]/g, '');
-  return SERVICES.find(s => 
+  const found = SERVICES.find(s => 
     s.service_id.toLowerCase() === id.toLowerCase() ||
     s.service_id.toLowerCase().replace(/[-_]/g, '') === clean ||
     (s.slug && s.slug.toLowerCase() === id.toLowerCase())
   );
+  serviceIdCache.set(id, found);
+  return found;
 }
 
 export function getPackageById(id) {
   if (!id) return undefined;
+  if (packageIdCache.has(id)) return packageIdCache.get(id);
   const clean = String(id).trim().toLowerCase().replace(/[-_]/g, '');
-  return PACKAGES.find(p => 
+  const found = PACKAGES.find(p => 
     p.package_id.toLowerCase() === id.toLowerCase() ||
     p.package_id.toLowerCase().replace(/[-_]/g, '') === clean
   );
+  packageIdCache.set(id, found);
+  return found;
 }
 
 export function getPackagesByService(serviceId) {
-  return PACKAGES.filter(p => p.service_id === serviceId && p.status === 'active');
+  if (packagesByServiceCache.has(serviceId)) {
+    return packagesByServiceCache.get(serviceId);
+  }
+  const result = PACKAGES.filter(p => p.service_id === serviceId && p.status === 'active');
+  packagesByServiceCache.set(serviceId, result);
+  return result;
 }
 
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat(getDateLocale(), {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  const locale = getDateLocale();
+  let formatter = currencyFormatters.get(locale);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+    currencyFormatters.set(locale, formatter);
+  }
+  return formatter.format(amount);
 }
 
 export function getCategories() {
