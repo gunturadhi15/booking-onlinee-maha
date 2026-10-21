@@ -1451,9 +1451,14 @@ textarea.form-input {
 .booking-steps {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: var(--space-2);
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-8);
+  width: 100%;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
 }
 
 .booking-step {
@@ -1725,6 +1730,14 @@ textarea.form-input {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: var(--space-10);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+  align-items: start;
 }
 
 .payment-methods {
@@ -2388,7 +2401,8 @@ textarea.form-input {
   .about-preview__grid,
   .about-content__grid,
   .service-detail__grid,
-  .checkout__grid {
+  .checkout__grid,
+  .contact__grid {
     grid-template-columns: 1fr;
     gap: var(--space-8);
   }

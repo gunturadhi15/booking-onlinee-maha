@@ -7,7 +7,7 @@
  * - Complete Multi-Language Support
  */
 import { formatCurrency, COMPANY, getServiceById, getPackageById, formatDateSafe, formatCurrencyWithApprox } from '../data.js';
-import { t, getDateLocale, getLang } from '../i18n.js';
+import { t, getDateLocale, getLang, translateServiceName, translatePackageName } from '../i18n.js';
 import { getBookingByInvoiceFromSupabase, isSupabaseConfigured } from '../api/supabase.js';
 
 export function renderInvoice(params) {
@@ -40,9 +40,8 @@ export function renderInvoice(params) {
 
   const service = getServiceById(data.service_id);
   const pkg = getPackageById(data.package_id);
-  const srvKey = service ? service.service_id.toLowerCase() : 'srv001';
-  const serviceName = service ? (t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name) : 'Spiritual Journey Bali';
-  const packageName = data.package_name || (pkg ? pkg.package_name : 'Paket Pilihan');
+  const serviceName = service ? (translateServiceName(service.service_id) || service.service_name) : 'Spiritual Journey Bali';
+  const packageName = pkg ? (translatePackageName(pkg.package_id) || pkg.package_name) : (data.package_name || 'Paket Pilihan');
   const bookingCode = data.booking_id || data.kode_pemesanan || 'MWJ-JOURNEY-001';
   const currentLanguage = getLang();
 

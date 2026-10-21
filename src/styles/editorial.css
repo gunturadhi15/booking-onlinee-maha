@@ -623,12 +623,14 @@ h1, h2, h3, h4,
   flex-wrap: nowrap !important;
   gap: var(--space-2);
   margin: var(--space-6) auto var(--space-8);
-  max-width: 680px;
+  width: 100%;
+  max-width: 880px;
+  box-sizing: border-box;
   background: var(--surface-card);
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-xl);
-  padding: 12px 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  padding: 12px 24px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.03);
   user-select: none;
 }
 
@@ -734,6 +736,136 @@ h1, h2, h3, h4,
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-lg);
   box-shadow: none;
+}
+
+/* ==========================================================================
+   Booking Service Selection Cards (Step 1)
+   ========================================================================== */
+.booking-services-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.booking-service-select {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-card);
+  transition: all 0.25s ease;
+  overflow: hidden;
+  font-family: inherit;
+  color: inherit;
+  position: relative;
+}
+
+.booking-service-select:hover {
+  border-color: var(--gold-maha);
+  background: #FCFBF7;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(197, 155, 39, 0.08);
+}
+
+.booking-service-select:active {
+  transform: translateY(0);
+}
+
+.booking-service-select:hover .booking-service-select__arrow {
+  transform: translateX(3px);
+  color: var(--gold-deep);
+}
+
+.booking-service-select__img {
+  width: 84px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.booking-service-select__body {
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.booking-service-select__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.booking-service-select__title {
+  font-size: var(--text-base);
+  margin: 0;
+  color: var(--text-onyx);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.booking-service-select__badge {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.booking-service-select__desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-stone);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.booking-service-select__price {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--cta-forest);
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1.35;
+}
+
+.booking-service-select__price .price-currency-approx {
+  font-size: 0.78rem;
+  color: var(--text-stone);
+  font-weight: 400;
+}
+
+.booking-service-select__arrow {
+  color: var(--gold-maha);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+  margin-left: auto;
 }
 
 .payment-method.selected,
@@ -949,9 +1081,27 @@ h1, h2, h3, h4,
     flex: 1 1 100%;
     width: 100%;
   }
+  .booking-steps {
+    max-width: 780px;
+    padding: 10px 18px;
+    gap: 6px;
+  }
+  .booking-step {
+    gap: 6px;
+    padding: 3px 5px;
+  }
+  .booking-step__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+  }
+  .booking-step__number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .navbar__logo-text {
     font-size: 0.85rem;
     letter-spacing: 0.08em;
@@ -965,19 +1115,25 @@ h1, h2, h3, h4,
   }
   .booking-steps {
     flex-wrap: nowrap !important;
-    padding: 10px 14px;
-    gap: 4px;
+    padding: 8px 10px;
+    gap: 3px;
     justify-content: space-between;
     margin-bottom: var(--space-6);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .booking-step {
-    gap: 6px;
-    padding: 2px 4px;
+    gap: 4px;
+    padding: 2px 3px;
+    min-width: 0;
+    flex-shrink: 0;
   }
   .booking-step__number {
-    width: 28px;
-    height: 28px;
-    font-size: 0.75rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.72rem;
   }
   .booking-step:not(.active) .booking-step__label {
     display: none !important;
@@ -987,15 +1143,107 @@ h1, h2, h3, h4,
     font-size: 0.68rem;
     font-weight: 700;
     color: var(--cta-forest);
-    max-width: 90px;
+    max-width: 85px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .booking-step__connector {
-    flex: 1 1 6px;
-    min-width: 6px;
-    max-width: 24px;
+    flex: 1 1 4px;
+    min-width: 4px;
+    max-width: 20px;
+  }
+
+  .booking-service-select {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+  .booking-service-select__img {
+    width: 72px;
+    height: 60px;
+  }
+  .booking-service-select__title {
+    font-size: 0.95rem;
+  }
+  .booking-service-select__desc {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-page .container {
+    padding-inline: 12px !important;
+  }
+  .booking-steps {
+    padding: 6px 8px;
+    gap: 2px;
+    border-radius: var(--radius-lg);
+  }
+  .booking-step {
+    gap: 3px;
+    padding: 2px;
+  }
+  .booking-step__number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.68rem;
+  }
+  .booking-step.active .booking-step__label {
+    max-width: 65px;
+    font-size: 0.62rem;
+  }
+  .booking-step__connector {
+    min-width: 3px;
+    max-width: 12px;
+  }
+  .booking-service-select {
+    padding: 10px 10px;
+    gap: 10px;
+    border-radius: var(--radius-md);
+  }
+  .booking-service-select__img {
+    width: 62px;
+    height: 54px;
+    border-radius: var(--radius-sm);
+  }
+  .booking-service-select__title {
+    font-size: 0.88rem;
+    line-height: 1.25;
+  }
+  .booking-service-select__badge {
+    font-size: 0.62rem;
+    padding: 1px 6px;
+  }
+  .booking-service-select__desc {
+    font-size: 0.76rem;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
+  }
+  .booking-service-select__price {
+    font-size: 0.76rem;
+    margin-top: 4px;
+  }
+  .booking-service-select__arrow {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Contact Page Responsive Layout
+   ========================================================================== */
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
   }
 }
 
@@ -1658,16 +1906,17 @@ h1, h2, h3, h4,
   inset: 0;
   background: rgba(20, 40, 29, 0.65);
   backdrop-filter: blur(4px);
-  z-index: 9999;
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  animation: fadeIn 0.25s ease;
+  animation: modalFadeIn 0.25s ease-out forwards;
 }
 
 .confirm-modal-box {
-  background: #FFFFFF;
+  background: #FFFFFF !important;
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--gold-maha);
   width: 100%;
@@ -1677,6 +1926,26 @@ h1, h2, h3, h4,
   padding: var(--space-6) var(--space-8);
   box-shadow: 0 16px 36px rgba(20, 40, 29, 0.25);
   position: relative;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .confirm-modal-header {

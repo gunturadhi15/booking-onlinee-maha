@@ -46,6 +46,7 @@ import {
   translatePackageDesc
 } from '../i18n.js';
 import { createBookingInSupabase, getBookedTimesFromSupabase, updateBookingStatusInSupabase } from '../api/supabase.js';
+import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
 
 let bookingState = {
   step: 1,
@@ -181,29 +182,27 @@ function renderStep1() {
     </div>
 
     <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_choose_service')}</h2>
-    <div style="display: grid; gap: var(--space-4);">
+    <div class="booking-services-grid">
       ${SERVICES.filter(s => s.status === 'active').map(service => {
         const srvName = translateServiceName(service.service_id) || service.service_name;
         const srvDesc = translateServiceDesc(service.service_id) || service.description;
         const packages = getPackagesByService(service.service_id);
         const minPrice = Math.min(...packages.map(p => p.price));
         return `
-          <button class="payment-method booking-service-select" data-service="${service.service_id}"
-                  style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4);">
-            <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="84" height="64" loading="lazy" decoding="async"
-                 style="width: 84px; height: 64px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;" />
-            <div style="flex: 1; min-width: 0;">
-              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
-                <h4 style="font-size: var(--text-base); margin: 0; color: var(--text-onyx); font-family: var(--font-serif); font-weight: 600;">${srvName}</h4>
-                <span class="badge badge--teal" style="font-size: 0.7rem;">${service.category}</span>
+          <button type="button" class="booking-service-select" data-service="${service.service_id}">
+            <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" class="booking-service-select__img" width="84" height="64" loading="lazy" decoding="async" />
+            <div class="booking-service-select__body">
+              <div class="booking-service-select__header">
+                <h4 class="booking-service-select__title">${srvName}</h4>
+                <span class="badge badge--teal booking-service-select__badge">${service.category}</span>
               </div>
-              <p style="margin: 0; font-size: 0.82rem; color: var(--text-stone); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${srvDesc}</p>
-              <div style="margin-top: 6px; font-size: 0.8rem; color: var(--cta-forest); font-weight: 600;">
-                ${t('starting_from')} <span class="tabular-nums">${formatCurrencyWithApprox(minPrice, currentLanguage)}</span>
+              <p class="booking-service-select__desc">${srvDesc}</p>
+              <div class="booking-service-select__price">
+                <span>${t('starting_from')}</span> <span class="tabular-nums">${formatCurrencyWithApprox(minPrice, currentLanguage)}</span>
               </div>
             </div>
-            <div style="color: var(--gold-maha); display: flex; align-items: center; flex-shrink: 0;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <div class="booking-service-select__arrow" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </button>
         `;
@@ -289,8 +288,10 @@ function renderStep2() {
 function renderStep3() {
   const service = getServiceById(bookingState.service_id);
   const pkg = getPackageById(bookingState.package_id);
-  const srvName = translateServiceName(service?.service_id) || service?.service_name;
-  const pkgName = translatePackageName(pkg?.package_id) || pkg?.package_name;
+  if (!service || !pkg) return renderStep1();
+
+  const srvName = translateServiceName(service.service_id) || service.service_name;
+  const pkgName = translatePackageName(pkg.package_id) || pkg.package_name;
 
   return `
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
@@ -358,6 +359,8 @@ function renderStep3() {
 function renderStep4() {
   const service = getServiceById(bookingState.service_id);
   const pkg = getPackageById(bookingState.package_id);
+  if (!service || !pkg) return renderStep1();
+
   const maxPax = getMaxPaxForService(service);
   const isNumerology = service?.category === 'Numerology' || service?.service_id === 'SRV003';
   const currentLanguage = getLang();
@@ -365,6 +368,9 @@ function renderStep4() {
   // Price calculations
   const unitPrice = pkg?.price || 0;
   const currentSubtotal = unitPrice * bookingState.pax;
+
+  const srvName = translateServiceName(service.service_id) || service.service_name;
+  const pkgName = translatePackageName(pkg.package_id) || pkg.package_name;
 
   return `
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); flex-wrap: wrap; gap: 8px;">
@@ -839,20 +845,36 @@ export function initBooking() {
   const content = document.getElementById('booking-step-content');
   if (!content) return;
 
-  // Real-time phone sanitizer listener in Step 4
+  // Real-time form fields sync listener in Step 4
+  const syncPhone = () => {
+    const code = document.getElementById('customer-country-code')?.value || '+62';
+    const raw = document.getElementById('customer-phone-input')?.value || '';
+    bookingState.country_code = code;
+    bookingState.whatsapp_raw = raw;
+    bookingState.whatsapp = sanitizeInternationalPhone(code, raw);
+    
+    const previewEl = document.getElementById('preview-sanitized-phone');
+    if (previewEl) {
+      previewEl.textContent = bookingState.whatsapp ? `+${bookingState.whatsapp}` : '-';
+    }
+  };
+
   content.addEventListener('input', (e) => {
     if (e.target.id === 'customer-phone-input' || e.target.id === 'customer-country-code') {
-      const code = document.getElementById('customer-country-code')?.value || '+62';
-      const raw = document.getElementById('customer-phone-input')?.value || '';
-      bookingState.country_code = code;
-      bookingState.whatsapp_raw = raw;
-      bookingState.whatsapp = sanitizeInternationalPhone(code, raw);
-      
-      const previewEl = document.getElementById('preview-sanitized-phone');
-      if (previewEl) {
-        previewEl.textContent = bookingState.whatsapp ? `+${bookingState.whatsapp}` : '-';
-      }
+      syncPhone();
     }
+    if (e.target.id === 'customer-name') bookingState.customer_name = e.target.value;
+    if (e.target.id === 'customer-email') bookingState.email = e.target.value;
+    if (e.target.id === 'customer-notes') bookingState.notes = e.target.value;
+    if (e.target.id === 'customer-dob') bookingState.dob = e.target.value;
+  });
+
+  content.addEventListener('change', (e) => {
+    if (e.target.id === 'customer-country-code') {
+      syncPhone();
+    }
+    if (e.target.id === 'customer-nationality') bookingState.nationality = e.target.value;
+    if (e.target.id === 'customer-dob') bookingState.dob = e.target.value;
   });
 
   // Stepper node click delegation: jump directly to any previously completed step
@@ -964,20 +986,41 @@ export function initBooking() {
       if (bookingState.booking_date && bookingState.booking_time) {
         bookingState.step = 4;
         updateBookingUI();
+      } else {
+        if (!bookingState.booking_date) {
+          alert('Silakan tentukan tanggal kunjungan terlebih dahulu.');
+        } else if (!bookingState.booking_time) {
+          alert('Silakan tentukan jam/waktu sesi terlebih dahulu.');
+        }
       }
       return;
     }
 
-    // Pax stepper +/- buttons
+    // Pax stepper +/- buttons (In-place update without clearing user inputs)
     if (e.target.closest('#pax-minus') || e.target.closest('#pax-plus')) {
       const service = getServiceById(bookingState.service_id);
+      const pkg = getPackageById(bookingState.package_id);
       const maxPax = getMaxPaxForService(service);
       if (e.target.closest('#pax-minus') && bookingState.pax > 1) {
         bookingState.pax--;
       } else if (e.target.closest('#pax-plus') && bookingState.pax < maxPax) {
         bookingState.pax++;
       }
-      updateBookingUI();
+      
+      const paxValEl = document.getElementById('pax-display-val');
+      const paxMinusBtn = document.getElementById('pax-minus');
+      const paxPlusBtn = document.getElementById('pax-plus');
+      const paxLabelEl = content.querySelector('.pax-counter-box span:first-child');
+      const subtotalEl = content.querySelector('.nationality-hint strong.tabular-nums');
+
+      if (paxValEl) paxValEl.textContent = bookingState.pax;
+      if (paxMinusBtn) paxMinusBtn.disabled = bookingState.pax <= 1;
+      if (paxPlusBtn) paxPlusBtn.disabled = bookingState.pax >= maxPax;
+      if (paxLabelEl) paxLabelEl.textContent = `${bookingState.pax} ${t('book_pax_person')}`;
+      if (subtotalEl && pkg) {
+        const sub = pkg.price * bookingState.pax;
+        subtotalEl.innerHTML = formatCurrencyWithApprox(sub, getLang());
+      }
       return;
     }
 
@@ -1197,9 +1240,9 @@ export function initBooking() {
 
         restoreBtn();
 
-        // 4. Show Payment Success Modal (Lazy-loaded component)
-        const { showPaymentSuccessModal } = await import('../components/paymentModal.js');
+        // 4. Show Payment Success Modal
         showPaymentSuccessModal(savedSession);
+        resetBooking();
       } catch (err) {
         console.error('Error saat proses pembayaran:', err);
         restoreBtn();
@@ -1213,7 +1256,6 @@ export function initBooking() {
           package_name: pkg?.package_name
         };
 
-        const { showPaymentFailedModal } = await import('../components/paymentModal.js');
         showPaymentFailedModal({
           booking: errorSession,
           errorMsg: err?.message || 'Terjadi gangguan jaringan atau gateway saat verifikasi pembayaran.',

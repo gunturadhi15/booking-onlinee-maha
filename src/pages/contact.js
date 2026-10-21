@@ -18,7 +18,7 @@ export function renderContact() {
     <section class="section">
       <div class="container" style="max-width: 960px; margin: 0 auto;">
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); margin-bottom: var(--space-12);" class="checkout__grid">
+        <div class="contact__grid">
           
           <!-- Kontak Info -->
           <div class="fade-in-left">

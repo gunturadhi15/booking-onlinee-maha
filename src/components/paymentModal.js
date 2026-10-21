@@ -37,7 +37,11 @@ export function showPaymentSuccessModal(booking) {
 
   const html = `
     <div class="confirm-modal-overlay" id="payment-result-modal">
-      <div class="confirm-modal-box payment-success-box fade-in">
+      <div class="confirm-modal-box payment-success-box" style="position: relative;">
+        <!-- Close Button -->
+        <button type="button" class="modal-close-btn" id="btn-close-payment-modal" aria-label="Tutup Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
         
         <!-- Header Success -->
         <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2);">
@@ -147,14 +151,26 @@ export function showPaymentSuccessModal(booking) {
     });
   }
 
+  // Close modal handler
+  const closeModal = () => {
+    const m = document.getElementById('payment-result-modal');
+    if (m) m.remove();
+  };
+
+  document.getElementById('btn-close-payment-modal')?.addEventListener('click', closeModal);
+
+  // Close when clicking overlay backdrop outside box
+  document.getElementById('payment-result-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'payment-result-modal') {
+      closeModal();
+    }
+  });
+
   // Close modal when navigating
   const links = document.querySelectorAll('#payment-result-modal a');
   links.forEach(l => {
     l.addEventListener('click', () => {
-      setTimeout(() => {
-        const m = document.getElementById('payment-result-modal');
-        if (m) m.remove();
-      }, 250);
+      setTimeout(closeModal, 250);
     });
   });
 }
@@ -187,7 +203,11 @@ export function showPaymentFailedModal(options = {}) {
 
   const html = `
     <div class="confirm-modal-overlay" id="payment-result-modal">
-      <div class="confirm-modal-box payment-failed-box fade-in">
+      <div class="confirm-modal-box payment-failed-box" style="position: relative;">
+        <!-- Close Button -->
+        <button type="button" class="modal-close-btn" id="btn-close-failed-modal" aria-label="Tutup Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
         
         <!-- Header Failed -->
         <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2);">
@@ -265,12 +285,26 @@ export function showPaymentFailedModal(options = {}) {
 
   document.body.insertAdjacentHTML('beforeend', html);
 
+  // Close modal handler
+  const closeModal = () => {
+    const m = document.getElementById('payment-result-modal');
+    if (m) m.remove();
+  };
+
+  document.getElementById('btn-close-failed-modal')?.addEventListener('click', closeModal);
+
+  // Close when clicking overlay backdrop outside box
+  document.getElementById('payment-result-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'payment-result-modal') {
+      closeModal();
+    }
+  });
+
   // Hook Retry button
   const retryBtn = document.getElementById('btn-retry-payment');
   if (retryBtn) {
     retryBtn.addEventListener('click', () => {
-      const m = document.getElementById('payment-result-modal');
-      if (m) m.remove();
+      closeModal();
       if (typeof onRetry === 'function') onRetry();
     });
   }
@@ -279,8 +313,7 @@ export function showPaymentFailedModal(options = {}) {
   const changeBtn = document.getElementById('btn-change-payment-method');
   if (changeBtn) {
     changeBtn.addEventListener('click', () => {
-      const m = document.getElementById('payment-result-modal');
-      if (m) m.remove();
+      closeModal();
       if (typeof onChangeMethod === 'function') onChangeMethod();
     });
   }

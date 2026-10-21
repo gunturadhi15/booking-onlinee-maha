@@ -8,7 +8,7 @@
  * - Multi-Language support
  */
 import { getServiceById, getPackageById, formatCurrency, formatDateSafe, formatCurrencyWithApprox } from '../data.js';
-import { t, getDateLocale, getLang } from '../i18n.js';
+import { t, getDateLocale, getLang, translateServiceName, translatePackageName } from '../i18n.js';
 import { updateBookingStatusInSupabase } from '../api/supabase.js';
 import { resetBooking } from './booking.js';
 
@@ -44,8 +44,7 @@ export function renderCheckout() {
     `;
   }
 
-  const srvKey = service.service_id.toLowerCase();
-  const srvName = t(`data_${srvKey}_name`) !== `data_${srvKey}_name` ? t(`data_${srvKey}_name`) : service.service_name;
+  const srvName = translateServiceName(service.service_id) || service.service_name;
   const bookingCode = data.booking_id || data.kode_pemesanan || 'MWJ-JOURNEY-001';
   const currentLanguage = getLang();
   const selectedMethod = data.payment_method || 'card';
