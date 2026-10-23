@@ -11,6 +11,7 @@ import { getServiceById, getPackageById, formatCurrency, formatDateSafe, formatC
 import { t, getDateLocale, getLang, translateServiceName, translatePackageName } from '../i18n.js';
 import { updateBookingStatusInSupabase } from '../api/supabase.js';
 import { resetBooking } from './booking.js';
+import { esc } from '../utils/security.js';
 
 let countdownInterval = null;
 
@@ -71,11 +72,11 @@ export function renderCheckout() {
                 ${t('chk_booking_code')}
               </span>
               <p class="booking-code-value" id="display-booking-code" style="margin: 2px 0 0;">
-                ${bookingCode}
+                ${esc(bookingCode)}
               </p>
             </div>
           </div>
-          <button type="button" class="copy-code-btn" id="btn-copy-checkout-code" data-code="${bookingCode}">
+          <button type="button" class="copy-code-btn" id="btn-copy-checkout-code" data-code="${esc(bookingCode)}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span id="copy-btn-text">${t('inv_copy_code')}</span>
           </button>
@@ -171,45 +172,45 @@ export function renderCheckout() {
               <div style="background: var(--surface-silk); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); margin-bottom: var(--space-4); font-size: var(--text-xs);">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
                   <span style="color: var(--text-muted); font-family: var(--font-mono);">Kode Booking</span>
-                  <span style="font-weight: 700; color: var(--cta-forest); font-family: var(--font-mono);">${bookingCode}</span>
+                  <span style="font-weight: 700; color: var(--cta-forest); font-family: var(--font-mono);">${esc(bookingCode)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                   <span style="color: var(--text-muted); font-family: var(--font-mono);">Invoice Ref</span>
-                  <span style="font-weight: 700; color: var(--gold-700); font-family: var(--font-mono);">${data.invoice_id}</span>
+                  <span style="font-weight: 700; color: var(--gold-700); font-family: var(--font-mono);">${esc(data.invoice_id || data.invoice_number)}</span>
                 </div>
               </div>
 
               <div class="booking-summary__row">
                 <span class="label">${t('book_service_label')}</span>
-                <span class="value">${srvName}</span>
+                <span class="value">${esc(srvName)}</span>
               </div>
               <div class="booking-summary__row">
                 <span class="label">${t('book_package_label')}</span>
-                <span class="value">${pkg?.package_id ? (translatePackageName(pkg.package_id) || pkg.package_name) : pkg.package_name}</span>
+                <span class="value">${esc(pkg?.package_id ? (translatePackageName(pkg.package_id) || pkg.package_name) : pkg.package_name)}</span>
               </div>
               ${data.pax && data.pax > 1 ? `
                 <div class="booking-summary__row">
                   <span class="label">${t('book_pax_label')}</span>
-                  <span class="value"><strong>${data.pax} ${t('book_pax_person')}</strong></span>
+                  <span class="value"><strong>${Number(data.pax)} ${t('book_pax_person')}</strong></span>
                 </div>
               ` : ''}
               <div class="booking-summary__row">
                 <span class="label">${t('book_date_label')}</span>
-                <span class="value">${formatDateSafe(data.booking_date)}</span>
+                <span class="value">${esc(formatDateSafe(data.booking_date))}</span>
               </div>
               <div class="booking-summary__row">
                 <span class="label">${t('book_time_label')}</span>
-                <span class="value">${data.booking_time} WITA (Bali Time)</span>
+                <span class="value">${esc(data.booking_time)} WITA (Bali Time)</span>
               </div>
               
               <div style="margin: var(--space-4) 0; padding: var(--space-3); background: var(--surface-silk); border-radius: var(--radius-md); border: 1px solid var(--border-hairline);">
                 <p style="font-size: var(--text-xs); font-family: var(--font-mono); text-transform: uppercase; color: var(--gold-maha); font-weight: 600; margin-bottom: var(--space-1);">${t('book_customer_label')}</p>
-                <p style="font-size: var(--text-xs); color: var(--text-onyx); font-weight: 600; margin: 0 0 2px;">${data.customer_name} ${data.nationality ? `(${data.nationality})` : ''}</p>
-                <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${data.email}</p>
-                <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${data.whatsapp}</p>
+                <p style="font-size: var(--text-xs); color: var(--text-onyx); font-weight: 600; margin: 0 0 2px;">${esc(data.customer_name)} ${data.nationality ? `(${esc(data.nationality)})` : ''}</p>
+                <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${esc(data.email)}</p>
+                <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${esc(data.whatsapp)}</p>
                 
-                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${data.dob}</p>` : ''}
-                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> Transport: ${data.transport_option === 'need_pickup' ? 'Pickup (' + (data.pickup_address || '') + ')' : 'Direct Meet Bindu'}</p>` : ''}
+                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${esc(data.dob)}</p>` : ''}
+                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> Transport: ${data.transport_option === 'need_pickup' ? 'Pickup (' + esc(data.pickup_address || '') + ')' : 'Direct Meet Bindu'}</p>` : ''}
               </div>
 
               <div class="booking-summary__row">

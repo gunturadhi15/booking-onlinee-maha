@@ -47,6 +47,7 @@ import {
 } from '../i18n.js';
 import { createBookingInSupabase, getBookedTimesFromSupabase, updateBookingStatusInSupabase } from '../api/supabase.js';
 import { showPaymentSuccessModal, showPaymentFailedModal } from '../components/paymentModal.js';
+import { esc, sanitizeText, INPUT_LIMITS, isValidName, isValidEmail as isStrictValidEmail } from '../utils/security.js';
 
 let bookingState = {
   step: 1,
@@ -399,14 +400,14 @@ function renderStep4() {
       <div class="form-group">
         <label class="form-label" for="customer-name">${t('book_fullname')} ${t('book_required')}</label>
         <input type="text" class="form-input" id="customer-name" placeholder="${t('book_fullname_placeholder')}" 
-               value="${bookingState.customer_name}" required />
+               value="${esc(bookingState.customer_name)}" maxlength="${INPUT_LIMITS.customer_name}" required />
       </div>
 
       <!-- 2. Email Address -->
       <div class="form-group">
         <label class="form-label" for="customer-email">${t('book_email')} ${t('book_required')}</label>
         <input type="email" class="form-input" id="customer-email" placeholder="example@email.com" 
-               value="${bookingState.email}" required />
+               value="${esc(bookingState.email)}" maxlength="${INPUT_LIMITS.email}" required />
       </div>
 
       <!-- 3. International WhatsApp Phone with E.164 Sanitization -->
@@ -415,16 +416,16 @@ function renderStep4() {
         <div class="phone-input-combo">
           <select class="country-code-select" id="customer-country-code">
             ${COUNTRIES_LIST.map(c => `
-              <option value="${c.dial}" ${bookingState.country_code === c.dial ? 'selected' : ''}>
-                ${c.flag} ${c.dial} (${c.code})
+              <option value="${esc(c.dial)}" ${bookingState.country_code === c.dial ? 'selected' : ''}>
+                ${esc(c.flag)} ${esc(c.dial)} (${esc(c.code)})
               </option>
             `).join('')}
           </select>
           <input type="tel" class="form-input phone-number-input" id="customer-phone-input" 
                  placeholder="${t('book_phone_placeholder')}" 
-                 value="${bookingState.whatsapp_raw || ''}" required />
+                 value="${esc(bookingState.whatsapp_raw || '')}" maxlength="${INPUT_LIMITS.phone}" required />
         </div>
-        <p class="nationality-hint">E.164 Sanitized: <strong id="preview-sanitized-phone" style="color: var(--cta-forest); font-family: var(--font-mono);">${bookingState.whatsapp || '-'}</strong></p>
+        <p class="nationality-hint">E.164 Sanitized: <strong id="preview-sanitized-phone" style="color: var(--cta-forest); font-family: var(--font-mono);">${esc(bookingState.whatsapp || '-')}</strong></p>
       </div>
 
       <!-- 4. Country of Origin / Nationality with Bilingual Guide Note -->
@@ -469,7 +470,7 @@ function renderStep4() {
           <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label" for="customer-dob">${t('book_dob_label')} ${t('book_required')}</label>
             <input type="date" class="form-input" id="customer-dob" 
-                   value="${bookingState.dob || ''}" 
+                   value="${esc(bookingState.dob || '')}" 
                    max="${getBaliDateString()}" 
                    required />
             <p class="nationality-hint">${t('book_dob_hint')}</p>
@@ -514,7 +515,7 @@ function renderStep4() {
       <!-- Notes -->
       <div class="form-group">
         <label class="form-label" for="customer-notes">${t('book_notes')}</label>
-        <textarea class="form-input" id="customer-notes" placeholder="${t('book_notes_placeholder')}">${bookingState.notes}</textarea>
+        <textarea class="form-input" id="customer-notes" maxlength="${INPUT_LIMITS.notes}" placeholder="${t('book_notes_placeholder')}">${esc(bookingState.notes)}</textarea>
       </div>
       
       <button class="btn btn--primary btn--lg" id="continue-to-step5" style="width: 100%; margin-top: var(--space-4);">
@@ -569,7 +570,7 @@ function renderStep5() {
             ${t('book_code_preview')}
           </span>
           <p class="booking-code-value" style="margin: 2px 0 0;">
-            ${previewBookingCode}
+            ${esc(previewBookingCode)}
           </p>
         </div>
         <span class="badge badge--teal" style="font-size: 0.72rem;">Official Sacred Code</span>
@@ -605,21 +606,21 @@ function renderStep5() {
       <!-- Specific Conditional Details Preview -->
       <div style="margin: var(--space-4) 0; padding: var(--space-4); background: var(--surface-silk); border-radius: var(--radius-md); border: 1px solid var(--border-hairline);">
         <p style="font-size: var(--text-xs); font-family: var(--font-mono); text-transform: uppercase; color: var(--gold-maha); font-weight: 600; margin-bottom: var(--space-2);">${t('book_customer_label')}</p>
-        <p style="font-size: var(--text-sm); font-weight: 600; color: var(--text-onyx); margin: 0 0 2px;">${bookingState.customer_name} (${bookingState.nationality})</p>
-        <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">Email: ${bookingState.email}</p>
-        <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">WhatsApp (E.164): <strong>+${bookingState.whatsapp}</strong></p>
+        <p style="font-size: var(--text-sm); font-weight: 600; color: var(--text-onyx); margin: 0 0 2px;">${esc(bookingState.customer_name)} (${esc(bookingState.nationality)})</p>
+        <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">Email: ${esc(bookingState.email)}</p>
+        <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">WhatsApp (E.164): <strong>+${esc(bookingState.whatsapp)}</strong></p>
         
         ${isNumerology && bookingState.dob ? `
           <p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;">
-            • Tanggal Lahir (Chart): ${bookingState.dob}
+            • Tanggal Lahir (Chart): ${esc(bookingState.dob)}
           </p>
         ` : ''}
 
         <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 4px;">
-          Metode Pembayaran: <strong style="color: var(--text-onyx);">${bookingState.payment_method.toUpperCase()}</strong>
+          Metode Pembayaran: <strong style="color: var(--text-onyx);">${esc(bookingState.payment_method.toUpperCase())}</strong>
         </p>
 
-        ${bookingState.notes ? `<p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-2); font-style: italic;">“${bookingState.notes}”</p>` : ''}
+        ${bookingState.notes ? `<p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-2); font-style: italic;">“${esc(bookingState.notes)}”</p>` : ''}
       </div>
       
       <!-- Pricing Breakdown (Zero Tax) -->
@@ -1036,28 +1037,37 @@ export function initBooking() {
 
     // Continue to step 5 (Validation & Serialization Prep)
     if (e.target.closest('#continue-to-step5')) {
-      const name = document.getElementById('customer-name')?.value.trim();
-      const email = document.getElementById('customer-email')?.value.trim();
+      const rawName = document.getElementById('customer-name')?.value || '';
+      const rawEmail = document.getElementById('customer-email')?.value || '';
       const code = document.getElementById('customer-country-code')?.value || '+62';
-      const phoneRaw = document.getElementById('customer-phone-input')?.value.trim();
+      const phoneRaw = document.getElementById('customer-phone-input')?.value || '';
       const nationality = document.getElementById('customer-nationality')?.value || 'International';
-      const notes = document.getElementById('customer-notes')?.value.trim() || '';
+      const rawNotes = document.getElementById('customer-notes')?.value || '';
+
+      const name = sanitizeText(rawName, INPUT_LIMITS.customer_name);
+      const email = sanitizeText(rawEmail, INPUT_LIMITS.email);
+      const notes = sanitizeText(rawNotes, INPUT_LIMITS.notes);
 
       const service = getServiceById(bookingState.service_id);
       const isNumerology = service?.category === 'Numerology' || service?.service_id === 'SRV003';
 
-      if (!name || !email || !phoneRaw) {
+      if (!name || !email || !phoneRaw.trim()) {
         alert(t('book_validation_fill'));
         return;
       }
 
-      if (!isValidEmail(email)) {
+      if (!isValidName(name)) {
+        alert('Mohon masukkan nama lengkap yang valid (hanya huruf, spasi, atau tanda baca wajar).');
+        return;
+      }
+
+      if (!isValidEmail(email) || !isStrictValidEmail(email)) {
         alert(t('book_validation_email'));
         return;
       }
 
-      const sanitizedPhone = sanitizeInternationalPhone(code, phoneRaw);
-      if (!sanitizedPhone || sanitizedPhone.length < 7) {
+      const sanitizedPhone = sanitizeInternationalPhone(code, phoneRaw.trim());
+      if (!sanitizedPhone || sanitizedPhone.length < 7 || sanitizedPhone.length > 18) {
         alert('Mohon masukkan nomor WhatsApp yang valid.');
         return;
       }
@@ -1065,9 +1075,9 @@ export function initBooking() {
       // Check conditional numerology DOB
       let dobVal = '';
       if (isNumerology) {
-        dobVal = document.getElementById('customer-dob')?.value;
-        if (!dobVal) {
-          alert('Tanggal lahir wajib diisi untuk kalkulasi numerologi.');
+        dobVal = document.getElementById('customer-dob')?.value?.trim() || '';
+        if (!dobVal || !/^\d{4}-\d{2}-\d{2}$/.test(dobVal)) {
+          alert('Tanggal lahir wajib diisi dengan format YYYY-MM-DD untuk kalkulasi numerologi.');
           return;
         }
       }
@@ -1076,9 +1086,9 @@ export function initBooking() {
       bookingState.customer_name = name;
       bookingState.email = email;
       bookingState.country_code = code;
-      bookingState.whatsapp_raw = phoneRaw;
+      bookingState.whatsapp_raw = sanitizeText(phoneRaw, INPUT_LIMITS.phone);
       bookingState.whatsapp = sanitizedPhone;
-      bookingState.nationality = nationality;
+      bookingState.nationality = sanitizeText(nationality, 60);
       bookingState.notes = notes;
       bookingState.dob = dobVal;
       bookingState.step = 5;
@@ -1338,10 +1348,10 @@ function showConfirmationModal(booking) {
               ${t('modal_booking_code_label')}
             </span>
             <p class="booking-code-value" id="modal-code-val" style="margin: 2px 0 0;">
-              ${booking.booking_id}
+              ${esc(booking.booking_id)}
             </p>
           </div>
-          <button type="button" class="copy-code-btn" id="btn-copy-modal-code" data-code="${booking.booking_id}">
+          <button type="button" class="copy-code-btn" id="btn-copy-modal-code" data-code="${esc(booking.booking_id)}">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span id="copy-modal-text">${t('inv_copy_code')}</span>
           </button>
@@ -1351,15 +1361,15 @@ function showConfirmationModal(booking) {
         <div style="background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); font-size: 0.82rem;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <span style="color: var(--text-muted);">${t('book_service_label')}:</span>
-            <strong style="color: var(--text-onyx);">${srvTitle} (${pkgTitle})</strong>
+            <strong style="color: var(--text-onyx);">${esc(srvTitle)} (${esc(pkgTitle)})</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <span style="color: var(--text-muted);">${t('book_date_label')}:</span>
-            <span style="color: var(--text-onyx);">${formatDateSafe(booking.booking_date)} • <strong>${booking.booking_time} WITA</strong></span>
+            <span style="color: var(--text-onyx);">${esc(formatDateSafe(booking.booking_date))} • <strong>${esc(booking.booking_time)} WITA</strong></span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
             <span style="color: var(--text-muted);">${t('book_pax_label')}:</span>
-            <span style="color: var(--text-onyx);">${booking.pax} ${t('book_pax_person')}</span>
+            <span style="color: var(--text-onyx);">${esc(String(booking.pax))} ${t('book_pax_person')}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-hairline);">
             <strong style="color: var(--cta-forest); font-size: 0.95rem;">${t('book_grand_total')}:</strong>
@@ -1387,7 +1397,7 @@ function showConfirmationModal(booking) {
           </a>
 
           <!-- Tertiary CTA: Printable Invoice -->
-          <a href="#/invoice/${booking.invoice_id}" class="btn-modal-invoice">
+          <a href="#/invoice/${encodeURIComponent(booking.invoice_id)}" class="btn-modal-invoice">
             ${t('modal_invoice_btn')}
           </a>
         </div>

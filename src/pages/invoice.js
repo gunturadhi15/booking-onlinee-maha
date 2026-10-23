@@ -9,6 +9,7 @@
 import { formatCurrency, COMPANY, getServiceById, getPackageById, formatDateSafe, formatCurrencyWithApprox } from '../data.js';
 import { t, getDateLocale, getLang, translateServiceName, translatePackageName } from '../i18n.js';
 import { getBookingByInvoiceFromSupabase, isSupabaseConfigured } from '../api/supabase.js';
+import { esc } from '../utils/security.js';
 
 export function renderInvoice(params) {
   const invoiceId = params?.id;
@@ -80,11 +81,11 @@ export function renderInvoice(params) {
                   ${t('inv_code_label')}
                 </span>
                 <span class="booking-code-value" style="font-size: 1.15rem; color: var(--cta-forest);">
-                  ${bookingCode}
+                  ${esc(bookingCode)}
                 </span>
               </div>
             </div>
-            <button type="button" class="copy-code-btn" id="btn-copy-invoice-code" data-code="${bookingCode}">
+            <button type="button" class="copy-code-btn" id="btn-copy-invoice-code" data-code="${esc(bookingCode)}">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               <span id="copy-invoice-text">${t('inv_copy_code')}</span>
             </button>
@@ -95,16 +96,16 @@ export function renderInvoice(params) {
             <div>
               <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2);">
                 <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney" width="40" height="40" loading="lazy" decoding="async" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-hairline);" />
-                <h1 style="font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 700; color: var(--text-onyx); margin: 0; letter-spacing: 0.04em;">${COMPANY.name}</h1>
+                <h1 style="font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 700; color: var(--text-onyx); margin: 0; letter-spacing: 0.04em;">${esc(COMPANY.name)}</h1>
               </div>
               <p style="font-size: var(--text-xs); color: var(--text-muted); line-height: 1.5; margin: 0;">
-                ${COMPANY.address}<br/>
-                Email: ${COMPANY.email} | WhatsApp: ${COMPANY.phone}
+                ${esc(COMPANY.address)}<br/>
+                Email: ${esc(COMPANY.email)} | WhatsApp: ${esc(COMPANY.phone)}
               </p>
             </div>
             <div style="text-align: right;">
               <span class="badge badge--green" style="font-size: var(--text-xs); padding: var(--space-1) var(--space-3); font-weight: 700; letter-spacing: 0.05em;">${t('inv_status')}</span>
-              <p style="font-size: var(--text-sm); font-weight: 700; color: var(--gold-700); margin-top: var(--space-2); font-family: var(--font-mono);">${data.invoice_id || data.invoice_number}</p>
+              <p style="font-size: var(--text-sm); font-weight: 700; color: var(--gold-700); margin-top: var(--space-2); font-family: var(--font-mono);">${esc(data.invoice_id || data.invoice_number)}</p>
               <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0;">${new Date(data.paid_at || Date.now()).toLocaleString(getDateLocale())}</p>
             </div>
           </div>
@@ -113,17 +114,17 @@ export function renderInvoice(params) {
           <div class="invoice-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6); background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-lg); border: 1px solid var(--border-hairline);">
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin: 0 0 var(--space-2); font-family: var(--font-mono);">${t('inv_customer_info')}</h4>
-              <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${data.customer_name} ${data.nationality ? `(${data.nationality})` : ''}</p>
-              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${data.email}</p>
-              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${data.whatsapp}</p>
-              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${data.dob}</p>` : ''}
+              <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${esc(data.customer_name)} ${data.nationality ? `(${esc(data.nationality)})` : ''}</p>
+              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${esc(data.email)}</p>
+              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${esc(data.whatsapp)}</p>
+              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${esc(data.dob)}</p>` : ''}
             </div>
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin: 0 0 var(--space-2); font-family: var(--font-mono);">${t('inv_schedule_info')}</h4>
-              <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${formattedDate}</p>
-              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${t('book_time_label')}: <strong>${data.booking_time} WITA (Bali Time)</strong></p>
-              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${t('book_pax_label')}: <strong>${data.pax || 1} ${t('book_pax_person')}</strong></p>
-              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">${t('inv_code_label')}: <strong style="color: var(--cta-forest);">${bookingCode}</strong></p>
+              <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${esc(formattedDate)}</p>
+              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${t('book_time_label')}: <strong>${esc(data.booking_time)} WITA (Bali Time)</strong></p>
+              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${t('book_pax_label')}: <strong>${Number(data.pax || 1)} ${t('book_pax_person')}</strong></p>
+              <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">${t('inv_code_label')}: <strong style="color: var(--cta-forest);">${esc(bookingCode)}</strong></p>
             </div>
           </div>
 

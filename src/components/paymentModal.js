@@ -6,6 +6,7 @@
  */
 import { formatCurrency, formatDateSafe, formatCurrencyWithApprox, COMPANY } from '../data.js';
 import { t, getLang, translateServiceName, translatePackageName } from '../i18n.js';
+import { esc } from '../utils/security.js';
 
 export function showPaymentSuccessModal(booking) {
   const existing = document.getElementById('payment-result-modal');
@@ -60,7 +61,7 @@ export function showPaymentSuccessModal(booking) {
             Reservasi Sakral Terkunci
           </h2>
           <p style="font-size: 0.84rem; color: var(--text-stone); margin: 0; line-height: 1.5;">
-            Terima kasih, <strong>${booking.customer_name}</strong>. Pembayaran Anda telah kami verifikasi secara otomatis.
+            Terima kasih, <strong>${esc(booking.customer_name)}</strong>. Pembayaran Anda telah kami verifikasi secara otomatis.
           </p>
         </div>
 
@@ -71,10 +72,10 @@ export function showPaymentSuccessModal(booking) {
               Kode Booking Sakral
             </span>
             <p class="booking-code-value" id="modal-code-val" style="margin: 2px 0 0; color: #065F46;">
-              ${bookingCode}
+              ${esc(bookingCode)}
             </p>
           </div>
-          <button type="button" class="copy-code-btn" id="btn-copy-success-code" data-code="${bookingCode}" style="background: #059669; border-color: #059669;">
+          <button type="button" class="copy-code-btn" id="btn-copy-success-code" data-code="${esc(bookingCode)}" style="background: #059669; border-color: #059669;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span id="copy-success-text">Salin Kode</span>
           </button>
@@ -84,19 +85,19 @@ export function showPaymentSuccessModal(booking) {
         <div style="background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); font-size: 0.82rem;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <span style="color: var(--text-muted);">Paket Sesi:</span>
-            <strong style="color: var(--text-onyx); text-align: right;">${srvTitle} — ${pkgTitle}</strong>
+            <strong style="color: var(--text-onyx); text-align: right;">${esc(srvTitle)} — ${esc(pkgTitle)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <span style="color: var(--text-muted);">Jadwal & Waktu:</span>
-            <span style="color: var(--text-onyx);">${formatDateSafe(booking.booking_date)} • <strong>${booking.booking_time} WITA</strong></span>
+            <span style="color: var(--text-onyx);">${esc(formatDateSafe(booking.booking_date))} • <strong>${esc(booking.booking_time)} WITA</strong></span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <span style="color: var(--text-muted);">Peserta (Pax):</span>
-            <span style="color: var(--text-onyx);">${booking.pax || 1} Orang</span>
+            <span style="color: var(--text-onyx);">${Number(booking.pax || 1)} Orang</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
             <span style="color: var(--text-muted);">Metode & Ref:</span>
-            <span style="color: var(--text-onyx); font-family: var(--font-mono); font-size: 0.76rem;">${method} (${invoiceId})</span>
+            <span style="color: var(--text-onyx); font-family: var(--font-mono); font-size: 0.76rem;">${esc(method)} (${esc(invoiceId)})</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-hairline);">
             <strong style="color: var(--cta-forest); font-size: 0.95rem;">Total Lunas (0% Tax):</strong>
@@ -109,7 +110,7 @@ export function showPaymentSuccessModal(booking) {
         <!-- Actions -->
         <div class="confirm-modal-cta-group" style="margin-top: var(--space-5);">
           <!-- 1. Open / Print Invoice -->
-          <a href="#/invoice/${invoiceId}" class="btn-modal-invoice" id="btn-success-invoice" style="background: var(--surface-card); border-color: var(--gold-maha); color: var(--cta-forest); font-weight: 600; text-align: center; padding: 12px 18px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <a href="#/invoice/${esc(invoiceId)}" class="btn-modal-invoice" id="btn-success-invoice" style="background: var(--surface-card); border-color: var(--gold-maha); color: var(--cta-forest); font-weight: 600; text-align: center; padding: 12px 18px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             <span>Buka & Unduh Invoice Resmi</span>
           </a>
@@ -238,10 +239,10 @@ export function showPaymentFailedModal(options = {}) {
                 Keterangan Kendala:
               </p>
               <p style="font-size: 0.8rem; color: #991B1B; margin: 0; line-height: 1.5;">
-                ${errorMsg}
+                ${esc(errorMsg)}
               </p>
               <span style="display: inline-block; margin-top: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: #B91C1C; background: #FEE2E2; padding: 2px 8px; border-radius: 4px;">
-                STATUS: ${errorCode} • METODE: ${method}
+                STATUS: ${esc(errorCode)} • METODE: ${esc(method)}
               </span>
             </div>
           </div>
