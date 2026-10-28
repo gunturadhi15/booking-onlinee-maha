@@ -33,3 +33,6 @@ database/*.db
 *.sln
 *.sw?
 
+
+.env
+.env*.local
