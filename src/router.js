@@ -87,7 +87,59 @@ export class Router {
         });
       }
       this.updateActiveNav(path);
+      this.updateSEO(path, params);
       this.initAnimations();
+    }
+  }
+
+  updateSEO(path, params = {}) {
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const brand = 'Mahawellnerjourney Bali';
+
+    const seoMap = {
+      '/': {
+        title: `Official Flagship & Direct Wellness Booking Bali — ${brand}`,
+        desc: 'Official Sanctuary & Direct Wellness Booking Engine Mahawellnerjourney Bali. Pesan paket spiritual tour, yoga retreat, melukat purification, dan konsultasi numerologi di Ubud.'
+      },
+      '/layanan': {
+        title: `Katalog Layanan & Curated Journeys — ${brand}`,
+        desc: 'Jelajahi paket retreat yoga, tur pura sakral, melukat purification, dan konsultasi numerologi Bali dengan panduan praktisi senior.'
+      },
+      '/booking': {
+        title: `Direct Booking Engine — Reservasi Resmi — ${brand}`,
+        desc: 'Formulir reservasi langsung Mahawellnerjourney. Pilih jadwal waktu lokal Bali (WITA), jumlah tamu, dan metode pembayaran aman.'
+      },
+      '/checkout': {
+        title: `Checkout & Konfirmasi Pembayaran — ${brand}`,
+        desc: 'Tinjau rincian pemesanan dan selesaikan konfirmasi reservasi aman untuk perjalanan wellness Anda di Ubud Bali.'
+      },
+      '/invoice': {
+        title: `Faktur & E-Voucher Resmi — ${brand}`,
+        desc: 'Rincian faktur digital dan E-Voucher resmi Mahawellnerjourney dengan nomor referensi pemesanan yang terverifikasi.'
+      },
+      '/tentang-kami': {
+        title: `Tentang Kami — Kisah Sanctuary & Desa Adat Bindu — ${brand}`,
+        desc: 'Mengenal etos Tri Hita Karana, praktisi lokal senior, dan sanctuary hening Mahawellnerjourney di Desa Adat Bindu, Ubud, Bali.'
+      },
+      '/hubungi-kami': {
+        title: `Hubungi Kami & Concierge Care — ${brand}`,
+        desc: 'Kontak resmi, lokasi sanctuary di Ubud Bali, FAQ, dan layanan bantuan WhatsApp Concierge.'
+      }
+    };
+
+    let meta = seoMap[path];
+    if (!meta && path.startsWith('/layanan/')) {
+      const slug = path.split('/')[2];
+      const titleSlug = (slug || '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      meta = {
+        title: `${titleSlug} — ${brand}`,
+        desc: `Detail pengalaman ${titleSlug} di Mahawellnerjourney Ubud Bali. Informasi durasi, fasilitas termasuk, dan pemesanan langsung.`
+      };
+    }
+
+    if (meta) {
+      document.title = meta.title;
+      if (metaDesc) metaDesc.setAttribute('content', meta.desc);
     }
   }
 

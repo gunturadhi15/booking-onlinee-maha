@@ -100,18 +100,29 @@ export function createRateLimiter({ windowMs, max }) {
 /* JSON body reader: batas ukuran + wajib application/json             */
 /* ------------------------------------------------------------------ */
 export function readJsonBody(req, maxBytes = 16 * 1024) {
+  if (req.body && typeof req.body === 'object') {
+    const parsed = Array.isArray(req.body) ? req.body : { ...req.body };
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new HttpError(400, 'ERR_INVALID_JSON', 'Body harus berupa objek JSON.');
+    }
+    delete parsed.__proto__;
+    delete parsed.constructor;
+    delete parsed.prototype;
+    return Promise.resolve(parsed);
+  }
+
   return new Promise((resolve, reject) => {
     const contentType = String(req.headers['content-type'] || '').toLowerCase();
     if (!contentType.startsWith('application/json')) {
+      if (typeof req.resume === 'function') req.resume();
       reject(new HttpError(415, 'ERR_UNSUPPORTED_MEDIA_TYPE', 'Content-Type harus application/json.'));
-      req.resume();
       return;
     }
 
     const declared = Number(req.headers['content-length'] || 0);
     if (declared > maxBytes) {
+      if (typeof req.resume === 'function') req.resume();
       reject(new HttpError(413, 'ERR_PAYLOAD_TOO_LARGE', 'Ukuran request terlalu besar.'));
-      req.resume();
       return;
     }
 
@@ -119,13 +130,41 @@ export function readJsonBody(req, maxBytes = 16 * 1024) {
     const chunks = [];
     let aborted = false;
 
+    if (typeof req.on !== 'function' && req[Symbol.asyncIterator]) {
+      (async () => {
+        try {
+          for await (const chunk of req) {
+            const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+            size += buf.length;
+            if (size > maxBytes) {
+              return reject(new HttpError(413, 'ERR_PAYLOAD_TOO_LARGE', 'Ukuran request terlalu besar.'));
+            }
+            chunks.push(buf);
+          }
+          const raw = Buffer.concat(chunks).toString('utf8');
+          if (!raw) return resolve({});
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            return reject(new HttpError(400, 'ERR_INVALID_JSON', 'Body harus berupa objek JSON.'));
+          }
+          delete parsed.__proto__;
+          delete parsed.constructor;
+          delete parsed.prototype;
+          resolve(parsed);
+        } catch {
+          reject(new HttpError(400, 'ERR_INVALID_JSON', 'Format JSON tidak valid.'));
+        }
+      })();
+      return;
+    }
+
     req.on('data', (chunk) => {
       if (aborted) return;
       size += chunk.length;
       if (size > maxBytes) {
         aborted = true;
+        if (typeof req.resume === 'function') req.resume();
         reject(new HttpError(413, 'ERR_PAYLOAD_TOO_LARGE', 'Ukuran request terlalu besar.'));
-        req.resume();
         return;
       }
       chunks.push(chunk);

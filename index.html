@@ -235,14 +235,14 @@
     </main>
 
     <!-- Chatbot Floating Widget -->
-    <button class="chatbot-fab" id="chatbot-fab" aria-label="Open chatbot">
+    <button class="chatbot-fab" id="chatbot-fab" aria-label="Buka Chatbot Concierge" aria-expanded="false" aria-controls="chatbot-window">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
     </button>
 
     <!-- Chatbot Dialog -->
-    <div id="chatbot-window" class="chatbot-window" style="display: none;">
+    <div id="chatbot-window" class="chatbot-window" role="dialog" aria-modal="true" aria-label="Concierge Chatbot" style="display: none;">
       <div
         style="background: linear-gradient(135deg, var(--gold-500), var(--gold-700)); color: white; padding: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 8px;">

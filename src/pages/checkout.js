@@ -322,15 +322,10 @@ export function initCheckout() {
 
         await new Promise(resolve => setTimeout(resolve, 1200));
 
-        if (invoiceNumber) {
-          const updateRes = await updateBookingStatusInSupabase(invoiceNumber, 'paid');
-          if (!updateRes.success && !updateRes.simulated) {
-            console.warn('Perhatian: Gagal memperbarui status di Supabase:', updateRes.error);
-          }
-        }
+        let isPaymentConfirmed = false;
 
         try {
-          await fetch('/api/payments/charge', {
+          const chargeRes = await fetch('/api/payments/charge', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -339,13 +334,26 @@ export function initCheckout() {
               amount: bookingData.grand_total || bookingData.total_price || 0
             })
           });
+
+          if (chargeRes.ok) {
+            const chargeJson = await chargeRes.json();
+            if (chargeJson?.data?.status === 'paid') {
+              isPaymentConfirmed = true;
+            }
+          }
         } catch (_) {}
 
         bookingData.payment_method = paymentMethod;
-        bookingData.payment_status = 'PAID';
-        bookingData.status = 'paid';
-        bookingData.booking_status = 'CONFIRMED';
-        bookingData.paid_at = new Date().toISOString();
+        if (isPaymentConfirmed) {
+          bookingData.payment_status = 'PAID';
+          bookingData.status = 'paid';
+          bookingData.booking_status = 'CONFIRMED';
+          bookingData.paid_at = new Date().toISOString();
+        } else {
+          bookingData.payment_status = 'WAITING_VERIFICATION';
+          bookingData.status = 'pending';
+          bookingData.booking_status = 'PENDING';
+        }
         bookingData.transaction_id = 'TRX' + Date.now();
 
         sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
@@ -355,7 +363,7 @@ export function initCheckout() {
         payBtn.disabled = false;
         payBtn.innerHTML = originalBtnText;
 
-        // Show Luxury Payment Success Modal
+        // Show Modal (Differentiates between verified paid and waiting verification)
         const { showPaymentSuccessModal } = await import('../components/paymentModal.js');
         showPaymentSuccessModal(bookingData);
       } catch (err) {

@@ -1179,9 +1179,12 @@ export function initBooking() {
       }
 
       try {
-        // 1. Sync local SQLite API
+        let assignedBookingId = bookingCode;
+        let assignedInvoiceId = invoiceId;
+
+        // 1. Sync ke backend API (Node / SQLite / Vercel Serverless)
         try {
-          await fetch('/api/bookings', {
+          const apiRes = await fetch('/api/bookings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1201,47 +1204,69 @@ export function initBooking() {
               total_amount: grandTotal
             })
           });
-        } catch (_) {}
 
-        // 2. Insert to Supabase (resilient with schema fallback)
-        const result = await createBookingInSupabase(bookingPayload);
+          if (apiRes.ok) {
+            const apiData = await apiRes.json();
+            if (apiData?.data?.booking_id) assignedBookingId = apiData.data.booking_id;
+            if (apiData?.data?.order_id) assignedInvoiceId = apiData.data.order_id;
+          } else {
+            const errData = await apiRes.json().catch(() => ({}));
+            if (apiRes.status === 409 || apiRes.status === 422) {
+              throw new Error(errData.message || 'Slot kapasitas tidak mencukupi atau data tidak valid.');
+            }
+          }
+        } catch (apiErr) {
+          if (apiErr.message.includes('Slot') || apiErr.message.includes('Kapasitas') || apiErr.message.includes('tidak valid')) {
+            restoreBtn();
+            showPaymentFailedModal({
+              booking: {
+                ...bookingState,
+                booking_id: bookingCode,
+                invoice_id: invoiceId,
+                grand_total: grandTotal,
+                service_name: service?.service_name,
+                package_name: pkg?.package_name
+              },
+              errorMsg: apiErr.message,
+              errorCode: 'ERR_CAPACITY_OR_VALIDATION',
+              onRetry: () => {
+                document.getElementById('proceed-checkout')?.click();
+              },
+              onChangeMethod: () => {
+                bookingState.step = 3;
+                updateBookingUI();
+              }
+            });
+            return;
+          }
+          console.warn('Backend note (lanjut dengan resilient storage):', apiErr.message);
+        }
 
-        // 3. Confirm Payment as PAID in SQLite & Supabase
-        try {
-          await fetch('/api/payments/charge', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              order_id: invoiceId,
-              payment_method: bookingState.payment_method,
-              amount: grandTotal
-            })
-          });
-        } catch (_) {}
+        // 2. Insert to Supabase (resilient with RLS pending policy)
+        const result = await createBookingInSupabase({
+          ...bookingPayload,
+          invoice_number: assignedInvoiceId
+        });
 
-        try {
-          await updateBookingStatusInSupabase(invoiceId, 'paid');
-        } catch (_) {}
-
-        // Store full confirmed booking state in sessionStorage
+        // Simpan sesi reservasi resmi berstatus PENDING (Menunggu Pembayaran / Verifikasi Concierge)
         const savedSession = {
           ...bookingState,
-          id: result?.data?.id || bookingCode,
-          booking_id: bookingCode,
-          kode_pemesanan: bookingCode,
-          booking_code: bookingCode,
+          id: result?.data?.id || assignedBookingId,
+          booking_id: assignedBookingId,
+          kode_pemesanan: assignedBookingId,
+          booking_code: assignedBookingId,
           subtotal,
           tax: 0,
           grand_total: grandTotal,
           total_price: grandTotal,
           package_name: bookingPayload.package_name,
-          invoice_id: invoiceId,
-          invoice_number: invoiceId,
-          status: 'paid',
-          payment_status: 'PAID',
-          paid_at: new Date().toISOString(),
-          serialized_notes: serializedNotes,
+          invoice_id: assignedInvoiceId,
+          invoice_number: assignedInvoiceId,
+          status: 'pending',
+          booking_status: 'PENDING',
+          payment_status: 'WAITING_CONFIRMATION',
           created_at: result?.data?.created_at || new Date().toISOString(),
+          serialized_notes: serializedNotes,
           expired_at: new Date(Date.now() + SETTINGS.payment_expiry_hours * 3600000).toISOString(),
         };
 
@@ -1250,7 +1275,7 @@ export function initBooking() {
 
         restoreBtn();
 
-        // 4. Show Payment Success Modal
+        // 3. Tampilkan Modal Konfirmasi Reservasi
         showPaymentSuccessModal(savedSession);
         resetBooking();
       } catch (err) {

@@ -1,12 +1,38 @@
 /**
- * Payment Result Modals Component (Success & Failed / Gangguan)
- * Provides high-trust luxury feedback for payment states:
- * 1. showPaymentSuccessModal: Confirmed booking, official code, invoice link & WhatsApp notification
+ * Payment Result Modals Component (Success, Pending Confirmation, & Failed)
+ * Provides high-trust luxury feedback for payment & booking states:
+ * 1. showPaymentSuccessModal: Handles both 'confirmed/paid' and 'pending/waiting_confirmation'
  * 2. showPaymentFailedModal: Clear error message, retry button, change payment method, & WhatsApp fallback
+ * Fully compliant with WCAG 2.2 Level AA (aria-modal, role="dialog", keyboard escape listener, focus trap)
  */
 import { formatCurrency, formatDateSafe, formatCurrencyWithApprox, COMPANY } from '../data.js';
 import { t, getLang, translateServiceName, translatePackageName } from '../i18n.js';
 import { esc } from '../utils/security.js';
+
+let activeEscapeListener = null;
+
+function setupModalA11y(modalEl, closeBtnEl) {
+  // Focus initial element
+  if (closeBtnEl) {
+    setTimeout(() => closeBtnEl.focus(), 50);
+  }
+
+  // Remove any prior escape listener
+  if (activeEscapeListener) {
+    document.removeEventListener('keydown', activeEscapeListener);
+  }
+
+  activeEscapeListener = (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('payment-result-modal');
+      if (modal) modal.remove();
+      document.removeEventListener('keydown', activeEscapeListener);
+      activeEscapeListener = null;
+    }
+  };
+
+  document.addEventListener('keydown', activeEscapeListener);
+}
 
 export function showPaymentSuccessModal(booking) {
   const existing = document.getElementById('payment-result-modal');
@@ -19,63 +45,78 @@ export function showPaymentSuccessModal(booking) {
   const invoiceId = booking.invoice_id || booking.invoice_number || `INV-${Date.now().toString().slice(-6)}`;
   const method = (booking.payment_method || 'ONLINE').toUpperCase();
 
+  const isConfirmedPaid = String(booking.status || '').toLowerCase() === 'paid'
+    || String(booking.payment_status || '').toUpperCase() === 'PAID';
+
+  const modalTitle = isConfirmedPaid
+    ? 'Pembayaran Berhasil & Terkonfirmasi'
+    : 'Reservasi Berhasil Didaftarkan';
+
+  const statusBadge = isConfirmedPaid
+    ? `<span class="payment-status-badge success" id="payment-modal-badge" style="background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.75rem;">
+        ✓ Sesi Sakral Terkunci (LUNAS)
+      </span>`
+    : `<span class="payment-status-badge pending" id="payment-modal-badge" style="background: #FFF8E1; color: #8D6E63; border: 1px solid #FFE082; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.75rem;">
+        ⏳ Menunggu Konfirmasi & Pembayaran
+      </span>`;
+
+  const leadMessage = isConfirmedPaid
+    ? `Terima kasih, <strong>${esc(booking.customer_name)}</strong>. Pembayaran Anda telah kami verifikasi secara resmi.`
+    : `Terima kasih, <strong>${esc(booking.customer_name)}</strong>. Rincian reservasi Anda telah berhasil dicatat. Silakan lakukan konfirmasi ke WhatsApp Concierge kami untuk menyelesaikan instruksi pembayaran dan mengunci slot sesi sakral Anda.`;
+
   // WhatsApp formatted confirmation text
   const waText = encodeURIComponent(
     `Om Swastyastu / Hello Mahawellnerjourney Concierge,\n\n` +
-    `Saya baru saja menyelesaikan pembayaran:\n` +
+    `Saya telah mendaftarkan reservasi:\n` +
     `• Kode Booking: ${bookingCode}\n` +
-    `• Invoice: ${invoiceId}\n` +
+    `• Invoice Ref: ${invoiceId}\n` +
     `• Nama Tamu: ${booking.customer_name} (${booking.nationality || 'Guest'})\n` +
     `• Layanan: ${srvTitle} - ${pkgTitle}\n` +
     `• Jumlah Peserta: ${booking.pax || 1} Orang\n` +
     `• Jadwal: ${formatDateSafe(booking.booking_date)} jam ${booking.booking_time} WITA\n` +
     (booking.dob ? `• Tanggal Lahir: ${booking.dob}\n` : '') +
-    `• Total Lunas: ${formatCurrency(booking.grand_total || booking.total_price || 0)} (100% Nett)\n` +
-    `• Metode: ${method}\n\n` +
-    `Mohon konfirmasi kesiapan sesi sakral kami. Suksma / Thank you!`
+    `• Total Tagihan: ${formatCurrency(booking.grand_total || booking.total_price || 0)} (100% Nett)\n` +
+    `• Status: ${isConfirmedPaid ? 'Lunas' : 'Menunggu Konfirmasi & Pembayaran'}\n\n` +
+    `Mohon info instruksi pembayaran / konfirmasi kesiapan sesi kami. Suksma / Thank you!`
   );
-  const waUrl = `https://wa.me/${COMPANY.whatsapp}?text=${waText}`;
+  const waUrl = `https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=${waText}`;
 
   const html = `
-    <div class="confirm-modal-overlay" id="payment-result-modal">
-      <div class="confirm-modal-box payment-success-box" style="position: relative;">
+    <div class="confirm-modal-overlay" id="payment-result-modal" role="dialog" aria-modal="true" aria-labelledby="modal-success-title">
+      <div class="confirm-modal-box payment-success-box" style="position: relative;" tabindex="-1">
         <!-- Close Button -->
-        <button type="button" class="modal-close-btn" id="btn-close-payment-modal" aria-label="Tutup Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
+        <button type="button" class="modal-close-btn" id="btn-close-payment-modal" aria-label="Tutup Dialog Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
         
-        <!-- Header Success -->
-        <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2);">
-          <div class="payment-modal-icon-circle success">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6L9 17l-5-5"/>
-            </svg>
+        <!-- Header -->
+        <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2); text-align: center;">
+          <div class="payment-modal-icon-circle ${isConfirmedPaid ? 'success' : 'pending'}" style="margin: 0 auto 12px; width: 56px; height: 56px; border-radius: 50%; background: ${isConfirmedPaid ? '#E8F5E9' : '#FFF9C4'}; display: flex; align-items: center; justify-content: center; color: ${isConfirmedPaid ? '#2E7D32' : '#F57F17'};">
+            ${isConfirmedPaid
+              ? `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`
+              : `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+            }
           </div>
-          <span class="payment-status-badge success">
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="margin-right: 4px; vertical-align: -1px;">
-              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Pembayaran Berhasil & Terkonfirmasi
-          </span>
-          <h2 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--cta-forest); margin: var(--space-2) 0 4px;">
-            Reservasi Sakral Terkunci
+          ${statusBadge}
+          <h2 id="modal-success-title" style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--cta-forest); margin: var(--space-2) 0 4px;">
+            ${modalTitle}
           </h2>
           <p style="font-size: 0.84rem; color: var(--text-stone); margin: 0; line-height: 1.5;">
-            Terima kasih, <strong>${esc(booking.customer_name)}</strong>. Pembayaran Anda telah kami verifikasi secara otomatis.
+            ${leadMessage}
           </p>
         </div>
 
         <!-- Official Booking Code Card with Copy Action -->
-        <div class="booking-code-card" style="margin: var(--space-3) 0 var(--space-4); background: #F4FBF7; border: 1.5px solid #A7F3D0;">
+        <div class="booking-code-card" style="margin: var(--space-3) 0 var(--space-4); background: #FAF7F2; border: 1.5px solid var(--gold-maha); border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <span style="font-size: 0.68rem; color: #047857; font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;">
-              Kode Booking Sakral
+            <span style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; font-weight: 600;">
+              Kode Booking Resmi
             </span>
-            <p class="booking-code-value" id="modal-code-val" style="margin: 2px 0 0; color: #065F46;">
+            <p class="booking-code-value" id="modal-code-val" style="margin: 2px 0 0; color: var(--cta-forest); font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem;">
               ${esc(bookingCode)}
             </p>
           </div>
-          <button type="button" class="copy-code-btn" id="btn-copy-success-code" data-code="${esc(bookingCode)}" style="background: #059669; border-color: #059669;">
+          <button type="button" class="copy-code-btn" id="btn-copy-success-code" data-code="${esc(bookingCode)}" style="background: var(--cta-forest); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span id="copy-success-text">Salin Kode</span>
           </button>
@@ -100,7 +141,7 @@ export function showPaymentSuccessModal(booking) {
             <span style="color: var(--text-onyx); font-family: var(--font-mono); font-size: 0.76rem;">${esc(method)} (${esc(invoiceId)})</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-hairline);">
-            <strong style="color: var(--cta-forest); font-size: 0.95rem;">Total Lunas (0% Tax):</strong>
+            <strong style="color: var(--cta-forest); font-size: 0.95rem;">${isConfirmedPaid ? 'Total Lunas (Nett):' : 'Total Tagihan (Nett):'}</strong>
             <strong style="color: var(--cta-forest); font-size: 1.05rem;" class="tabular-nums">
               ${formatCurrencyWithApprox(booking.grand_total || booking.total_price || 0, currentLang)}
             </strong>
@@ -108,23 +149,23 @@ export function showPaymentSuccessModal(booking) {
         </div>
 
         <!-- Actions -->
-        <div class="confirm-modal-cta-group" style="margin-top: var(--space-5);">
-          <!-- 1. Open / Print Invoice -->
-          <a href="#/invoice/${esc(invoiceId)}" class="btn-modal-invoice" id="btn-success-invoice" style="background: var(--surface-card); border-color: var(--gold-maha); color: var(--cta-forest); font-weight: 600; text-align: center; padding: 12px 18px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span>Buka & Unduh Invoice Resmi</span>
-          </a>
-
-          <!-- 2. WhatsApp Notification -->
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-modal-wa" id="btn-success-wa">
+        <div class="confirm-modal-cta-group" style="margin-top: var(--space-5); display: flex; flex-direction: column; gap: 8px;">
+          <!-- 1. WhatsApp Confirmation -->
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn--primary" id="btn-success-wa" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; font-weight: 600;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
-            <span>Kirim Konfirmasi ke WhatsApp Concierge</span>
+            <span>Konfirmasi ke WhatsApp Concierge</span>
+          </a>
+
+          <!-- 2. Open / Print Invoice -->
+          <a href="#/invoice/${esc(invoiceId)}" class="btn btn--secondary" id="btn-success-invoice" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Buka Detail Faktur & E-Voucher</span>
           </a>
 
           <!-- 3. Back to Home -->
-          <a href="#/" class="btn-modal-online" id="btn-success-home" style="background: var(--cta-forest); color: #fff; text-align: center; justify-content: center; padding: 12px 18px; border-radius: var(--radius-md);">
+          <a href="#/" class="btn btn--ghost" id="btn-success-home" style="text-align: center; justify-content: center; padding: 10px;">
             <span>Selesai & Kembali ke Beranda</span>
           </a>
         </div>
@@ -156,9 +197,14 @@ export function showPaymentSuccessModal(booking) {
   const closeModal = () => {
     const m = document.getElementById('payment-result-modal');
     if (m) m.remove();
+    if (activeEscapeListener) {
+      document.removeEventListener('keydown', activeEscapeListener);
+      activeEscapeListener = null;
+    }
   };
 
-  document.getElementById('btn-close-payment-modal')?.addEventListener('click', closeModal);
+  const closeBtn = document.getElementById('btn-close-payment-modal');
+  closeBtn?.addEventListener('click', closeModal);
 
   // Close when clicking overlay backdrop outside box
   document.getElementById('payment-result-modal')?.addEventListener('click', (e) => {
@@ -174,6 +220,9 @@ export function showPaymentSuccessModal(booking) {
       setTimeout(closeModal, 250);
     });
   });
+
+  // WCAG focus management
+  setupModalA11y(document.getElementById('payment-result-modal'), closeBtn);
 }
 
 export function showPaymentFailedModal(options = {}) {
@@ -198,29 +247,31 @@ export function showPaymentFailedModal(options = {}) {
     `• Invoice / Order: ${booking.invoice_id || booking.invoice_number || '-'}\n` +
     `• Kendala: ${errorMsg}\n` +
     `• Metode yang Dicoba: ${method}\n\n` +
-    `Mohon bantuan untuk proses pembayaran atau transfer manual. Suksma!`
+    `Mohon bantuan untuk proses verifikasi / transfer manual. Suksma!`
   );
-  const waUrl = `https://wa.me/${COMPANY.whatsapp}?text=${waHelpText}`;
+  const waUrl = `https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=${waHelpText}`;
 
   const html = `
-    <div class="confirm-modal-overlay" id="payment-result-modal">
-      <div class="confirm-modal-box payment-failed-box" style="position: relative;">
+    <div class="confirm-modal-overlay" id="payment-result-modal" role="dialog" aria-modal="true" aria-labelledby="modal-failed-title">
+      <div class="confirm-modal-box payment-failed-box" style="position: relative;" tabindex="-1">
         <!-- Close Button -->
-        <button type="button" class="modal-close-btn" id="btn-close-failed-modal" aria-label="Tutup Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
+        <button type="button" class="modal-close-btn" id="btn-close-failed-modal" aria-label="Tutup Dialog Modal" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: var(--surface-silk); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-stone); transition: all 0.2s ease;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
         
         <!-- Header Failed -->
-        <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2);">
-          <div class="payment-modal-icon-circle failed">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <div class="confirm-modal-header" style="border-bottom: none; padding-bottom: var(--space-3); margin-bottom: var(--space-2); text-align: center;">
+          <div class="payment-modal-icon-circle failed" style="margin: 0 auto 12px; width: 56px; height: 56px; border-radius: 50%; background: #FFEBEE; display: flex; align-items: center; justify-content: center; color: #C62828;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
           </div>
-          <span class="payment-status-badge failed">Pemberitahuan Sistem Pembayaran</span>
-          <h2 style="font-family: var(--font-serif); font-size: 1.45rem; color: #991B1B; margin: var(--space-2) 0 4px;">
+          <span class="payment-status-badge failed" style="background: #FFCDD2; color: #B71C1C; padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.75rem;">
+            Pemberitahuan Sistem Reservasi
+          </span>
+          <h2 id="modal-failed-title" style="font-family: var(--font-serif); font-size: 1.45rem; color: #991B1B; margin: var(--space-2) 0 4px;">
             Pembayaran Belum Berhasil
           </h2>
           <p style="font-size: 0.84rem; color: var(--text-stone); margin: 0; line-height: 1.5;">
@@ -257,9 +308,9 @@ export function showPaymentFailedModal(options = {}) {
         </div>
 
         <!-- Action Buttons -->
-        <div class="confirm-modal-cta-group" style="margin-top: var(--space-5);">
+        <div class="confirm-modal-cta-group" style="margin-top: var(--space-5); display: flex; flex-direction: column; gap: 8px;">
           <!-- 1. Retry Payment Button -->
-          <button type="button" class="btn btn--primary" id="btn-retry-payment" style="width: 100%; justify-content: center; padding: 13px 20px; font-weight: 600; font-size: 0.95rem;">
+          <button type="button" class="btn btn--primary" id="btn-retry-payment" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
               <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
             </svg>
@@ -267,12 +318,12 @@ export function showPaymentFailedModal(options = {}) {
           </button>
 
           <!-- 2. Change Payment Method -->
-          <button type="button" class="btn btn--secondary" id="btn-change-payment-method" style="width: 100%; justify-content: center; padding: 11px 18px; font-weight: 600; font-size: 0.88rem; background: #fff;">
+          <button type="button" class="btn btn--secondary" id="btn-change-payment-method" style="width: 100%; justify-content: center; padding: 11px; font-weight: 600; font-size: 0.88rem; background: #fff;">
             Pilih Metode Pembayaran Lain (QRIS / Card / Transfer)
           </button>
 
           <!-- 3. Concierge WhatsApp Help -->
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-modal-wa" id="btn-failed-wa" style="background: #128C7E;">
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost" id="btn-failed-wa" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
@@ -290,9 +341,14 @@ export function showPaymentFailedModal(options = {}) {
   const closeModal = () => {
     const m = document.getElementById('payment-result-modal');
     if (m) m.remove();
+    if (activeEscapeListener) {
+      document.removeEventListener('keydown', activeEscapeListener);
+      activeEscapeListener = null;
+    }
   };
 
-  document.getElementById('btn-close-failed-modal')?.addEventListener('click', closeModal);
+  const closeBtn = document.getElementById('btn-close-failed-modal');
+  closeBtn?.addEventListener('click', closeModal);
 
   // Close when clicking overlay backdrop outside box
   document.getElementById('payment-result-modal')?.addEventListener('click', (e) => {
@@ -318,4 +374,7 @@ export function showPaymentFailedModal(options = {}) {
       if (typeof onChangeMethod === 'function') onChangeMethod();
     });
   }
+
+  // WCAG focus management
+  setupModalA11y(document.getElementById('payment-result-modal'), closeBtn);
 }

@@ -289,17 +289,30 @@ function setupGlobalUI() {
   const chatMessages = document.getElementById('chat-messages');
 
   if (chatbotFab && chatbotWindow) {
+    const toggleChatbot = (show) => {
+      chatbotWindow.style.display = show ? 'block' : 'none';
+      chatbotFab.setAttribute('aria-expanded', String(show));
+      if (show && chatInput) chatInput.focus();
+    };
+
     chatbotFab.addEventListener('click', () => {
       const isHidden = chatbotWindow.style.display === 'none' || !chatbotWindow.style.display;
-      chatbotWindow.style.display = isHidden ? 'block' : 'none';
-      if (isHidden && chatInput) chatInput.focus();
+      toggleChatbot(isHidden);
     });
 
     if (chatbotClose) {
       chatbotClose.addEventListener('click', () => {
-        chatbotWindow.style.display = 'none';
+        toggleChatbot(false);
+        chatbotFab.focus();
       });
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && chatbotWindow.style.display === 'block') {
+        toggleChatbot(false);
+        chatbotFab.focus();
+      }
+    });
 
     const sendMsg = () => {
       const text = chatInput?.value.trim();

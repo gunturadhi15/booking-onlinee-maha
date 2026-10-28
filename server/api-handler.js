@@ -382,6 +382,92 @@ export function createApiHandler({ getDb, env = process.env, logger = console })
       }
 
       /* ============================ PUBLIC =========================== */
+      // GET /api/availability?date=YYYY-MM-DD
+      if (pathname === '/api/availability' && req.method === 'GET') {
+        const rl = publicLimiter(`avail:${ip}`);
+        if (!rl.allowed) throw new HttpError(429, 'ERR_RATE_LIMIT', 'Terlalu banyak request.');
+
+        const targetDate = query.date || baliToday();
+        if (!isValidDateString(targetDate)) {
+          throw new HttpError(400, 'ERR_VALIDATION', 'Format parameter date tidak valid (YYYY-MM-DD).');
+        }
+
+        const bookings = db.prepare(`
+          SELECT booking_time, pax, status
+          FROM bookings
+          WHERE booking_date = ? AND status NOT IN ('cancelled', 'failed')
+        `).all(targetDate);
+
+        const data = ADMIN_TIME_SLOTS.map((time) => {
+          const matched = bookings.filter((b) => String(b.booking_time).slice(0, 5) === time);
+          const bookedPax = matched.reduce((acc, cur) => acc + (cur.pax || 1), 0);
+          const remainingQuota = Math.max(0, MAX_CAPACITY_PER_SLOT - bookedPax);
+          return {
+            time_slot: time,
+            max_capacity: MAX_CAPACITY_PER_SLOT,
+            booked_pax: bookedPax,
+            remaining_quota: remainingQuota,
+            is_available: remainingQuota > 0
+          };
+        });
+
+        return sendJson(res, 200, {
+          status: 'success',
+          date: targetDate,
+          timezone: 'Asia/Makassar (WITA)',
+          data
+        });
+      }
+
+      // GET /api/bookings/lookup?ref=... (Sanitized invoice/booking lookup)
+      if (pathname === '/api/bookings/lookup' && req.method === 'GET') {
+        const rl = publicLimiter(`lookup:${ip}`);
+        if (!rl.allowed) throw new HttpError(429, 'ERR_RATE_LIMIT', 'Terlalu banyak request.');
+
+        const ref = String(query.ref || query.order_id || query.booking_id || '').trim();
+        if (!ref || (!isValidOrderId(ref) && !isValidBookingCode(ref) && !isValidInvoiceId(ref))) {
+          throw new HttpError(400, 'ERR_VALIDATION', 'Parameter ref tidak valid.');
+        }
+
+        const row = db.prepare(`
+          SELECT b.booking_id, b.booking_date, b.booking_time, b.pax, b.status AS booking_status,
+                 b.total_amount, b.subtotal, b.notes, b.created_at,
+                 s.service_name, p.package_name,
+                 c.name AS customer_name,
+                 pay.order_id, pay.status AS payment_status, pay.payment_method, pay.paid_at
+          FROM bookings b
+          JOIN customers c ON b.customer_id = c.customer_id
+          JOIN services s ON b.service_id = s.service_id
+          LEFT JOIN packages p ON b.package_id = p.package_id
+          LEFT JOIN payments pay ON b.booking_id = pay.booking_id
+          WHERE b.booking_id = ? OR pay.order_id = ?
+        `).get(ref, ref);
+
+        if (!row) {
+          throw new HttpError(404, 'ERR_NOT_FOUND', 'Data reservasi tidak ditemukan.');
+        }
+
+        return sendJson(res, 200, {
+          status: 'success',
+          data: {
+            booking_id: row.booking_id,
+            order_id: row.order_id,
+            customer_name: row.customer_name,
+            service_name: row.service_name,
+            package_name: row.package_name,
+            booking_date: row.booking_date,
+            booking_time: String(row.booking_time).slice(0, 5),
+            pax: row.pax,
+            total_amount: row.total_amount,
+            booking_status: row.booking_status,
+            payment_status: row.payment_status || 'pending',
+            payment_method: row.payment_method,
+            paid_at: row.paid_at,
+            created_at: row.created_at
+          }
+        });
+      }
+
       // POST /api/bookings
       if (pathname === '/api/bookings' && req.method === 'POST') {
         const rl = publicLimiter(`booking:${ip}`);
@@ -396,6 +482,25 @@ export function createApiHandler({ getDb, env = process.env, logger = console })
         const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
 
         const result = withTransaction(db, () => {
+          // 1. Cek ketersediaan kuota slot secara atomik di dalam transaksi (Pencegahan Overbooking / Race Condition)
+          const slotCheck = db.prepare(`
+            SELECT COALESCE(SUM(b.pax), 0) AS booked_pax
+            FROM bookings b
+            WHERE b.booking_date = ? 
+              AND (b.booking_time = ? OR b.booking_time = ?)
+              AND b.status NOT IN ('cancelled', 'failed')
+          `).get(v.bookingDate, v.bookingTime, `${v.bookingTime}:00`);
+
+          const currentBooked = slotCheck ? Number(slotCheck.booked_pax) : 0;
+          if (currentBooked + v.pax > MAX_CAPACITY_PER_SLOT) {
+            const remaining = Math.max(0, MAX_CAPACITY_PER_SLOT - currentBooked);
+            throw new HttpError(
+              409,
+              'ERR_SLOT_FULL',
+              `Kapasitas sesi pada tanggal ${v.bookingDate} pukul ${v.bookingTime} WITA tidak mencukupi (sisa kuota: ${remaining} tamu, diminta: ${v.pax} tamu). Silakan pilih slot waktu lain.`
+            );
+          }
+
           // Pastikan service & package dari katalog resmi ada di DB (untuk foreign key)
           db.prepare(`INSERT OR IGNORE INTO services (service_id, service_name, category, status) VALUES (?, ?, ?, 'active')`)
             .run(v.service.service_id, v.service.service_name, v.service.category || 'General');
