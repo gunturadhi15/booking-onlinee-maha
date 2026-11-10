@@ -9,7 +9,8 @@ import {
   translateServiceName, 
   translateServiceDesc, 
   translatePackageName, 
-  translatePackageDesc 
+  translatePackageDesc,
+  translateCategory
 } from '../i18n.js';
 
 export function renderServices() {
@@ -35,7 +36,7 @@ export function renderServices() {
           <div class="filter-tags" id="filter-tags">
             <button class="filter-tag active" data-filter="all">${t('svc_filter_all')}</button>
             ${categories.map(cat => `
-              <button class="filter-tag" data-filter="${cat}">${cat}</button>
+              <button class="filter-tag" data-filter="${cat}">${translateCategory(cat)}</button>
             `).join('')}
           </div>
         </div>
@@ -56,10 +57,10 @@ export function renderServices() {
                        srcset="${service.image_sm || (service.image || `/images/${service.slug}.webp`).replace('.webp', '-sm.webp')} 400w, ${service.image || `/images/${service.slug}.webp`} 600w"
                        sizes="(max-width: 640px) 220px, (max-width: 1024px) 380px, 400px"
                        alt="${srvName}" width="600" height="340" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease;" loading="lazy" decoding="async" />
-                  <span class="service-card__badge badge badge--teal">${service.category}</span>
+                  <span class="service-card__badge badge badge--teal">${translateCategory(service.category)}</span>
                 </a>
                 <div class="service-card__body">
-                  <p class="service-card__category">${service.category}</p>
+                  <p class="service-card__category">${translateCategory(service.category)}</p>
                   <h3 class="service-card__title font-serif">
                     <a href="#/layanan/${service.slug}" style="color: inherit; text-decoration: none;">${srvName}</a>
                   </h3>
@@ -161,7 +162,7 @@ export function renderServiceDetail(params) {
             <span>${t('svc_back_to_catalog')}</span>
           </a>
           <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">
-            ${service.category} • Official Flagship
+            ${translateCategory(service.category)} • Official Flagship
           </span>
         </div>
 
@@ -170,7 +171,7 @@ export function renderServiceDetail(params) {
           <img src="${service.image || `/images/${service.slug}.webp`}" alt="${srvName}" width="1200" height="360" style="width: 100%; height: 100%; object-fit: cover; display: block;" fetchpriority="high" loading="eager" decoding="sync" />
           <div class="service-detail__hero-overlay" style="background: linear-gradient(180deg, rgba(20,40,29,0.3) 0%, rgba(20,40,29,0.7) 100%); position: absolute; inset: 0;"></div>
           <div class="service-detail__hero-text">
-            <span class="badge badge--teal" style="margin-bottom: var(--space-3);">${service.category}</span>
+            <span class="badge badge--teal" style="margin-bottom: var(--space-3);">${translateCategory(service.category)}</span>
             <h1 class="heading-1 font-serif" style="color: white; font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));">${srvName}</h1>
           </div>
         </div>
@@ -245,7 +246,7 @@ export function renderServiceDetail(params) {
 
               <div style="background: var(--gold-50); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-5);">
                 <p style="font-size: var(--text-sm); color: var(--earth-600);">
-                  <strong>💡 Tips:</strong> ${t('svc_tip')}
+                  <strong>💡 ${t('svc_tips_label') || 'Tips'}:</strong> ${t('svc_tip')}
                 </p>
               </div>
 
@@ -253,7 +254,7 @@ export function renderServiceDetail(params) {
                 ${t('svc_book_service')}
               </a>
               
-              <a href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan ${srvName}" 
+              <a href="https://wa.me/6281234567890?text=${encodeURIComponent(t('con_wa_greeting') + ' ' + srvName)}" 
                  target="_blank" class="btn btn--secondary btn--lg" 
                  style="width: 100%; margin-top: var(--space-3);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -280,7 +281,7 @@ export function renderServiceDetail(params) {
                 <a href="#/layanan/${other.slug}" class="journey-nav-card">
                   <img src="${other.image || `/images/${other.slug}.webp`}" alt="${otherName}" class="journey-nav-card__img" width="300" height="180" loading="lazy" decoding="async" />
                   <div class="journey-nav-card__body">
-                    <span class="journey-nav-card__tag">${other.category}</span>
+                    <span class="journey-nav-card__tag">${translateCategory(other.category)}</span>
                     <h4 class="journey-nav-card__title">${otherName}</h4>
                     <p class="journey-nav-card__price">
                       <span style="font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted);">${t('starting_from')}</span>

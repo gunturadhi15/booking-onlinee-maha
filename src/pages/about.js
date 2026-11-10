@@ -47,16 +47,16 @@ export function renderAbout() {
             <!-- Credential Metrics Grid -->
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-hairline);">
               <div>
-                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">Afiliasi Adat</span>
-                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">Desa Bindu</strong>
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">${t('abt_metric_1_label')}</span>
+                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">${t('abt_metric_1_val')}</strong>
               </div>
               <div>
-                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">Living Ethos</span>
-                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">Tri Hita Karana</strong>
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">${t('abt_metric_2_label')}</span>
+                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">${t('abt_metric_2_val')}</strong>
               </div>
               <div>
-                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">Privasi Sesi</span>
-                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">Eksklusif Privat</strong>
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">${t('abt_metric_3_label')}</span>
+                <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">${t('abt_metric_3_val')}</strong>
               </div>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function renderAbout() {
                   Ubud Sacred Valley Sanctuary
                 </p>
                 <p style="font-size: 0.84rem; color: var(--text-stone); margin: 0; line-height: 1.5;">
-                  Oase hening di lembah persawahan sakral Desa Adat Bindu, Gianyar, Bali. Menjaga kemurnian tirta dan ketenangan jiwa tanpa gangguan keramaian kota.
+                  ${t('abt_story_caption')}
                 </p>
               </div>
             </div>

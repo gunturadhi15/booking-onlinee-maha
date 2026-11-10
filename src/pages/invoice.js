@@ -29,19 +29,19 @@ export function renderInvoice(params) {
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
             <h1 class="heading-2 font-serif" style="margin-bottom: var(--space-2); color: var(--text-onyx); font-size: 1.5rem;">
-              Faktur / Status Reservasi
+              ${t('inv_empty_title')}
             </h1>
             <p style="color: var(--text-stone); font-size: 0.95rem; margin-bottom: var(--space-6); line-height: 1.6;">
               ${invoiceId 
-                ? `Nomor referensi <strong>${esc(invoiceId)}</strong> sedang diverifikasi atau tidak ditemukan pada sesi browser ini.` 
-                : 'Belum ada data reservasi aktif pada sesi browser ini.'}
+                ? `${t('inv_empty_desc')} (Ref: <strong>${esc(invoiceId)}</strong>)` 
+                : t('inv_empty_desc')}
             </p>
             <div style="display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;">
               <a href="#/booking" class="btn btn--primary">
                 ${t('chk_no_order_btn')}
               </a>
-              <a href="https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=Halo%20Concierge%20Mahawellnerjourney,%20saya%20ingin%20cek%20status%20reservasi%20saya" target="_blank" class="btn btn--secondary">
-                Tanya WhatsApp Concierge
+              <a href="https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=${encodeURIComponent(t('inv_wa_greeting') + ' ' + (t('inv_empty_title') || 'Status Reservasi'))}" target="_blank" class="btn btn--secondary">
+                ${t('con_chat_wa')}
               </a>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function renderInvoice(params) {
 
   const statusLabel = isConfirmedPaid
     ? (t('inv_status_paid') || 'LUNAS / CONFIRMED')
-    : 'MENUNGGU PEMBAYARAN / PENDING';
+    : (t('inv_status_pending') || 'MENUNGGU PEMBAYARAN / PENDING');
 
   const badgeStyle = isConfirmedPaid
     ? 'background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7;'
@@ -72,15 +72,15 @@ export function renderInvoice(params) {
 
   const waMessage = encodeURIComponent(
     `${t('inv_wa_greeting')}\n` +
-    (isConfirmedPaid ? 'Saya ingin mengonfirmasi sesi yang telah lunas:\n' : 'Saya ingin mengonfirmasi status pembayaran reservasi saya:\n') +
+    `${t('inv_wa_intro')}\n` +
     `• ${t('inv_code_label')}: ${bookingCode}\n` +
-    `• Invoice Ref: ${data.invoice_id || data.invoice_number || '-'}\n` +
+    `• ${t('inv_invoice_ref')}: ${data.invoice_id || data.invoice_number || '-'}\n` +
     `• ${t('book_fullname')}: ${data.customer_name} (${data.nationality || 'Guest'})\n` +
     `• ${t('book_service_label')}: ${serviceName} (${packageName})\n` +
     `• ${t('book_pax_label')}: ${data.pax || 1} ${t('book_pax_person')}\n` +
     `• ${t('book_date_label')}: ${formattedDate} (${data.booking_time} WITA)\n` +
-    (data.dob ? `• DOB: ${data.dob}\n` : '') +
-    `• Status: ${statusLabel} (${formatCurrency(data.grand_total || data.total_price || 0)})\n\n` +
+    (data.dob ? `• ${t('book_dob_label') ? t('book_dob_label').split('(')[0].trim() : 'DOB'}: ${data.dob}\n` : '') +
+    `• ${t('inv_status')}: ${statusLabel} (${formatCurrency(data.grand_total || data.total_price || 0)})\n\n` +
     `${t('inv_wa_thanks')}`
   );
 
@@ -142,7 +142,7 @@ export function renderInvoice(params) {
               <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${esc(data.customer_name)} ${data.nationality ? `(${esc(data.nationality)})` : ''}</p>
               <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${esc(data.email)}</p>
               <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${esc(data.whatsapp)}</p>
-              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${esc(data.dob)}</p>` : ''}
+              ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> ${t('book_dob_label') ? t('book_dob_label').split('(')[0].trim() : 'DOB'}: ${esc(data.dob)}</p>` : ''}
             </div>
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin: 0 0 var(--space-2); font-family: var(--font-mono);">${t('inv_schedule_info')}</h4>
@@ -159,8 +159,8 @@ export function renderInvoice(params) {
               <thead>
                 <tr style="border-bottom: 2px solid var(--cream-200); text-align: left; font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">
                   <th style="padding: var(--space-3) 0;">${t('inv_item_desc')}</th>
-                  <th style="padding: var(--space-3) var(--space-2); text-align: center;">Qty</th>
-                  <th style="padding: var(--space-3) 0; text-align: right;">Total</th>
+                  <th style="padding: var(--space-3) var(--space-2); text-align: center;">${t('inv_col_qty')}</th>
+                  <th style="padding: var(--space-3) 0; text-align: right;">${t('inv_col_total')}</th>
                 </tr>
               </thead>
               <tbody style="font-size: var(--text-sm);">
@@ -179,21 +179,21 @@ export function renderInvoice(params) {
           <!-- Total Summary -->
           <div style="border-top: 1.5px solid var(--border-hairline); padding-top: var(--space-4); margin-bottom: var(--space-6);">
             <div style="display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 700; color: var(--cta-forest);">
-              <span>${isConfirmedPaid ? 'Total Lunas (0% Tax):' : 'Total Tagihan (Nett):'}</span>
+              <span>${isConfirmedPaid ? t('inv_total_paid') : t('inv_total_bill')}</span>
               <span class="tabular-nums">${formatCurrency(data.grand_total || data.total_price || data.subtotal || 0)}</span>
             </div>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0; text-align: right;">
-              Estimasi: ${formatCurrencyWithApprox(data.grand_total || data.total_price || data.subtotal || 0, currentLanguage)}
+              ${t('inv_approx_label')}: ${formatCurrencyWithApprox(data.grand_total || data.total_price || data.subtotal || 0, currentLanguage)}
             </p>
           </div>
 
           <!-- Payment Instructions / Verification Notice -->
           <div style="background: var(--surface-silk); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: var(--space-4); font-size: 0.82rem; color: var(--text-stone); line-height: 1.6;">
-            <strong style="color: var(--text-onyx); display: block; margin-bottom: 4px;">Informasi Penting & Verifikasi:</strong>
+            <strong style="color: var(--text-onyx); display: block; margin-bottom: 4px;">${t('inv_notice_title')}</strong>
             ${isConfirmedPaid
-              ? '• Sesi Anda telah terkonfirmasi resmi. Mohon tiba di Sanctuary Desa Adat Bindu, Ubud minimal 15 menit sebelum waktu sesi sakral dimulai.'
-              : '• Status reservasi Anda saat ini adalah <strong>Menunggu Konfirmasi & Pembayaran</strong>. Silakan hubungi Concierge via WhatsApp dengan menunjukkan Kode Booking resmi untuk menyelesaikan pembayaran dan mengunci slot waktu sesi Anda.'}
-            <br/>• Pakaian sopan / sarung upacara Bali disediakan di lokasi untuk ritual sakral.
+              ? t('inv_notice_confirmed')
+              : t('inv_notice_pending')}
+            <br/>${t('inv_notice_attire')}
           </div>
 
         </div>
@@ -202,7 +202,7 @@ export function renderInvoice(params) {
         <div class="fade-in" style="display: flex; gap: var(--space-4); margin-top: var(--space-6); justify-content: center; flex-wrap: wrap;">
           <a href="https://wa.me/${(COMPANY.whatsapp || '6281234567890').replace(/\D/g, '')}?text=${waMessage}" target="_blank" class="btn btn--primary btn--lg" style="display: inline-flex; align-items: center; gap: var(--space-2);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            ${isConfirmedPaid ? 'Kirim Konfirmasi ke WhatsApp' : 'Konfirmasi via WhatsApp Concierge'}
+            ${t('inv_btn_wa_confirm')}
           </a>
           <button id="btn-print-invoice" class="btn btn--secondary btn--lg" style="display: inline-flex; align-items: center; gap: var(--space-2);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>

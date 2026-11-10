@@ -461,7 +461,7 @@ function renderStep4() {
           </div>
         </div>
         <p class="nationality-hint" style="text-align: right; margin-top: 4px;">
-          Subtotal: <strong class="tabular-nums" style="color: var(--cta-forest);">${formatCurrencyWithApprox(currentSubtotal, currentLanguage)}</strong>
+          ${t('book_subtotal')}: <strong class="tabular-nums" style="color: var(--cta-forest);">${formatCurrencyWithApprox(currentSubtotal, currentLanguage)}</strong>
         </p>
       </div>
 
@@ -617,12 +617,12 @@ function renderStep5() {
         
         ${isNumerology && bookingState.dob ? `
           <p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 4px 0 0; font-weight: 600;">
-            • Tanggal Lahir (Chart): ${esc(bookingState.dob)}
+            • ${t('book_dob_label') ? t('book_dob_label').split('(')[0].trim() : 'DOB'} (Chart): ${esc(bookingState.dob)}
           </p>
         ` : ''}
 
         <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 4px;">
-          Metode Pembayaran: <strong style="color: var(--text-onyx);">${esc(bookingState.payment_method.toUpperCase())}</strong>
+          ${t('pay_method_title')}: <strong style="color: var(--text-onyx);">${esc(bookingState.payment_method.toUpperCase())}</strong>
         </p>
 
         ${bookingState.notes ? `<p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-2); font-style: italic;">“${esc(bookingState.notes)}”</p>` : ''}
@@ -673,8 +673,8 @@ function renderStep5() {
 
       <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-3); line-height: 1.5;">
         ${t('book_agree_terms')} <br />
-        <a href="#/syarat-ketentuan" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">Syarat &amp; Ketentuan</a> &bull; 
-        <a href="#/kebijakan-privasi" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">Kebijakan Privasi</a>
+        <a href="#/syarat-ketentuan" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">${t('foot_terms_conditions')}</a> &bull; 
+        <a href="#/kebijakan-privasi" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">${t('foot_privacy_policy')}</a>
       </p>
     </div>
   `;
@@ -1337,19 +1337,19 @@ function showConfirmationModal(booking) {
 
   // Generate structured WhatsApp pre-filled message
   const waText = encodeURIComponent(
-    `Om Swastyastu / Hello Mahawellnerjourney Sanctuary Team,\n\n` +
-    `I would like to confirm my sacred booking:\n` +
-    `• Booking Code: ${booking.booking_id}\n` +
-    `• Invoice Ref: ${booking.invoice_id}\n` +
-    `• Guest Name: ${booking.customer_name} (${booking.nationality})\n` +
-    `• Phone: +${booking.whatsapp}\n` +
-    `• Service: ${srvTitle} - ${pkgTitle}\n` +
-    `• Participants: ${booking.pax} Person(s)\n` +
-    `• Schedule: ${formatDateSafe(booking.booking_date)} at ${booking.booking_time} WITA\n` +
-    (booking.dob ? `• Date of Birth: ${booking.dob}\n` : '') +
-    `• Total: ${formatCurrency(booking.grand_total)}\n` +
-    `• Payment Choice: ${booking.payment_method.toUpperCase()}\n\n` +
-    `Please confirm my reservation details. Suksma / Thank you!`
+    `${t('inv_wa_greeting')}\n\n` +
+    `${t('inv_wa_intro')}\n` +
+    `• ${t('inv_code_label')}: ${booking.booking_id}\n` +
+    `• ${t('inv_invoice_ref')}: ${booking.invoice_id}\n` +
+    `• ${t('book_fullname')}: ${booking.customer_name} (${booking.nationality || 'Guest'})\n` +
+    `• WhatsApp: +${booking.whatsapp}\n` +
+    `• ${t('book_service_label')}: ${srvTitle} - ${pkgTitle}\n` +
+    `• ${t('book_pax_label')}: ${booking.pax} ${t('book_pax_person')}\n` +
+    `• ${t('book_date_label')}: ${formatDateSafe(booking.booking_date)} (${booking.booking_time} WITA)\n` +
+    (booking.dob ? `• ${t('book_dob_label') ? t('book_dob_label').split('(')[0].trim() : 'DOB'}: ${booking.dob}\n` : '') +
+    `• ${t('book_grand_total')}: ${formatCurrency(booking.grand_total)}\n` +
+    `• ${t('pay_method_title')}: ${booking.payment_method.toUpperCase()}\n\n` +
+    `${t('inv_wa_thanks')}`
   );
 
   const waUrl = `https://wa.me/${COMPANY.whatsapp}?text=${waText}`;
@@ -1363,7 +1363,7 @@ function showConfirmationModal(booking) {
             <svg class="luxury-check-icon" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color: var(--cta-forest); margin-right: 4px; vertical-align: -1px;">
               <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Official Sanctuary Reservation
+            ${t('modal_reservation_badge')}
           </span>
           <h2 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--cta-forest); margin: var(--space-2) 0;">
             ${t('modal_confirmed_title')}

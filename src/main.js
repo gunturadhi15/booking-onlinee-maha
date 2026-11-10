@@ -160,16 +160,32 @@ function updateStaticTexts() {
     footerCopyright.textContent = (cp && cp !== 'foot_copyright') ? cp : '© 2026 Mahawellnerjourney. All rights reserved.';
   }
 
-  // Footer nav links
+  // Footer nav links (Column 1)
   const footerNavLinks = document.querySelectorAll('.footer__links:first-of-type ul li a');
   footerNavLinks.forEach(a => {
     const page = a.dataset.page;
     if (page === 'home') a.textContent = t('nav_home');
     else if (page === 'services') a.textContent = t('nav_services');
-    else if (page === 'booking') a.textContent = t('nav_booking') + ' Online';
+    else if (page === 'booking') a.textContent = t('nav_booking');
     else if (page === 'about') a.textContent = t('nav_about');
     else if (page === 'contact') a.textContent = t('nav_contact');
   });
+
+  // Footer curated journeys links (Column 2)
+  const journeyLinks = document.querySelectorAll('.footer__links:nth-of-type(2) ul li a');
+  if (journeyLinks.length >= 4) {
+    journeyLinks[0].textContent = t('foot_service_temple');
+    journeyLinks[1].textContent = t('foot_service_yoga');
+    journeyLinks[2].textContent = t('foot_service_numerology');
+    journeyLinks[3].textContent = t('foot_service_melukat');
+  }
+
+  // Footer legal links (Bottom)
+  const legalLinks = document.querySelectorAll('.footer__legal-links a');
+  if (legalLinks.length >= 2) {
+    legalLinks[0].textContent = t('foot_privacy_policy');
+    legalLinks[1].textContent = t('foot_terms_conditions');
+  }
 
   // Chatbot
   const chatTitle = document.querySelector('#chatbot-window .chat-title, #chatbot-window h4');
@@ -370,9 +386,7 @@ function setupGlobalUI() {
   const currentLang = getLang();
   document.documentElement.lang = currentLang;
   buildLanguageUI();
-  if (currentLang !== 'id') {
-    updateStaticTexts();
-  }
+  updateStaticTexts();
   initLanguageSwitcher();
 
   // Asynchronously activate external fonts after initial render to avoid blocking & forced reflow

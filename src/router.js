@@ -1,6 +1,7 @@
 /**
  * Router - Simple SPA hash-based router
  */
+import { t, getLang } from './i18n.js';
 
 export class Router {
   constructor() {
@@ -95,35 +96,50 @@ export class Router {
   updateSEO(path, params = {}) {
     const metaDesc = document.querySelector('meta[name="description"]');
     const brand = 'Mahawellnerjourney Bali';
+    const isEn = getLang() !== 'id';
 
     const seoMap = {
       '/': {
-        title: `Official Flagship & Direct Wellness Booking Bali — ${brand}`,
-        desc: 'Official Sanctuary & Direct Wellness Booking Engine Mahawellnerjourney Bali. Pesan paket spiritual tour, yoga retreat, melukat purification, dan konsultasi numerologi di Ubud.'
+        title: `${t('nav_home')} — ${brand}`,
+        desc: isEn 
+          ? 'Official Sanctuary & Direct Wellness Booking Engine Mahawellnerjourney Bali. Sacred spiritual journeys, yoga retreats, melukat purification, and numerology readings in Ubud.'
+          : 'Official Sanctuary & Direct Wellness Booking Engine Mahawellnerjourney Bali. Pesan paket spiritual tour, yoga retreat, melukat purification, dan konsultasi numerologi di Ubud.'
       },
       '/layanan': {
-        title: `Katalog Layanan & Curated Journeys — ${brand}`,
-        desc: 'Jelajahi paket retreat yoga, tur pura sakral, melukat purification, dan konsultasi numerologi Bali dengan panduan praktisi senior.'
+        title: `${t('nav_services')} — ${brand}`,
+        desc: isEn
+          ? 'Explore yoga retreat packages, sacred temple tours, melukat purification, and Balinese numerology with senior practitioners.'
+          : 'Jelajahi paket retreat yoga, tur pura sakral, melukat purification, dan konsultasi numerologi Bali dengan panduan praktisi senior.'
       },
       '/booking': {
-        title: `Direct Booking Engine — Reservasi Resmi — ${brand}`,
-        desc: 'Formulir reservasi langsung Mahawellnerjourney. Pilih jadwal waktu lokal Bali (WITA), jumlah tamu, dan metode pembayaran aman.'
+        title: `${t('nav_booking_cta')} — ${brand}`,
+        desc: isEn
+          ? 'Official Mahawellnerjourney direct reservation. Select your local Bali schedule (WITA), number of participants, and secure payment method.'
+          : 'Formulir reservasi langsung Mahawellnerjourney. Pilih jadwal waktu lokal Bali (WITA), jumlah tamu, dan metode pembayaran aman.'
       },
       '/checkout': {
-        title: `Checkout & Konfirmasi Pembayaran — ${brand}`,
-        desc: 'Tinjau rincian pemesanan dan selesaikan konfirmasi reservasi aman untuk perjalanan wellness Anda di Ubud Bali.'
+        title: `${t('chk_heading')} — ${brand}`,
+        desc: isEn
+          ? 'Review booking details and complete secure checkout for your wellness journey in Ubud Bali.'
+          : 'Tinjau rincian pemesanan dan selesaikan konfirmasi reservasi aman untuk perjalanan wellness Anda di Ubud Bali.'
       },
       '/invoice': {
-        title: `Faktur & E-Voucher Resmi — ${brand}`,
-        desc: 'Rincian faktur digital dan E-Voucher resmi Mahawellnerjourney dengan nomor referensi pemesanan yang terverifikasi.'
+        title: `${t('inv_empty_title')} — ${brand}`,
+        desc: isEn
+          ? 'Official digital invoice and reservation details with verified booking reference.'
+          : 'Rincian faktur digital dan E-Voucher resmi Mahawellnerjourney dengan nomor referensi pemesanan yang terverifikasi.'
       },
       '/tentang-kami': {
-        title: `Tentang Kami — Kisah Sanctuary & Desa Adat Bindu — ${brand}`,
-        desc: 'Mengenal etos Tri Hita Karana, praktisi lokal senior, dan sanctuary hening Mahawellnerjourney di Desa Adat Bindu, Ubud, Bali.'
+        title: `${t('nav_about')} — ${brand}`,
+        desc: isEn
+          ? 'Learn about our Tri Hita Karana ethos, senior local practitioners, and quiet sanctuary grounds in Desa Adat Bindu, Ubud, Bali.'
+          : 'Mengenal etos Tri Hita Karana, praktisi lokal senior, dan sanctuary hening Mahawellnerjourney di Desa Adat Bindu, Ubud, Bali.'
       },
       '/hubungi-kami': {
-        title: `Hubungi Kami & Concierge Care — ${brand}`,
-        desc: 'Kontak resmi, lokasi sanctuary di Ubud Bali, FAQ, dan layanan bantuan WhatsApp Concierge.'
+        title: `${t('nav_contact')} — ${brand}`,
+        desc: isEn
+          ? 'Official contact, sanctuary location in Ubud Bali, FAQ, and 24/7 WhatsApp concierge assistance.'
+          : 'Kontak resmi, lokasi sanctuary di Ubud Bali, FAQ, dan layanan bantuan WhatsApp Concierge.'
       }
     };
 

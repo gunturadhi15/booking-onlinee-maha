@@ -171,11 +171,11 @@ export function renderCheckout() {
               
               <div style="background: var(--surface-silk); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); margin-bottom: var(--space-4); font-size: var(--text-xs);">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                  <span style="color: var(--text-muted); font-family: var(--font-mono);">Kode Booking</span>
+                  <span style="color: var(--text-muted); font-family: var(--font-mono);">${t('chk_booking_code')}</span>
                   <span style="font-weight: 700; color: var(--cta-forest); font-family: var(--font-mono);">${esc(bookingCode)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="color: var(--text-muted); font-family: var(--font-mono);">Invoice Ref</span>
+                  <span style="color: var(--text-muted); font-family: var(--font-mono);">${t('inv_invoice_ref')}</span>
                   <span style="font-weight: 700; color: var(--gold-700); font-family: var(--font-mono);">${esc(data.invoice_id || data.invoice_number)}</span>
                 </div>
               </div>
@@ -209,8 +209,8 @@ export function renderCheckout() {
                 <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0 0 2px;">${esc(data.email)}</p>
                 <p style="font-size: var(--text-xs); color: var(--text-stone); margin: 0;">+${esc(data.whatsapp)}</p>
                 
-                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> DOB: ${esc(data.dob)}</p>` : ''}
-                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> Transport: ${data.transport_option === 'need_pickup' ? 'Pickup (' + esc(data.pickup_address || '') + ')' : 'Direct Meet Bindu'}</p>` : ''}
+                ${data.dob ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> ${t('book_dob_label') ? t('book_dob_label').split('(')[0].trim() : 'DOB'}: ${esc(data.dob)}</p>` : ''}
+                ${data.transport_option ? `<p style="font-size: var(--text-xs); color: var(--cta-forest); margin: 3px 0 0; font-weight: 600;"><span class="subtle-bullet">•</span> Transport: ${data.transport_option === 'need_pickup' ? `${t('book_transport_pickup')} (${esc(data.pickup_address || '')})` : t('book_transport_direct')}</p>` : ''}
               </div>
 
               <div class="booking-summary__row">

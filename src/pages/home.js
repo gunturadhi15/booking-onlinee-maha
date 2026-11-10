@@ -14,7 +14,9 @@ import {
   translateServiceName, 
   translateServiceDesc, 
   translatePackageName, 
-  translatePackageDesc 
+  translatePackageDesc,
+  translateCategory,
+  GALLERY_TRANSLATIONS
 } from '../i18n.js';
 
 function serviceName(service) {
@@ -34,6 +36,7 @@ function packageDesc(pkg) {
 }
 
 export function renderHome() {
+  const currentLang = getLang();
   const services = SERVICES.filter(s => s.status === 'active').map(service => {
     const packages = getPackagesByService(service.service_id);
     const prices = packages.map(p => p.price);
@@ -219,7 +222,7 @@ export function renderHome() {
                   loading="lazy" 
                   decoding="async" 
                 />
-                <span class="journey-card__tag">${s.category} • ${translateDuration(pkg.duration)}</span>
+                <span class="journey-card__tag">${translateCategory(s.category)} • ${translateDuration(pkg.duration)}</span>
               </div>
 
               <h3 class="journey-card__name font-serif">${serviceName(s)}</h3>
@@ -264,21 +267,23 @@ export function renderHome() {
         </div>
 
         <div class="sanctuary-motion-grid">
-          ${SANCTUARY_MEDIA.gallery.map(item => `
+          ${SANCTUARY_MEDIA.gallery.map(item => {
+            const galTrans = GALLERY_TRANSLATIONS[item.id]?.[currentLang] || item;
+            return `
             <a href="#/layanan/${item.slug}" class="motion-card fade-in">
               <div class="motion-card__media">
                 <img 
                   src="${item.image}" 
                   srcset="${item.image_sm || item.image.replace('.webp', '-sm.webp')} 400w, ${item.image} 600w"
                   sizes="(max-width: 640px) 220px, (max-width: 1024px) 380px, 400px"
-                  alt="${item.title}" 
+                  alt="${galTrans.title || item.title}" 
                   class="motion-card__img" 
                   width="400" 
                   height="225" 
                   loading="lazy" 
                   decoding="async" 
                 />
-                <div class="motion-card__play-badge" aria-label="Jelajahi pengalaman">
+                <div class="motion-card__play-badge" aria-label="${t('nav_services')}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
@@ -286,13 +291,14 @@ export function renderHome() {
               </div>
               <div class="motion-card__body">
                 <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--gold-maha); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
-                  ${item.tag}
+                  ${galTrans.tag || item.tag}
                 </span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 6px; color: var(--text-onyx);">${item.title}</h3>
-                <p style="font-size: 0.82rem; color: var(--text-stone); line-height: 1.5; margin: 0;">${item.quote}</p>
+                <h3 style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0 0 6px; color: var(--text-onyx);">${galTrans.title || item.title}</h3>
+                <p style="font-size: 0.82rem; color: var(--text-stone); line-height: 1.5; margin: 0;">${galTrans.quote || item.quote}</p>
               </div>
             </a>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
       </div>
     </section>
@@ -350,7 +356,7 @@ export function renderHome() {
             <div>
               <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; display: block;">${t('svc_hours')}</span>
               <strong>09:00 - 17:00 WITA</strong>
-              <p style="color: var(--text-stone); margin: 2px 0 0;">Respon Concierge 24 Jam</p>
+              <p style="color: var(--text-stone); margin: 2px 0 0;">${t('home_concierge_hours')}</p>
             </div>
           </div>
 
@@ -424,7 +430,7 @@ export function renderHome() {
                   <tr style="border-bottom: 1px solid var(--border-hairline);">
                     <td style="padding: 12px 18px;">
                       <strong style="color: var(--text-onyx);">${packageName(p)}</strong>
-                      ${p.popular ? `<span style="margin-left: 8px; font-family: var(--font-mono); font-size: 0.65rem; background: var(--cta-forest); color: white; padding: 2px 6px; border-radius: 3px;">POPULAR</span>` : ''}
+                      ${p.popular ? `<span style="margin-left: 8px; font-family: var(--font-mono); font-size: 0.65rem; background: var(--cta-forest); color: white; padding: 2px 6px; border-radius: 3px;">${t('badge_popular')}</span>` : ''}
                       <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0;">${packageDesc(p)}</p>
                     </td>
                     <td style="padding: 12px 18px; font-size: 0.85rem; color: var(--text-stone);">${translateDuration(p.duration)}</td>
@@ -453,7 +459,7 @@ export function renderHome() {
                   <div class="catalog-mobile-card">
                     <div class="catalog-mobile-card__top">
                       <h4 class="catalog-mobile-card__title">${packageName(p)}</h4>
-                      ${p.popular ? `<span class="catalog-mobile-card__badge">POPULAR</span>` : ''}
+                      ${p.popular ? `<span class="catalog-mobile-card__badge">${t('badge_popular')}</span>` : ''}
                     </div>
                     <p class="catalog-mobile-card__desc">${packageDesc(p)}</p>
                     <div class="catalog-mobile-card__meta">
