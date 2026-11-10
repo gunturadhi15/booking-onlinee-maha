@@ -20,6 +20,79 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mahawellnerjourney.com" />
 
+  <!-- Schema.org JSON-LD Structured Data for Rich Search Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HealthAndBeautyBusiness",
+        "@id": "https://mahawellnerjourney.com/#sanctuary",
+        "name": "Mahawellnerjourney Bali",
+        "alternateName": "Maha Wellner Journey",
+        "url": "https://mahawellnerjourney.com",
+        "logo": "https://mahawellnerjourney.com/logo-mahawellnerjourney.svg",
+        "image": "https://mahawellnerjourney.com/images/sanctuary-ambiance.webp",
+        "description": "Official Sanctuary & Direct Wellness Booking Bali. Curated spiritual temple tours, holistic yoga retreats, authentic Melukat purification ceremonies, and sacred Balinese numerology.",
+        "telephone": "+6281234567890",
+        "email": "concierge@mahawellnerjourney.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Jl. Raya Ubud No. 88",
+          "addressLocality": "Ubud",
+          "addressRegion": "Bali",
+          "postalCode": "80571",
+          "addressCountry": "ID"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -8.5069,
+          "longitude": 115.2625
+        },
+        "priceRange": "Rp 750,000 - Rp 3,500,000",
+        "currenciesAccepted": "IDR, USD, EUR",
+        "paymentAccepted": "Credit Card, Debit Card, PayPal, QRIS",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "07:00",
+            "closes": "21:00"
+          }
+        ]
+      },
+      {
+        "@type": "TouristTrip",
+        "@id": "https://mahawellnerjourney.com/#spiritual-temple-tour",
+        "name": "Spiritual Temple Tour & Ancient Water Blessing",
+        "description": "Exclusive private pilgrimage to sanctified ancient water temples in Gianyar & Bangli with traditional pemangku blessing.",
+        "touristType": "Spiritual seekers, cultural travelers, wellness enthusiasts",
+        "offers": {
+          "@type": "Offer",
+          "price": "1250000",
+          "priceCurrency": "IDR",
+          "availability": "https://schema.org/InStock",
+          "url": "https://mahawellnerjourney.com/#/layanan/spiritual-temple-tour"
+        }
+      },
+      {
+        "@type": "TouristTrip",
+        "@id": "https://mahawellnerjourney.com/#melukat-purification",
+        "name": "Sacred Melukat Water Purification Ceremony",
+        "description": "Sacred soul cleansing ritual under holy natural springs with guided meditation and customary offerings.",
+        "touristType": "Wellness travelers, mindfulness practitioners",
+        "offers": {
+          "@type": "Offer",
+          "price": "750000",
+          "priceCurrency": "IDR",
+          "availability": "https://schema.org/InStock",
+          "url": "https://mahawellnerjourney.com/#/layanan/healing-purification"
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/logo-mahawellnerjourney.svg" />
 
@@ -35,7 +108,7 @@
 
   <!-- Google Fonts: Non-render-blocking Asynchronous Loading with font-display: swap -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" id="google-fonts" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" media="print" />
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   </noscript>
@@ -293,10 +366,10 @@
           <div class="footer__links">
             <h3 class="footer__title">Curated Journeys</h3>
             <ul>
-              <li><a href="#/layanan/spiritual-tour-pura-sakral" data-page="services">Spiritual Temple Tour</a></li>
-              <li><a href="#/layanan/yoga-meditasi-retreat" data-page="services">Yoga & Meditation Retreat</a></li>
-              <li><a href="#/layanan/konsultasi-numerology-bali" data-page="services">Numerology Consultation</a></li>
-              <li><a href="#/layanan/melukat-healing-ceremony" data-page="services">Melukat & Purification</a></li>
+              <li><a href="#/layanan/spiritual-temple-tour" data-page="services">Spiritual Temple Tour</a></li>
+              <li><a href="#/layanan/yoga-meditation-retreat" data-page="services">Yoga &amp; Meditation Retreat</a></li>
+              <li><a href="#/layanan/numerology-consultation" data-page="services">Numerology Consultation</a></li>
+              <li><a href="#/layanan/healing-purification" data-page="services">Melukat &amp; Purification</a></li>
             </ul>
           </div>
           <div class="footer__contact">
@@ -327,7 +400,14 @@
           </div>
         </div>
         <div class="footer__bottom">
-          <p>&copy; 2026 Mahawellnerjourney. All rights reserved.</p>
+          <div class="footer__legal-wrap" style="display: flex; flex-direction: column; gap: 6px;">
+            <p>&copy; 2026 Mahawellnerjourney. All rights reserved.</p>
+            <div class="footer__legal-links" style="display: flex; gap: 16px; font-size: 0.8rem;">
+              <a href="#/kebijakan-privasi" style="color: var(--text-stone); text-decoration: none; transition: color 0.2s;">Kebijakan Privasi</a>
+              <span style="color: var(--border-hairline);">•</span>
+              <a href="#/syarat-ketentuan" style="color: var(--text-stone); text-decoration: none; transition: color 0.2s;">Syarat &amp; Ketentuan</a>
+            </div>
+          </div>
           <div class="footer__socials">
             <a href="#" aria-label="Instagram" class="footer__social">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

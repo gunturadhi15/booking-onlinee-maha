@@ -2285,11 +2285,28 @@ const TRANSLATIONS = {
 export const SUPPORTED_LANGS = ['ru', 'es', 'it', 'fr', 'en', 'id'];
 export const DEFAULT_LANG = 'id';
 
-let currentLang = (typeof localStorage !== 'undefined' ? localStorage.getItem('lang') : null) || 'id';
-// Default to id or en, fallback if invalid
-if (!SUPPORTED_LANGS.includes(currentLang)) {
-  currentLang = 'id';
+function detectInitialLang() {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('lang');
+    if (saved && SUPPORTED_LANGS.includes(saved)) {
+      return saved;
+    }
+  }
+  if (typeof navigator !== 'undefined') {
+    const browserLang = (navigator.language || (navigator.languages && navigator.languages[0]) || '').toLowerCase();
+    const primary = browserLang.split('-')[0];
+    if (SUPPORTED_LANGS.includes(primary)) {
+      return primary;
+    }
+    // If visitor browser is foreign, default to English for international hospitality
+    if (primary && primary !== 'id') {
+      return 'en';
+    }
+  }
+  return DEFAULT_LANG;
 }
+
+let currentLang = detectInitialLang();
 
 /** Get translation by key with full fallback across languages */
 export function t(key) {

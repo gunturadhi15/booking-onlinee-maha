@@ -1,9 +1,3 @@
-# Prompt Utama untuk Meningkatkan Website Mahawellnerjourney
-
-> **Cara menggunakan:** Salin seluruh prompt di bawah ini ke AI coding assistant yang dapat membaca dan mengubah repository proyek Anda, misalnya Cursor, Claude Code, atau GitHub Copilot. Jalankan dari root folder proyek. Jika menggunakan layanan tersebut, pastikan repository dan environment yang dibuka adalah proyek yang benar.
-
----
-
 ## PROMPT UNTUK AI CODING AGENT
 
 Bertindaklah sebagai **Senior Full-Stack Engineer, UI/UX Designer, Application Security Engineer, Database Architect, QA Engineer, dan Technical SEO Specialist**. Tugas Anda adalah mengevaluasi dan meningkatkan website **Mahawellnerjourney**, yaitu website layanan wellness dan perjalanan spiritual di Bali, yang saat ini dipublikasikan di:
@@ -321,9 +315,3 @@ Pekerjaan dinyatakan siap untuk ditinjau, bukan otomatis siap produksi, bila:
 ## Instruksi mulai
 
 Mulai dari **Fase 1: audit repository**. Berikan ringkasan arsitektur dan temuan P0/P1 terlebih dahulu. Setelah itu, lanjutkan perbaikan bertahap pada area yang dapat diperbaiki dengan aman, jalankan test yang relevan, dan perbarui dokumentasi. Bila suatu keputusan membutuhkan informasi bisnis atau akses yang tidak tersedia, jangan menebak; tulis pertanyaan/blocker yang spesifik dan lanjutkan bagian lain yang tidak bergantung pada informasi tersebut.
-
----
-
-## Catatan untuk pemilik proyek
-
-Sebelum menjalankan prompt ini, pastikan AI coding agent membuka **repository proyek yang benar**, bukan hanya URL produksi. Jangan pernah mengirim password, token, private key, atau isi secret `.env`. Gunakan branch kerja dan backup yang aman sebelum perubahan besar. Review hasil perubahan dan test terlebih dahulu sebelum menggabungkannya ke branch produksi.

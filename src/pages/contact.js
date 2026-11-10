@@ -3,6 +3,7 @@
  */
 import { COMPANY, FAQ } from '../data.js';
 import { t } from '../i18n.js';
+import { esc } from '../utils/security.js';
 
 export function renderContact() {
   return `
@@ -174,7 +175,7 @@ export function initContact() {
             Pesan Anda Telah Diterima
           </h3>
           <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.6; margin-bottom: var(--space-5);">
-            Terima kasih, <strong>${name}</strong>. Tim concierge kami akan merespons pertanyaan Anda sesegera mungkin. Anda juga dapat melanjutkan percakapan langsung via WhatsApp resmi kami.
+            Terima kasih, <strong>${esc(name)}</strong>. Tim concierge kami akan merespons pertanyaan Anda sesegera mungkin. Anda juga dapat melanjutkan percakapan langsung via WhatsApp resmi kami.
           </p>
           <div style="display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap;">
             <a href="${waLink}" target="_blank" class="btn btn--primary btn--sm" style="display: inline-flex; align-items: center; gap: 6px;">

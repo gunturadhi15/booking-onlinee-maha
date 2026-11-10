@@ -82,6 +82,11 @@ export function renderBooking(params = {}) {
   const packageId = params?.package || hashParams.package;
   const initialDate = params?.date || hashParams.date;
   const initialTime = params?.time || hashParams.time;
+  const initialPax = parseInt(params?.guests || hashParams.guests || params?.pax || hashParams.pax, 10);
+
+  if (initialPax && !isNaN(initialPax) && initialPax >= 1 && initialPax <= 10) {
+    bookingState.pax = initialPax;
+  }
 
   if (initialDate && !bookingState.booking_date) {
     bookingState.booking_date = initialDate;
@@ -666,8 +671,10 @@ function renderStep5() {
         </div>
       ` : ''}
 
-      <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-3);">
-        ${t('book_agree_terms')}
+      <p style="text-align: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-3); line-height: 1.5;">
+        ${t('book_agree_terms')} <br />
+        <a href="#/syarat-ketentuan" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">Syarat &amp; Ketentuan</a> &bull; 
+        <a href="#/kebijakan-privasi" target="_blank" style="color: var(--gold-maha); text-decoration: underline; text-underline-offset: 3px;">Kebijakan Privasi</a>
       </p>
     </div>
   `;

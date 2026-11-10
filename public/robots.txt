@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /checkout
+Disallow: /invoice/
+
+Sitemap: https://mahawellnerjourney.com/sitemap.xml
+

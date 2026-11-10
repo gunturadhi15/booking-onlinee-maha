@@ -672,7 +672,7 @@ export function saveConfirmedBooking(booking) {
         tour_date: date,
         booking_time: time,
         booking_id: booking.booking_id || booking.id,
-        customer_name: booking.customer_name || 'Guest',
+        customer_name: 'Guest (Reserved)',
         status: 'confirmed',
         created_at: new Date().toISOString()
       });

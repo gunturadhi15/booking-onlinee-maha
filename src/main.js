@@ -69,6 +69,16 @@ router.addRoute('/hubungi-kami', async () => {
   return html;
 });
 
+router.addRoute('/kebijakan-privasi', async () => {
+  const { renderPrivacyPolicy } = await import('./pages/legal.js');
+  return renderPrivacyPolicy();
+});
+
+router.addRoute('/syarat-ketentuan', async () => {
+  const { renderTerms } = await import('./pages/legal.js');
+  return renderTerms();
+});
+
 // ==================== i18n Integration ====================
 
 /** Populate the language dropdown & mobile language list */
@@ -357,10 +367,26 @@ function setupGlobalUI() {
   }
 
   // Initialize i18n
-  document.documentElement.lang = getLang();
+  const currentLang = getLang();
+  document.documentElement.lang = currentLang;
   buildLanguageUI();
-  updateStaticTexts();
+  if (currentLang !== 'id') {
+    updateStaticTexts();
+  }
   initLanguageSwitcher();
+
+  // Asynchronously activate external fonts after initial render to avoid blocking & forced reflow
+  const activateFonts = () => {
+    const gf = document.getElementById('google-fonts');
+    if (gf && gf.media !== 'all') {
+      gf.media = 'all';
+    }
+  };
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(activateFonts);
+  } else {
+    setTimeout(activateFonts, 60);
+  }
 }
 
 let isInitialized = false;

@@ -278,9 +278,9 @@ export function renderHome() {
                   loading="lazy" 
                   decoding="async" 
                 />
-                <div class="motion-card__play-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <polygon points="6 3 20 12 6 21 6 3"/>
+                <div class="motion-card__play-badge" aria-label="Jelajahi pengalaman">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
                 </div>
               </div>
