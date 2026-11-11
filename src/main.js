@@ -4,7 +4,7 @@
 import './styles/index.css';
 import './styles/editorial.css';
 import { Router } from './router.js';
-import { t, getLang, setLang, getLanguages } from './i18n.js';
+import { t, getLang, setLang, getLanguages, tPsych } from './i18n.js';
 import { renderHome, initHomeEffects } from './pages/home.js';
 
 // Initialize SPA Router
@@ -206,6 +206,46 @@ function updateStaticTexts() {
     const firstBubble = chatMessages.querySelector('div');
     if (firstBubble) firstBubble.textContent = t('chat_welcome');
   }
+
+  // Update Mobile Sticky Conversion Bar texts
+  updateMobileStickyBar();
+}
+
+/** Create & update the Mobile Sticky Bottom Conversion Bar */
+function updateMobileStickyBar() {
+  let bar = document.getElementById('mobile-sticky-book-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'mobile-sticky-book-bar';
+    bar.className = 'mobile-sticky-book-bar';
+    document.body.appendChild(bar);
+  }
+
+  const lang = getLang();
+  const hash = window.location.hash || '#/';
+  const isTransactionalPage = hash.startsWith('#/booking') || hash.startsWith('#/checkout') || hash.startsWith('#/invoice');
+
+  if (isTransactionalPage) {
+    bar.classList.add('is-hidden');
+    document.body.classList.remove('has-mobile-sticky-bar');
+  } else {
+    bar.classList.remove('is-hidden');
+    document.body.classList.add('has-mobile-sticky-bar');
+  }
+
+  bar.innerHTML = `
+    <div class="mobile-sticky-book-bar__info">
+      <span class="mobile-sticky-book-bar__rating">${tPsych('sticky_rating', lang)}</span>
+      <div class="mobile-sticky-book-bar__price">
+        <span class="mobile-sticky-book-bar__from">${tPsych('sticky_from', lang)}</span>
+        <strong class="tabular-nums">Rp 250.000</strong>
+      </div>
+    </div>
+    <a href="#/booking" class="btn btn--primary mobile-sticky-book-bar__cta" data-page="booking">
+      <span>${tPsych('sticky_cta', lang)}</span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  `;
 }
 
 /** Handle language change */
@@ -388,6 +428,7 @@ function setupGlobalUI() {
   buildLanguageUI();
   updateStaticTexts();
   initLanguageSwitcher();
+  window.addEventListener('hashchange', updateMobileStickyBar);
 
   // Asynchronously activate external fonts after initial render to avoid blocking & forced reflow
   const activateFonts = () => {

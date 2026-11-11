@@ -4,17 +4,20 @@
 import { SERVICES, PACKAGES, formatCurrency, getPackagesByService, getCategories } from '../data.js';
 import { 
   t, 
+  getLang,
   translateDuration, 
   translateBenefit, 
   translateServiceName, 
   translateServiceDesc, 
   translatePackageName, 
   translatePackageDesc,
-  translateCategory
+  translateCategory,
+  tPsych
 } from '../i18n.js';
 
 export function renderServices() {
   const categories = getCategories();
+  const currentLang = getLang();
 
   return `
     <section class="page-hero">
@@ -64,7 +67,10 @@ export function renderServices() {
                   <h3 class="service-card__title font-serif">
                     <a href="#/layanan/${service.slug}" style="color: inherit; text-decoration: none;">${srvName}</a>
                   </h3>
-                  <p class="service-card__desc">${srvDesc}</p>
+                  <div class="journey-card__best-for" style="margin: 6px 0 8px;">
+                    <strong>${tPsych('best_for_label', currentLang)}</strong> ${tPsych(`best_for_${service.service_id}`, currentLang)}
+                  </div>
+                  <p class="service-card__desc journey-card__desc--clamp">${srvDesc}</p>
                   <div class="service-card__meta">
                     <span class="service-card__price tabular-nums">
                       ${popular ? formatCurrency(popular.price) : ''}<small>${t('services_per_package')}</small>

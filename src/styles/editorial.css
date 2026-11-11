@@ -3012,3 +3012,378 @@ img, video, iframe {
   }
 }
 
+/* ==========================================================================
+   PSYCHOLOGICAL COMFORT, SOCIAL PROOF & VISUAL LUXURY UPGRADE (Section 10)
+   ========================================================================== */
+
+/* 1. Hero Rating Pill & Cinematic Visual Frame */
+.hero-trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFDF8;
+  border: 1px solid rgba(197, 155, 39, 0.45);
+  color: var(--cta-forest);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(197, 155, 39, 0.12);
+}
+
+.hero-ambient-container--cinematic {
+  height: 390px !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 20px 44px rgba(20, 40, 29, 0.16) !important;
+  border: 1.5px solid rgba(197, 155, 39, 0.35) !important;
+}
+
+.hero-ambient-container--cinematic .hero-ambient-img {
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-ambient-container--cinematic:hover .hero-ambient-img {
+  transform: scale(1.03);
+}
+
+.hero-sound-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20, 40, 29, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  border: 1px solid rgba(197, 155, 39, 0.6);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.hero-sound-btn:hover {
+  background: var(--cta-forest);
+  border-color: var(--gold-maha);
+  transform: translateY(-1px);
+}
+
+.hero-ambient-overlay--glass {
+  background: linear-gradient(180deg, rgba(14, 29, 21, 0) 0%, rgba(14, 29, 21, 0.88) 100%) !important;
+  padding: 28px 18px 16px !important;
+}
+
+.hero-capacity-pill {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* 2. Practical Benefit Pill & Clean 2-Line Description Clamp on Cards */
+.journey-card__best-for {
+  background: #FAF6EC;
+  border-left: 2.5px solid var(--gold-maha);
+  color: var(--cta-forest);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  padding: 6px 10px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 8px 0 10px;
+}
+
+.journey-card__best-for strong {
+  color: #8C6611;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+.journey-card__desc--clamp {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.55 !important;
+  margin-bottom: var(--space-3) !important;
+}
+
+/* 3. Verified International Guest Stories Grid */
+.guest-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.guest-review-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.guest-review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-gold-subtle);
+}
+
+.guest-review-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: var(--space-3);
+}
+
+.guest-review-card__stars {
+  color: #D49B1A;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.guest-review-card__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #1B5E20;
+  background: #E8F5E9;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.guest-review-card__quote {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-onyx);
+  font-style: italic;
+  margin: 0 0 var(--space-5);
+  flex: 1;
+}
+
+.guest-review-card__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.guest-review-card__flag {
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.guest-review-card__name {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.96rem;
+  color: var(--text-onyx);
+}
+
+.guest-review-card__service {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--gold-maha);
+  margin-top: 2px;
+}
+
+/* 4. Visual 3-Step Flow Cards with Gold Icons */
+.flow-step-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.flow-step-card:hover {
+  border-color: var(--border-gold-subtle);
+  transform: translateY(-2px);
+}
+
+.flow-step-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.flow-step-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FAF6EC;
+  border: 1px solid rgba(197, 155, 39, 0.35);
+  color: var(--gold-maha);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flow-step-card__num {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--gold-maha);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: var(--surface-silk);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* 5. Collapsible Full Rate Card Toggle Button */
+.price-toggle-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1.5px solid var(--gold-maha) !important;
+  background: var(--surface-card) !important;
+  color: var(--cta-forest) !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  box-shadow: var(--shadow-xs);
+}
+
+.price-toggle-btn:hover {
+  background: #FAF6EC !important;
+}
+
+/* 6. Mobile Sticky Bottom Conversion Bar */
+.mobile-sticky-book-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hero-ambient-container--cinematic {
+    height: 270px !important;
+  }
+
+  .guest-reviews-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-4) !important;
+  }
+
+  .price-toggle-btn {
+    width: 100%;
+    font-size: 0.88rem !important;
+    padding: 12px 16px !important;
+  }
+
+  /* Compact Step Guide Banner in Booking on Mobile */
+  .step-guide-banner {
+    padding: 8px 12px !important;
+    margin-bottom: var(--space-3) !important;
+  }
+
+  .step-guide-banner__text {
+    font-size: 0.78rem !important;
+  }
+
+  .wita-banner {
+    padding: 8px 12px !important;
+    margin-bottom: var(--space-4) !important;
+  }
+
+  /* Show Sticky Bottom Conversion Bar on Mobile Browsing Pages */
+  .mobile-sticky-book-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 990;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1.5px solid rgba(197, 155, 39, 0.4);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 -6px 24px rgba(20, 40, 29, 0.12);
+  }
+
+  .mobile-sticky-book-bar.is-hidden {
+    display: none !important;
+  }
+
+  .mobile-sticky-book-bar__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .mobile-sticky-book-bar__rating {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: #B78103;
+    font-weight: 700;
+  }
+
+  .mobile-sticky-book-bar__price {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    color: var(--cta-forest);
+    font-size: 0.98rem;
+  }
+
+  .mobile-sticky-book-bar__from {
+    font-size: 0.72rem;
+    color: var(--text-stone);
+  }
+
+  .mobile-sticky-book-bar__cta {
+    min-height: 44px !important;
+    padding: 10px 18px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    border-radius: var(--radius-md) !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Elevate Floating Chat Button when Sticky Bar is active so they never collide */
+  body.has-mobile-sticky-bar .chatbot-fab,
+  body.has-mobile-sticky-bar #chatbot-fab {
+    bottom: 78px !important;
+  }
+}
+
+

@@ -16,7 +16,9 @@ import {
   translatePackageName, 
   translatePackageDesc,
   translateCategory,
-  GALLERY_TRANSLATIONS
+  GALLERY_TRANSLATIONS,
+  tPsych,
+  getGuestReviews
 } from '../i18n.js';
 
 function serviceName(service) {
@@ -60,9 +62,14 @@ export function renderHome() {
     <section class="sanctuary-hero" id="hero-section">
       <div class="container sanctuary-hero__inner">
         <div class="sanctuary-hero__content">
-          <div class="sanctuary-hero__badge">
-            <span class="subtle-bullet"></span>
-            <span>${t('hero_badge')}</span>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: var(--space-3);">
+            <div class="sanctuary-hero__badge" style="margin-bottom: 0;">
+              <span class="subtle-bullet"></span>
+              <span>${t('hero_badge')}</span>
+            </div>
+            <span class="hero-trust-pill">
+              ${tPsych('hero_rating_badge', currentLang)}
+            </span>
           </div>
 
           <h1 class="heading-1 sanctuary-hero__title">
@@ -85,50 +92,44 @@ export function renderHome() {
           </div>
         </div>
 
-        <!-- Ambient Visual Card -->
+        <!-- Immersive Cinematic Visual Frame -->
         <div class="sanctuary-hero__visual">
-          <div class="hero-ambient-container">
+          <div class="hero-ambient-container hero-ambient-container--cinematic">
             <img 
               src="/images/sanctuary-ambiance.webp" 
               srcset="/images/sanctuary-ambiance-sm.webp 400w, /images/sanctuary-ambiance.webp 600w"
-              sizes="(max-width: 640px) 220px, (max-width: 1024px) 380px, 400px"
+              sizes="(max-width: 640px) 360px, (max-width: 1024px) 480px, 560px"
               alt="Ubud Sacred Valley Sanctuary" 
               class="hero-ambient-img" 
               width="600" 
-              height="220" 
+              height="380" 
               fetchpriority="high" 
               loading="eager" 
               decoding="sync"
             />
-            <div class="hero-ambient-overlay">
-              <div>
-                <p style="font-family: var(--font-serif); font-size: 1.05rem; margin: 0; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">
-                  Ubud Sacred Valley Sanctuary
-                </p>
-                <p style="font-size: 0.75rem; margin: 2px 0 0; opacity: 0.9; font-family: var(--font-mono);">
-                  Tri Hita Karana • Calming Sacred Presence
-                </p>
-              </div>
-            </div>
-          </div>
+            <!-- Interactive 432Hz Sound Bowl Button -->
+            <button type="button" id="ambient-sound-toggle" class="hero-sound-btn" aria-label="${t('video_play_ambient')}">
+              <span id="sound-icon">🔈</span>
+              <span id="sound-label">${t('video_play_ambient')}</span>
+            </button>
 
-          <div class="sanctuary-hero__card" style="margin-top: var(--space-4);">
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-hairline);">
-              <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="46" height="46" fetchpriority="high" loading="eager" decoding="sync" style="width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--border-gold-subtle);" />
-              <div>
-                <span class="overline" style="margin: 0; font-size: 0.65rem;">OFFICIAL FLAGSHIP & SANCTUARY DIRECT</span>
-                <p style="font-size: 1.1rem; margin: 0; color: var(--text-onyx); font-family: var(--font-serif); font-weight: 700;">Mahawellnerjourney</p>
-              </div>
-            </div>
-
-            <div style="background: var(--surface-silk); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); font-size: 0.8rem;">
-              <div>
-                <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">${t('hero_card_setting')}</span>
-                <strong style="color: var(--text-onyx);">Ubud Sanctuary Valley</strong>
-              </div>
-              <div>
-                <span style="display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase;">${t('hero_card_capacity')}</span>
-                <strong style="color: var(--text-onyx);">${t('hero_card_capacity_val')}</strong>
+            <!-- Floating Glassmorphic Sanctuary Caption -->
+            <div class="hero-ambient-overlay hero-ambient-overlay--glass">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <img src="/logo-mahawellnerjourney.svg" alt="Mahawellnerjourney Emblem" width="38" height="38" style="width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--gold-maha); flex-shrink: 0;" />
+                  <div>
+                    <p style="font-family: var(--font-serif); font-size: 1rem; margin: 0; line-height: 1.3; color: #FFFFFF; font-weight: 600;">
+                      Ubud Sacred Valley Sanctuary
+                    </p>
+                    <p style="font-size: 0.72rem; margin: 2px 0 0; color: rgba(255,255,255,0.88); font-family: var(--font-mono);">
+                      ${tPsych('hero_distance_badge', currentLang)}
+                    </p>
+                  </div>
+                </div>
+                <span class="hero-capacity-pill">
+                  ${t('hero_card_capacity_val')}
+                </span>
               </div>
             </div>
           </div>
@@ -205,6 +206,7 @@ export function renderHome() {
         ${services.map((s, index) => {
           const isSignature = index === 0;
           const pkg = s.popularPkg;
+          const bestForText = tPsych(`best_for_${s.service_id}`, currentLang);
           return `
             <article class="journey-card ${isSignature ? 'signature' : ''} fade-in" data-service="${s.service_id}">
               ${isSignature ? `<div class="journey-card__badge">${t('signature_badge')}</div>` : ''}
@@ -214,7 +216,7 @@ export function renderHome() {
                 <img 
                   src="${s.image}" 
                   srcset="${s.image_sm || s.image.replace('.webp', '-sm.webp')} 400w, ${s.image} 600w"
-                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 380px, 400px"
+                  sizes="(max-width: 640px) 340px, (max-width: 1024px) 380px, 420px"
                   alt="${serviceName(s)}" 
                   class="journey-card__img-photo" 
                   width="600" 
@@ -226,10 +228,16 @@ export function renderHome() {
               </div>
 
               <h3 class="journey-card__name font-serif">${serviceName(s)}</h3>
-              <p class="journey-card__desc">${serviceDesc(s)}</p>
+
+              <!-- Practical Benefit Psychological Pill -->
+              <div class="journey-card__best-for">
+                <strong>${tPsych('best_for_label', currentLang)}</strong> ${bestForText}
+              </div>
+
+              <p class="journey-card__desc journey-card__desc--clamp">${serviceDesc(s)}</p>
 
               <ul class="journey-card__inclusions">
-                ${pkg.benefits.slice(0, 4).map(b => `
+                ${pkg.benefits.slice(0, 3).map(b => `
                   <li>
                     <svg class="luxury-check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -369,6 +377,39 @@ export function renderHome() {
       </div>
     </section>
 
+    <!-- ==================== VERIFIED INTERNATIONAL GUEST STORIES (SOCIAL PROOF) ==================== -->
+    <section style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);" id="guest-reviews">
+      <div class="container">
+        <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10);" class="fade-in">
+          <span class="overline">${tPsych('reviews_overline', currentLang)}</span>
+          <h2 class="heading-2">${tPsych('reviews_title', currentLang)}</h2>
+          <p class="subtitle" style="margin: var(--space-3) auto 0;">${tPsych('reviews_subtitle', currentLang)}</p>
+        </div>
+
+        <div class="guest-reviews-grid">
+          ${getGuestReviews(currentLang).map(rev => `
+            <article class="guest-review-card fade-in">
+              <div class="guest-review-card__top">
+                <div class="guest-review-card__stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <span class="guest-review-card__verified">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                  ${tPsych('reviews_verified', currentLang)}
+                </span>
+              </div>
+              <p class="guest-review-card__quote">${rev.quote}</p>
+              <div class="guest-review-card__author">
+                <span class="guest-review-card__flag">${rev.flag}</span>
+                <div>
+                  <strong class="guest-review-card__name">${rev.name} • ${rev.country}</strong>
+                  <span class="guest-review-card__service">${rev.service}</span>
+                </div>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== 3-STEP EFFORTLESS BOOKING FLOW ==================== -->
     <section class="container" style="padding: var(--space-16) 0;">
       <div style="text-align: center; max-width: 640px; margin: 0 auto var(--space-10);" class="fade-in">
@@ -378,109 +419,130 @@ export function renderHome() {
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);">
-        <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
-          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 01</div>
+        <div class="fade-in flow-step-card">
+          <div class="flow-step-card__header">
+            <div class="flow-step-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            </div>
+            <span class="flow-step-card__num">STEP 01</span>
+          </div>
           <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_1_title')}</h3>
           <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_1_desc')}</p>
         </div>
 
-        <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
-          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 02</div>
+        <div class="fade-in flow-step-card">
+          <div class="flow-step-card__header">
+            <div class="flow-step-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <span class="flow-step-card__num">STEP 02</span>
+          </div>
           <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_2_title')}</h3>
           <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_2_desc')}</p>
         </div>
 
-        <div class="fade-in" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); padding: var(--space-6);">
-          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--gold-maha); font-weight: 700; margin-bottom: var(--space-2);">STEP 03</div>
+        <div class="fade-in flow-step-card">
+          <div class="flow-step-card__header">
+            <div class="flow-step-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <span class="flow-step-card__num">STEP 03</span>
+          </div>
           <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2); color: var(--text-onyx);">${t('step_3_title')}</h3>
           <p style="font-size: 0.88rem; color: var(--text-stone); line-height: 1.55; margin: 0;">${t('step_3_desc')}</p>
         </div>
       </div>
     </section>
 
-    <!-- ==================== TRANSPARENT RATES CATALOG (DUAL DESKTOP / MOBILE RESPONSIVE) ==================== -->
-    <section id="price-table" style="background: var(--surface-silk); padding: var(--space-16) 0; border-top: 1px solid var(--border-hairline);">
+    <!-- ==================== TRANSPARENT RATES CATALOG (COLLAPSIBLE TO PREVENT TEXT FATIGUE) ==================== -->
+    <section id="price-table" style="background: var(--surface-silk); padding: var(--space-12) 0; border-top: 1px solid var(--border-hairline);">
       <div class="container">
-        <div style="text-align: center; max-width: 680px; margin: 0 auto var(--space-10);" class="fade-in">
+        <div style="text-align: center; max-width: 680px; margin: 0 auto;" class="fade-in">
           <span class="overline">${t('price_overline')}</span>
           <h2 class="heading-2">${t('price_title')}</h2>
-          <p class="subtitle" style="margin: var(--space-3) auto 0;">${t('price_desc')}</p>
+          <p class="subtitle" style="margin: var(--space-3) auto var(--space-6);">${t('price_desc')}</p>
+          <button type="button" class="btn btn--secondary btn--lg price-toggle-btn" id="toggle-price-catalog-btn" aria-expanded="false">
+            <span id="toggle-price-catalog-text">${tPsych('price_toggle_show', currentLang)}</span>
+            <svg id="toggle-price-catalog-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition: transform 0.25s ease;"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
         </div>
 
-        <!-- 1. Desktop Catalog View (Clean Table) -->
-        <div class="price-catalog-desktop fade-in" style="overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);">
-          <table style="width: 100%; min-width: 680px; border-collapse: collapse; font-size: 0.9rem;">
-            <thead>
-              <tr style="border-bottom: 1.5px solid var(--border-hairline); background: #FAF8F4; text-align: left;">
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_service')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_duration')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_price')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_total')}</th>
-                <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: center;">${t('th_action')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${services.map(s => `
-                <tr style="background: var(--surface-silk); border-bottom: 1px solid var(--border-hairline);">
-                  <td colspan="5" style="padding: 10px 18px; font-family: var(--font-serif); font-weight: 700; color: var(--text-onyx); font-size: 0.98rem;">
-                    • ${serviceName(s)}
-                  </td>
+        <div id="price-catalog-drawer" class="price-catalog-drawer" style="display: none; margin-top: var(--space-8);">
+          <!-- 1. Desktop Catalog View (Clean Table) -->
+          <div class="price-catalog-desktop" style="overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);">
+            <table style="width: 100%; min-width: 680px; border-collapse: collapse; font-size: 0.9rem;">
+              <thead>
+                <tr style="border-bottom: 1.5px solid var(--border-hairline); background: #FAF8F4; text-align: left;">
+                  <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_service')}</th>
+                  <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">${t('th_duration')}</th>
+                  <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_price')}</th>
+                  <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: right;">${t('th_total')}</th>
+                  <th style="padding: 14px 18px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-align: center;">${t('th_action')}</th>
                 </tr>
-                ${s.packages.map(p => `
-                  <tr style="border-bottom: 1px solid var(--border-hairline);">
-                    <td style="padding: 12px 18px;">
-                      <strong style="color: var(--text-onyx);">${packageName(p)}</strong>
-                      ${p.popular ? `<span style="margin-left: 8px; font-family: var(--font-mono); font-size: 0.65rem; background: var(--cta-forest); color: white; padding: 2px 6px; border-radius: 3px;">${t('badge_popular')}</span>` : ''}
-                      <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0;">${packageDesc(p)}</p>
-                    </td>
-                    <td style="padding: 12px 18px; font-size: 0.85rem; color: var(--text-stone);">${translateDuration(p.duration)}</td>
-                    <td style="padding: 12px 18px; text-align: right; font-weight: 500;" class="tabular-nums">${formatCurrency(p.price)}</td>
-                    <td style="padding: 12px 18px; text-align: right; font-weight: 700; color: var(--cta-forest);" class="tabular-nums">${formatCurrency(p.price)}</td>
-                    <td style="padding: 12px 18px; text-align: center;">
-                      <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary btn--sm" data-page="booking">${t('svc_book_package')}</a>
+              </thead>
+              <tbody>
+                ${services.map(s => `
+                  <tr style="background: var(--surface-silk); border-bottom: 1px solid var(--border-hairline);">
+                    <td colspan="5" style="padding: 10px 18px; font-family: var(--font-serif); font-weight: 700; color: var(--text-onyx); font-size: 0.98rem;">
+                      • ${serviceName(s)}
                     </td>
                   </tr>
+                  ${s.packages.map(p => `
+                    <tr style="border-bottom: 1px solid var(--border-hairline);">
+                      <td style="padding: 12px 18px;">
+                        <strong style="color: var(--text-onyx);">${packageName(p)}</strong>
+                        ${p.popular ? `<span style="margin-left: 8px; font-family: var(--font-mono); font-size: 0.65rem; background: var(--cta-forest); color: white; padding: 2px 6px; border-radius: 3px;">${t('badge_popular')}</span>` : ''}
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 2px 0 0;">${packageDesc(p)}</p>
+                      </td>
+                      <td style="padding: 12px 18px; font-size: 0.85rem; color: var(--text-stone);">${translateDuration(p.duration)}</td>
+                      <td style="padding: 12px 18px; text-align: right; font-weight: 500;" class="tabular-nums">${formatCurrency(p.price)}</td>
+                      <td style="padding: 12px 18px; text-align: right; font-weight: 700; color: var(--cta-forest);" class="tabular-nums">${formatCurrency(p.price)}</td>
+                      <td style="padding: 12px 18px; text-align: center;">
+                        <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary btn--sm" data-page="booking">${t('svc_book_package')}</a>
+                      </td>
+                    </tr>
+                  `).join('')}
                 `).join('')}
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
 
-        <!-- 2. Mobile Responsive Catalog View (Zero Horizontal Cutoffs on Phones) -->
-        <div class="price-catalog-mobile fade-in">
-          ${services.map(s => `
-            <div class="catalog-mobile-group">
-              <div class="catalog-mobile-header">
-                <span class="subtle-bullet"></span>
-                <h3 class="catalog-mobile-header__title" style="margin: 0; font-size: 1rem; font-family: var(--font-serif); color: var(--text-onyx);">${serviceName(s)}</h3>
-              </div>
-              <div class="catalog-mobile-body">
-                ${s.packages.map(p => `
-                  <div class="catalog-mobile-card">
-                    <div class="catalog-mobile-card__top">
-                      <h4 class="catalog-mobile-card__title">${packageName(p)}</h4>
-                      ${p.popular ? `<span class="catalog-mobile-card__badge">${t('badge_popular')}</span>` : ''}
+          <!-- 2. Mobile Responsive Catalog View (Zero Horizontal Cutoffs on Phones) -->
+          <div class="price-catalog-mobile">
+            ${services.map(s => `
+              <div class="catalog-mobile-group">
+                <div class="catalog-mobile-header">
+                  <span class="subtle-bullet"></span>
+                  <h3 class="catalog-mobile-header__title" style="margin: 0; font-size: 1rem; font-family: var(--font-serif); color: var(--text-onyx);">${serviceName(s)}</h3>
+                </div>
+                <div class="catalog-mobile-body">
+                  ${s.packages.map(p => `
+                    <div class="catalog-mobile-card">
+                      <div class="catalog-mobile-card__top">
+                        <h4 class="catalog-mobile-card__title">${packageName(p)}</h4>
+                        ${p.popular ? `<span class="catalog-mobile-card__badge">${t('badge_popular')}</span>` : ''}
+                      </div>
+                      <p class="catalog-mobile-card__desc">${packageDesc(p)}</p>
+                      <div class="catalog-mobile-card__meta">
+                        <span class="catalog-mobile-card__duration">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                          </svg>
+                          ${translateDuration(p.duration)}
+                        </span>
+                        <span class="catalog-mobile-card__price tabular-nums">
+                          ${formatCurrency(p.price)}
+                        </span>
+                      </div>
+                      <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary catalog-mobile-card__cta" data-page="booking">
+                        ${t('svc_book_package')}
+                      </a>
                     </div>
-                    <p class="catalog-mobile-card__desc">${packageDesc(p)}</p>
-                    <div class="catalog-mobile-card__meta">
-                      <span class="catalog-mobile-card__duration">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;" aria-hidden="true">
-                          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                        </svg>
-                        ${translateDuration(p.duration)}
-                      </span>
-                      <span class="catalog-mobile-card__price tabular-nums">
-                        ${formatCurrency(p.price)}
-                      </span>
-                    </div>
-                    <a href="#/booking?service=${s.service_id}&package=${p.package_id}" class="btn btn--primary catalog-mobile-card__cta" data-page="booking">
-                      ${t('svc_book_package')}
-                    </a>
-                  </div>
-                `).join('')}
+                  `).join('')}
+                </div>
               </div>
-            </div>
-          `).join('')}
+            `).join('')}
+          </div>
         </div>
 
       </div>
@@ -565,6 +627,27 @@ export function initHomeEffects() {
     exploreBtn.addEventListener('click', (e) => {
       e.preventDefault();
       document.getElementById('curated-journeys')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // Collapsible Rate Card Drawer toggle
+  const togglePriceBtn = document.getElementById('toggle-price-catalog-btn');
+  const priceDrawer = document.getElementById('price-catalog-drawer');
+  if (togglePriceBtn && priceDrawer) {
+    togglePriceBtn.addEventListener('click', () => {
+      const isExpanded = togglePriceBtn.getAttribute('aria-expanded') === 'true';
+      const nextState = !isExpanded;
+      togglePriceBtn.setAttribute('aria-expanded', String(nextState));
+      priceDrawer.style.display = nextState ? 'block' : 'none';
+      const txtEl = document.getElementById('toggle-price-catalog-text');
+      const iconEl = document.getElementById('toggle-price-catalog-icon');
+      const lang = getLang();
+      if (txtEl) {
+        txtEl.textContent = nextState ? tPsych('price_toggle_hide', lang) : tPsych('price_toggle_show', lang);
+      }
+      if (iconEl) {
+        iconEl.style.transform = nextState ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
     });
   }
 

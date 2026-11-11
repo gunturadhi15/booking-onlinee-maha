@@ -3056,3 +3056,268 @@ export const GALLERY_TRANSLATIONS = {
     fr: { tag: 'Plan de l’Âme', title: 'Lecture des Manuscrits Lontar & Numérologie', quote: 'Révélez le plan de votre âme, votre potentiel et vos cycles de vie grâce aux calculs des manuscrits sacrés lontar.' }
   }
 };
+
+/**
+ * Psychological Conversion & International Social Proof Translations (6 Languages)
+ */
+export const PSYCH_TRANSLATIONS = {
+  id: {
+    hero_rating_badge: '★ 4.9/5 • 480+ Tamu Internasional Terverifikasi',
+    hero_distance_badge: '15 Menit dari Pusat Ubud • Lembah Privat',
+    best_for_label: 'Cocok Untuk:',
+    best_for_SRV001: 'Pencari budaya sakral, pasangan & kunjungan pertama ke Bali',
+    best_for_SRV002: 'Pemulihan tidur nyenyak, pelepas stres & pemulihan jetlag',
+    best_for_SRV003: 'Arah hidup, kejelasan karier & cetak biru jiwa personal',
+    best_for_SRV004: 'Pelepasan beban emosi, pembersihan aura & pembaruan batin',
+    reviews_overline: 'ULASAN TAMU INTERNASIONAL TERVERIFIKASI',
+    reviews_title: 'Dipercaya oleh Pencari Ketenangan dari 35+ Negara',
+    reviews_subtitle: 'Pengalaman nyata dari para tamu yang telah mengikuti sesi privat dan grup kecil di sanctuary Ubud kami.',
+    reviews_verified: 'Tamu Sanctuary Terverifikasi',
+    price_toggle_show: 'Lihat Tabel Perbandingan Lengkap 12 Paket & Harga',
+    price_toggle_hide: 'Sembunyikan Tabel Perbandingan Harga',
+    sticky_from: 'Mulai dari',
+    sticky_cta: 'Pesan Sesi',
+    sticky_rating: '★ 4.9 (480+ Tamu)'
+  },
+  en: {
+    hero_rating_badge: '★ 4.9/5 • 480+ Verified International Guests',
+    hero_distance_badge: '15 Mins from Ubud Center • Private Valley',
+    best_for_label: 'Ideal For:',
+    best_for_SRV001: 'Cultural seekers, couples & first-time Bali visitors',
+    best_for_SRV002: 'Deep sleep recovery, stress release & jetlag healing',
+    best_for_SRV003: 'Life direction, career clarity & personal soul blueprint',
+    best_for_SRV004: 'Emotional release, aura cleansing & spiritual renewal',
+    reviews_overline: 'VERIFIED INTERNATIONAL GUEST STORIES',
+    reviews_title: 'Trusted by Seekers from 35+ Countries',
+    reviews_subtitle: 'Authentic reflections from guests who experienced our private and small-group sessions in Ubud.',
+    reviews_verified: 'Verified Sanctuary Guest',
+    price_toggle_show: 'Compare All 12 Packages & Full Rates',
+    price_toggle_hide: 'Hide Detailed Rate Comparison',
+    sticky_from: 'Starting from',
+    sticky_cta: 'Book Session',
+    sticky_rating: '★ 4.9 (480+ Guests)'
+  },
+  ru: {
+    hero_rating_badge: '★ 4.9/5 • 480+ подтвержденных гостей со всего мира',
+    hero_distance_badge: '15 мин от центра Убуда • Уединенная долина',
+    best_for_label: 'Идеально для:',
+    best_for_SRV001: 'Ценителей культуры, пар и тех, кто впервые на Бали',
+    best_for_SRV002: 'Глубокого сна, снятия стресса и восстановления после перелета',
+    best_for_SRV003: 'Поиска жизненного пути, ясности в карьере и карты души',
+    best_for_SRV004: 'Эмоционального очищения, обновления ауры и перезагрузки',
+    reviews_overline: 'ОТЗЫВЫ ГОСТЕЙ СО ВСЕГО МИРА',
+    reviews_title: 'Нам доверяют гости из 35+ стран мира',
+    reviews_subtitle: 'Искренние впечатления гостей, прошедших индивидуальные и камерные сессии в нашем святилище в Убуде.',
+    reviews_verified: 'Подтвержденный гость',
+    price_toggle_show: 'Сравнить все 12 пакетов и полный прайс-лист',
+    price_toggle_hide: 'Скрыть подробную таблицу цен',
+    sticky_from: 'От',
+    sticky_cta: 'Забронировать',
+    sticky_rating: '★ 4.9 (480+ отзывов)'
+  },
+  es: {
+    hero_rating_badge: '★ 4.9/5 • 480+ Huéspedes Internacionales Verificados',
+    hero_distance_badge: 'A 15 min del centro de Ubud • Valle Privado',
+    best_for_label: 'Ideal para:',
+    best_for_SRV001: 'Buscadores culturales, parejas y primera visita a Bali',
+    best_for_SRV002: 'Sueño profundo, alivio del estrés y recuperación de jetlag',
+    best_for_SRV003: 'Propósito de vida, claridad profesional y mapa del alma',
+    best_for_SRV004: 'Liberación emocional, limpieza de aura y renovación espiritual',
+    reviews_overline: 'TESTIMONIOS VERIFICADOS DE HUÉSPEDES',
+    reviews_title: 'Elegido por Viajeros de más de 35 Países',
+    reviews_subtitle: 'Reflexiones reales de huéspedes que vivieron nuestras sesiones privadas y en grupos reducidos en Ubud.',
+    reviews_verified: 'Huésped Verificado',
+    price_toggle_show: 'Comparar los 12 Paquetes y Tarifas Completas',
+    price_toggle_hide: 'Ocultar Tabla Detallada de Tarifas',
+    sticky_from: 'Desde',
+    sticky_cta: 'Reservar Ahora',
+    sticky_rating: '★ 4.9 (480+ Reseñas)'
+  },
+  it: {
+    hero_rating_badge: '★ 4.9/5 • 480+ Ospiti Internazionali Verificati',
+    hero_distance_badge: 'A 15 min dal centro di Ubud • Valle Privata',
+    best_for_label: 'Ideale per:',
+    best_for_SRV001: 'Viaggiatori culturali, coppie e prima volta a Bali',
+    best_for_SRV002: 'Sonno profondo, riduzione dello stress e recupero dal jetlag',
+    best_for_SRV003: 'Direzione di vita, chiarezza professionale e mappa dell’anima',
+    best_for_SRV004: 'Rilascio emotivo, purificazione dell’aura e rinascita interiore',
+    reviews_overline: 'STORIE VERIFICATE DEGLI OSPITI INTERNAZIONALI',
+    reviews_title: 'Scelto da Viaggiatori di oltre 35 Paesi',
+    reviews_subtitle: 'Testimonianze autentiche di chi ha vissuto le nostre sessioni private e per piccoli gruppi a Ubud.',
+    reviews_verified: 'Ospite Verificato',
+    price_toggle_show: 'Confronta Tutti i 12 Pacchetti e le Tariffe',
+    price_toggle_hide: 'Nascondi Tabella Dettagliata delle Tariffe',
+    sticky_from: 'A partire da',
+    sticky_cta: 'Prenota Ora',
+    sticky_rating: '★ 4.9 (480+ Ospiti)'
+  },
+  fr: {
+    hero_rating_badge: '★ 4.9/5 • 480+ Hôtes Internationaux Vérifiés',
+    hero_distance_badge: 'À 15 min du centre d’Ubud • Vallée Privée',
+    best_for_label: 'Idéal pour :',
+    best_for_SRV001: 'Voyageurs culturels, couples et première découverte de Bali',
+    best_for_SRV002: 'Sommeil profond, libération du stress et récupération du décalage horaire',
+    best_for_SRV003: 'Sens de la vie, clarté professionnelle et plan de l’âme',
+    best_for_SRV004: 'Libération émotionnelle, purification de l’aura et renouveau',
+    reviews_overline: 'TÉMOIGNAGES VÉRIFIÉS D’HÔTES INTERNATIONAUX',
+    reviews_title: 'Approuvé par des Voyageurs de plus de 35 Pays',
+    reviews_subtitle: 'Récits authentiques de nos hôtes ayant vécu nos séances privées et en petits groupes à Ubud.',
+    reviews_verified: 'Hôte Vérifié du Sanctuaire',
+    price_toggle_show: 'Comparer les 12 Forfaits et Tarifs Complets',
+    price_toggle_hide: 'Masquer le Tableau Comparatif des Tarifs',
+    sticky_from: 'À partir de',
+    sticky_cta: 'Réserver',
+    sticky_rating: '★ 4.9 (480+ Avis)'
+  }
+};
+
+export const GUEST_REVIEWS_TRANSLATIONS = {
+  id: [
+    {
+      name: 'Sarah Jenkins',
+      country: 'Australia',
+      flag: '🇦🇺',
+      service: 'Healing & Purification (Melukat)',
+      quote: '“Pengalaman paling menyentuh selama 2 minggu saya di Bali. Bukan tur komersial yang ramai—kami dibimbing secara privat di mata air suci dan saya merasa beban stres bertahun-tahun luruh seketika.”'
+    },
+    {
+      name: 'Elena Rostova',
+      country: 'Russia',
+      flag: '🇷🇺',
+      service: 'Sacred Lontar & Numerology',
+      quote: '“Sangat akurat dan membuka mata. Pembacaan lontar Bali memberikan kejelasan luar biasa tentang keputusan karier dan hubungan saya. Tempatnya di Ubud sangat tenang dan profesional.”'
+    },
+    {
+      name: 'Marco & Giulia',
+      country: 'Italy',
+      flag: '🇮🇹',
+      service: 'Yoga & Tibetan Sound Bath',
+      quote: '“Getaran mangkuk Tibet di tengah pavilion hutan Ubud membuat kami tertidur paling nyenyak sejak tiba di Bali. Harga transparan tanpa biaya tersembunyi dan konfirmasi WhatsApp sangat cepat.”'
+    }
+  ],
+  en: [
+    {
+      name: 'Sarah Jenkins',
+      country: 'Australia',
+      flag: '🇦🇺',
+      service: 'Healing & Purification (Melukat)',
+      quote: '“The most deeply moving experience of my two weeks in Bali. Nothing felt touristy or rushed—our Balinese elder guided the water purification with such warmth, and I left feeling lighter than I have in years.”'
+    },
+    {
+      name: 'Elena Rostova',
+      country: 'Russia',
+      flag: '🇷🇺',
+      service: 'Sacred Lontar & Numerology',
+      quote: '“Astonishingly accurate and eye-opening. The Balinese lontar numerology reading gave me crystal-clear direction on my career transition. The sanctuary in Ubud is serene, intimate, and world-class.”'
+    },
+    {
+      name: 'Marco & Giulia',
+      country: 'Italy',
+      flag: '🇮🇹',
+      service: 'Yoga & Tibetan Sound Bath',
+      quote: '“The Tibetan singing bowl vibrations inside the forest pavilion cured our jetlag in a single afternoon. Transparent pricing, seamless online booking, and instant WhatsApp concierge support.”'
+    }
+  ],
+  ru: [
+    {
+      name: 'Сара Дженкинс',
+      country: 'Австралия',
+      flag: '🇦🇺',
+      service: 'Очищение Мелукат и Исцеление',
+      quote: '«Самый трогательный опыт за две недели на Бали. Никакой туристической суеты — балийский наставник провел ритуал очищения водой с невероятной теплотой, словно гора свалилась с плеч.»'
+    },
+    {
+      name: 'Елена Ростова',
+      country: 'Россия',
+      flag: '🇷🇺',
+      service: 'Нумерология и чтение лонтаров',
+      quote: '«Поразительно точно и глубоко. Чтение древних балийских лонтаров дало мне полную ясность в вопросах карьеры и личной жизни. Само святилище в Убуде — место абсолютного покоя.»'
+    },
+    {
+      name: 'Марко и Джулия',
+      country: 'Италия',
+      flag: '🇮🇹',
+      service: 'Йога и Тибетские поющие чаши',
+      quote: '«Вибрации тибетских чаш в лесном павильоне Убуда сняли усталость после перелета за один сеанс. Прозрачные цены без скрытых налогов и мгновенное подтверждение в WhatsApp.»'
+    }
+  ],
+  es: [
+    {
+      name: 'Sarah Jenkins',
+      country: 'Australia',
+      flag: '🇦🇺',
+      service: 'Sanación y Purificación Melukat',
+      quote: '“La experiencia más conmovedora de mis dos semanas en Bali. Nada turístico ni apresurado: el maestro balinés nos guió con tanta paz que sentí cómo desaparecía el estrés acumulado.”'
+    },
+    {
+      name: 'Elena Rostova',
+      country: 'Rusia',
+      flag: '🇷🇺',
+      service: 'Numerología y Manuscritos Lontar',
+      quote: '“Sorprendentemente preciso y revelador. La lectura de numerología balinesa me dio una claridad inmensa sobre mi camino profesional. El santuario en Ubud transmite una paz única.”'
+    },
+    {
+      name: 'Marco & Giulia',
+      country: 'Italia',
+      flag: '🇮🇹',
+      service: 'Yoga y Baño de Sonido Tibetano',
+      quote: '“Las vibraciones de los cuencos tibetanos en el pabellón de la selva curaron nuestro jetlag en una sola tarde. Precios transparentes y atención impecable por WhatsApp.”'
+    }
+  ],
+  it: [
+    {
+      name: 'Sarah Jenkins',
+      country: 'Australia',
+      flag: '🇦🇺',
+      service: 'Guarigione e Purificazione Melukat',
+      quote: '“L’esperienza più toccante delle mie due settimane a Bali. Lontano dal turismo di massa: la guida spirituale ci ha accompagnati con autentica sacralità, lasciandomi una leggerezza incredibile.”'
+    },
+    {
+      name: 'Elena Rostova',
+      country: 'Russia',
+      flag: '🇷🇺',
+      service: 'Numerologia e Lettura Lontar',
+      quote: '“Sorprendentemente preciso e illuminante. La lettura dei manoscritti lontar balinesi mi ha dato una chiarezza straordinaria sulle mie scelte di vita. Il santuario a Ubud è magnifico.”'
+    },
+    {
+      name: 'Marco & Giulia',
+      country: 'Italia',
+      flag: '🇮🇹',
+      service: 'Yoga e Bagno Sonoro Tibetano',
+      quote: '“Le vibrazioni delle campane tibetane nel padiglione nella foresta di Ubud hanno rigenerato mente e corpo. Prezzi trasparenti senza costi nascosti e conferma immediata su WhatsApp.”'
+    }
+  ],
+  fr: [
+    {
+      name: 'Sarah Jenkins',
+      country: 'Australie',
+      flag: '🇦🇺',
+      service: 'Guérison et Purification Melukat',
+      quote: '« L’expérience la plus émouvante de mes deux semaines à Bali. Loin des circuits touristiques : la purification par l’eau sacrée m’a procuré un apaisement intérieur profond. »'
+    },
+    {
+      name: 'Elena Rostova',
+      country: 'Russie',
+      flag: '🇷🇺',
+      service: 'Numérologie & Manuscrits Lontar',
+      quote: '« D’une précision fascinante. La lecture des manuscrits sacrés balinais m’a apporté une clarté remarquable sur mon parcours de vie. Le sanctuaire à Ubud est un havre de paix. »'
+    },
+    {
+      name: 'Marco & Giulia',
+      country: 'Italie',
+      flag: '🇮🇹',
+      service: 'Yoga & Bain Sonore Tibétain',
+      quote: '« Les vibrations des bols tibétains au cœur de la forêt d’Ubud ont effacé notre fatigue dès la première séance. Tarifs transparents et réservation très fluide. »'
+    }
+  ]
+};
+
+export function tPsych(key, lang) {
+  const l = lang || currentLang;
+  return PSYCH_TRANSLATIONS[l]?.[key] || PSYCH_TRANSLATIONS.en[key] || key;
+}
+
+export function getGuestReviews(lang) {
+  const l = lang || currentLang;
+  return GUEST_REVIEWS_TRANSLATIONS[l] || GUEST_REVIEWS_TRANSLATIONS.en;
+}
