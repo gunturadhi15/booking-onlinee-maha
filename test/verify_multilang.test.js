@@ -11,6 +11,7 @@ globalThis.document = {
   getElementById() { return null; }
 };
 
+import assert from 'node:assert';
 import { 
   t, 
   setLang, 
@@ -19,38 +20,48 @@ import {
   translateCategory, 
   GALLERY_TRANSLATIONS 
 } from '../src/i18n.js';
-import { formatCurrency, formatCurrencyWithApprox, formatDateSafe } from '../src/data.js';
+import { FAQ, formatCurrency, formatCurrencyWithApprox, formatDateSafe } from '../src/data.js';
 
 const langs = ['id', 'ru', 'es', 'it', 'fr', 'en'];
 const categories = ['Melukat & Spiritual', 'Yoga & Meditation', 'Temple Tour', 'Numerology'];
 
-console.log('--- Testing 6 Languages Localization ---');
+console.log('--- Testing 6 Languages Localization & FAQ ---');
 
 for (const lang of langs) {
   setLang(lang);
   console.log(`\n[Language: ${lang.toUpperCase()}]`);
-  console.log(`Locale: ${getDateLocale()}`);
-  console.log(`Nav Services: ${t('nav_services')}`);
-  console.log(`Booking Subtotal: ${t('book_subtotal')}`);
-  console.log(`Payment Method: ${t('pay_method_title')}`);
-  console.log(`Invoice Status Pending: ${t('inv_status_pending')}`);
-  console.log(`Invoice Approx Label: ${t('inv_notice_title')}`);
-  console.log(`Concierge Hours: ${t('home_concierge_hours')}`);
-  console.log(`Badge Popular: ${t('badge_popular')}`);
+  
+  // Basic keys
+  assert.notStrictEqual(t('nav_services'), 'nav_services');
+  assert.notStrictEqual(t('book_subtotal'), 'book_subtotal');
+  assert.notStrictEqual(t('pay_method_title'), 'pay_method_title');
+  assert.notStrictEqual(t('con_faq_heading'), 'con_faq_heading');
+  assert.notStrictEqual(t('chat_title'), 'chat_title');
+
+  // Test FAQ translation keys
+  FAQ.forEach((item, idx) => {
+    const qKey = `data_faq${String(idx + 1).padStart(3, '0')}_q`;
+    const aKey = `data_faq${String(idx + 1).padStart(3, '0')}_a`;
+    const q = t(qKey);
+    const a = t(aKey);
+    assert.notStrictEqual(q, qKey, `Missing translation for ${qKey} in ${lang}`);
+    assert.notStrictEqual(a, aKey, `Missing translation for ${aKey} in ${lang}`);
+    if (lang !== 'id') {
+      assert.notStrictEqual(q, item.question, `FAQ question in ${lang} should not be Indonesian`);
+    }
+  });
 
   // Test Categories
-  const translatedCats = categories.map(c => `${c} -> ${translateCategory(c)}`);
-  console.log('Categories:', translatedCats.join(' | '));
+  categories.forEach(c => {
+    const translated = translateCategory(c);
+    assert.ok(translated && translated.length > 0);
+  });
 
   // Test Gallery Translations
-  const galTitles = Object.keys(GALLERY_TRANSLATIONS).map(id => GALLERY_TRANSLATIONS[id][lang]?.title);
-  console.log('Gallery titles:', galTitles.join(', '));
-
-  // Test Currency & Approx
-  console.log('Formatted Currency Approx (Rp 1.250.000):', formatCurrencyWithApprox(1250000, lang));
-
-  // Test Date Formatting
-  console.log('Formatted Date (2026-11-15):', formatDateSafe('2026-11-15'));
+  Object.keys(GALLERY_TRANSLATIONS).forEach(id => {
+    const item = GALLERY_TRANSLATIONS[id][lang];
+    assert.ok(item && item.title && item.tag && item.quote);
+  });
 }
 
-console.log('\n--- ALL LOCALIZATION CHECKS PASSED ---');
+console.log('\n--- ALL LOCALIZATION & FAQ CHECKS PASSED ---');
