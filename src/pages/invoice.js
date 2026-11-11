@@ -136,7 +136,7 @@ export function renderInvoice(params) {
           </div>
 
           <!-- Customer & Booking Info -->
-          <div class="invoice-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-bottom: var(--space-6); background: var(--surface-silk); padding: var(--space-4); border-radius: var(--radius-lg); border: 1px solid var(--border-hairline);">
+          <div class="invoice-info-grid">
             <div>
               <h4 style="font-size: var(--text-xs); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin: 0 0 var(--space-2); font-family: var(--font-mono);">${t('inv_customer_info')}</h4>
               <p style="font-weight: 600; font-size: var(--text-sm); color: var(--text-onyx); margin: 0 0 2px;">${esc(data.customer_name)} ${data.nationality ? `(${esc(data.nationality)})` : ''}</p>

@@ -399,7 +399,7 @@ function renderStep4() {
 
     <h2 class="heading-3" style="margin-bottom: var(--space-6); text-align: center;">${t('book_customer_data')}</h2>
     
-    <div class="contact-form" style="max-width: 620px; margin: 0 auto; background: var(--surface-card); padding: var(--space-6); border-radius: var(--radius-lg); border: 1px solid var(--border-hairline);">
+    <div class="contact-form booking-form-card">
       
       <!-- 1. Full Name -->
       <div class="form-group">

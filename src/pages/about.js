@@ -45,7 +45,7 @@ export function renderAbout() {
             </p>
 
             <!-- Credential Metrics Grid -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-hairline);">
+            <div class="about-metrics-grid">
               <div>
                 <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; display: block;">${t('abt_metric_1_label')}</span>
                 <strong style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--text-onyx);">${t('abt_metric_1_val')}</strong>
